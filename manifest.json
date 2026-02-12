@@ -1,7 +1,7 @@
 {
   "name": "Merola's Super Fun Lab",
   "short_name": "MerolaLab",
-  "start_url": "merola.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#F8F4FF",
   "theme_color": "#673AB7",
