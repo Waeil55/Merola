@@ -490,7 +490,7 @@ const lessonData = [
             { q: "I wear gloves on my ___.", opts: ["feet", "hands", "head", "ears"], c: 1 },
             { q: "The turtle moves very ___.", opts: ["fast", "slow", "quickly", "high"], c: 1 },
             { q: "I use an ___ when it rains.", opts: ["umbrella", "hat", "coat", "boot"], c: 0 },
-            { q: "The lemon tastes ___.", opts: ["sweet", "sour", "salty", "yummy"], c: 1 },
+            { q: "The lemon tastes ___.", opts: ["sweet", "sour", "salty", "bitter"], c: 1 },
             { q: "The teacher wrote on the ___.", opts: ["desk", "board", "floor", "wall"], c: 1 }
         ]
     },
