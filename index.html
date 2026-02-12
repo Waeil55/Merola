@@ -49,207 +49,150 @@
             background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
             background-size: 30px 30px;
             transition: background-color 0.3s ease, color 0.3s ease;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size:24px"><text y="24">🍭</text></svg>'), auto;
         }
 
-        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes wiggle { 0% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } 100% { transform: rotate(0deg); } }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        /* Advanced UI Animations */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 45px; }
+        }
+        .listening-ring {
+            position: absolute;
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            border: 5px solid #ef4444;
+            animation: pulse-ring 1.5s infinite;
+        }
+        .wave-bar {
+            width: 7px; background: #6C5CE7; border-radius: 4px;
+            animation: wave 1s infinite ease-in-out;
+        }
 
-        .listening { animation: pulse-red 1.5s infinite; background-color: #ef4444 !important; color: white !important; }
-        .glass-header { background: var(--header-bg); border-bottom: 6px dashed rgba(255,255,255,0.3); border-radius: 0 0 30px 30px; }
-        .card { background-color: var(--card-bg); border: 4px solid var(--border-color); border-radius: 40px; box-shadow: 10px 10px 0px var(--border-color); transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px) rotate(1deg); }
-        .q-text { font-size: var(--user-font-size) !important; color: var(--text-color) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
-        .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border: 3px solid var(--border-color); border-radius: 25px; background: var(--card-bg); color: var(--text-color); box-shadow: 0 6px 0 var(--border-color); margin-bottom: 8px; }
+        .card { background-color: var(--card-bg); border: 4px solid var(--border-color); border-radius: 40px; box-shadow: 10px 10px 0px var(--border-color); }
+        .q-text { font-size: var(--user-font-size) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
+        .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border-radius: 25px; background: var(--card-bg); box-shadow: 0 6px 0 var(--border-color); border: 2px solid var(--border-color); }
         .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
         
-        .sticky-passage-wrapper {
-            position: sticky;
-            top: 70px;
-            z-index: 30;
-            padding-bottom: 1rem;
-        }
+        .sticky-passage-wrapper { position: sticky; top: 75px; z-index: 30; padding-bottom: 1rem; }
+        .passage-box { background: var(--passage-bg) !important; border: 4px dotted var(--primary-action) !important; border-radius: 30px !important; }
 
-        .passage-box { 
-            background: var(--passage-bg) !important; 
-            border: 4px dotted var(--primary-action) !important; 
-            border-radius: 30px !important; 
-            position: relative; 
-            color: var(--text-color); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        .passage-box::before { content: "📖 Read This! 📖"; position: absolute; top: -15px; left: 20px; background: var(--primary-action); color: white; padding: 2px 15px; border-radius: 10px; font-size: 14px; }
-        .correct { background: #4CAF50 !important; border-color: #2E7D32 !important; color: white !important; animation: pop 0.3s infinite; }
-        .wrong { background: #F44336 !important; border-color: #B71C1C !important; color: white !important; }
-        .hub-card { border-radius: 40px; border: 5px solid rgba(255,255,255,0.4); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
-        .hub-card:hover { transform: scale(1.08) rotate(-2deg); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
+        .correct { background: #4CAF50 !important; color: white !important; border-color: #2E7D32 !important; box-shadow: 0 4px 0 #2E7D32 !important; }
+        .wrong { background: #F44336 !important; color: white !important; border-color: #B71C1C !important; box-shadow: 0 4px 0 #B71C1C !important; }
         
+        .hub-card { border-radius: 40px; border: 5px solid rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .hub-card:hover { transform: scale(1.08) rotate(-1deg); }
+
         .lesson-gradient { background: linear-gradient(135deg, #9C27B0, #E91E63); }
+        .reading-gradient { background: linear-gradient(135deg, #FF5252, #FF1744); }
+        .stories-gradient { background: linear-gradient(135deg, #10b981, #059669); }
+        .math-gradient { background: linear-gradient(135deg, #FF9800, #F57C00); }
         .coin-gradient { background: linear-gradient(135deg, #009688, #00796B); }
         .time-gradient { background: linear-gradient(135deg, #2196F3, #1976D2); }
-        .math-gradient { background: linear-gradient(135deg, #FF9800, #F57C00); }
         .shapes-gradient { background: linear-gradient(135deg, #E040FB, #7B1FA2); }
         .grammar-gradient { background: linear-gradient(135deg, #03A9F4, #0288D1); }
-        .reading-gradient { background: linear-gradient(135deg, #FF5252, #FF1744); }
         .wordparts-gradient { background: linear-gradient(135deg, #6C5CE7, #a29bfe); }
-        .stories-gradient { background: linear-gradient(135deg, #10b981, #059669); }
 
-        .coin-img { display: inline-block; vertical-align: middle; filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1)); animation: wiggle 2s infinite ease-in-out; margin: 0 2px; }
-        .dark .card { background-color: var(--card-bg); }
-        .dark .option-btn { background-color: #3d4649; }
-        #quiz-footer { background: var(--footer-bg); border-top: 4px solid var(--border-color); }
+        .glass-header { background: var(--header-bg); border-bottom: 5px dashed rgba(255,255,255,0.3); border-radius: 0 0 30px 30px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <header class="glass-header sticky top-0 z-50 px-4 py-1 flex flex-col gap-1 shadow-xl">
-        <div class="app-shell flex justify-between items-center w-full max-w-5xl mx-auto">
+    <header class="glass-header sticky top-0 z-50 px-4 py-2 flex flex-col gap-1 shadow-xl text-white">
+        <div class="flex justify-between items-center max-w-5xl mx-auto w-full">
             <div class="flex items-center gap-2">
-                <span class="text-2xl animate-bounce">🎈</span>
+                <span class="text-3xl animate-bounce">🍦</span>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-black text-white dark:text-purple-100 tracking-tighter leading-none" style="font-family: 'Comic Neue';">MEROLA'S FUN LAB!</h1>
-                    <p class="text-[9px] font-bold text-yellow-300 uppercase leading-none">Learning is a Party! 🥳</p>
+                    <h1 class="text-xl font-black font-['Comic_Neue'] tracking-tight">MEROLA'S FUN LAB</h1>
+                    <p class="text-[10px] uppercase font-bold text-yellow-300 leading-none">Grade 2 Discovery!</p>
                 </div>
             </div>
-
-            <div id="smart-score-box" class="flex items-center bg-yellow-400 text-yellow-900 px-3 py-0.5 rounded-full border-2 border-white shadow-lg animate-pulse transform hover:scale-110 transition-transform cursor-pointer">
-                <span class="text-lg mr-1">⭐</span>
-                <div class="flex flex-col leading-none">
-                    <span class="text-[8px] uppercase font-bold opacity-80">Score</span>
-                    <span id="score-val" class="text-base font-black">0</span>
+            <div class="flex items-center gap-4">
+                <div class="bg-yellow-400 text-yellow-900 px-5 py-1.5 rounded-full font-black border-2 border-white shadow-md transform hover:scale-110 transition-transform">
+                    ⭐ <span id="score-val" class="text-lg">0</span>
                 </div>
-            </div>
-
-            <div class="flex items-center gap-1">
-                <div class="flex items-center bg-white/20 backdrop-blur rounded-full p-0.5 border border-white/30">
-                    <button onclick="adjustFont(-2)" class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center font-black hover:bg-white/30 text-white text-xs">🔍-</button>
-                    <button onclick="adjustFont(2)" class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center font-black hover:bg-white/30 ml-0.5 text-white text-xs">🔍+</button>
-                </div>
-                <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center text-base shadow-md text-white">
-                    <span id="theme-icon">✨</span>
-                </button>
-                <button onclick="goHome()" class="w-8 h-8 rounded-full bg-white/20 border-2 border-green-300 flex items-center justify-center text-base shadow-md">
-                    <span>🏠</span>
-                </button>
+                <button onclick="goHome()" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shadow-inner border border-white/30">🏠</button>
             </div>
         </div>
-        <div id="progress-container" class="hidden w-full max-w-5xl mx-auto mt-0.5 flex gap-2 items-center">
-            <div class="flex-grow h-2 bg-black/20 rounded-full overflow-hidden border border-white/30">
-                <div id="progress-bar" class="bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 h-full transition-all duration-700 relative" style="width: 0%">
-                    <div class="absolute inset-0 bg-white/20 animate-[wiggle_1s_infinite]"></div>
+        <div id="progress-container" class="hidden max-w-5xl mx-auto w-full mt-2">
+            <div class="h-3.5 bg-black/20 rounded-full overflow-hidden border border-white/20">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-yellow-300 to-orange-400 transition-all duration-700 relative">
+                    <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
             </div>
-            <div id="page-indicator" class="text-[10px] font-bold text-white bg-black/20 px-2 py-0.5 rounded-lg">1/10</div>
         </div>
     </header>
 
-    <main class="flex-grow w-full max-w-5xl mx-auto px-4 py-8 mb-20">
+    <main class="flex-grow max-w-5xl mx-auto px-4 py-10 w-full mb-24">
         <div id="main-view"></div>
     </main>
 
-    <footer id="quiz-footer" class="hidden fixed bottom-0 left-0 right-0 py-1 px-4 z-40 shadow-[0_-10px_20_rgba(0,0,0,0.1)]">
-        <div class="max-w-xl mx-auto flex gap-4">
-            <button onclick="handleBack()" id="prev-btn" class="flex-1 py-2 bg-white dark:bg-gray-800 border-b-4 border-purple-200 text-purple-600 dark:text-purple-300 rounded-3xl font-black text-lg hover:bg-purple-50 transition-all active:scale-95 shadow-lg active:border-b-0 translate-y-0 active:translate-y-1">🔙 BACK</button>
-            <button onclick="nextPage()" id="next-btn" class="flex-1 py-2 bg-purple-600 border-b-4 border-purple-800 text-white rounded-3xl font-black text-lg hover:bg-purple-500 transition-all active:scale-95 shadow-lg active:border-b-0 translate-y-0 active:translate-y-1 flex items-center justify-center gap-2">NEXT 🚀</button>
+    <footer id="quiz-footer" class="hidden fixed bottom-0 left-0 right-0 py-5 px-6 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t-4 border-purple-200">
+        <div class="max-w-xl mx-auto flex gap-6">
+            <button onclick="handleBack()" class="flex-1 py-4 bg-white dark:bg-gray-800 border-b-4 border-gray-300 rounded-3xl font-black text-xl text-gray-600 active:translate-y-1 active:border-b-0 transition-all">BACK</button>
+            <button onclick="nextPage()" class="flex-1 py-4 bg-purple-600 text-white border-b-4 border-purple-800 rounded-3xl font-black text-xl shadow-xl active:translate-y-1 active:border-b-0 transition-all">NEXT 🚀</button>
         </div>
     </footer>
 
-    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-8 py-4 rounded-full text-white font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-[60] text-xl border-4 border-white"></div>
+    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-10 py-4 rounded-full text-white font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-[60] text-xl border-4 border-white"></div>
 
     <script>
-        // Global State
         let currentView = 'home';
         let activeData = [];
         let currentPage = 0;
         let userAnswers = {};
         let fontSize = 22;
-        let isDarkMode = false;
         let globalScore = 0;
-        let recognition = null;
         let isListening = false;
+        let recognition = null;
         let currentActivityType = '';
 
-        // Shared Utilities
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // Init Voice
+        // Speech Recognition Setup
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.continuous = false;
-            recognition.interimResults = false;
             recognition.lang = 'en-US';
-            recognition.onstart = () => { isListening = true; const b = document.getElementById('mic-btn'); if(b) b.classList.add('listening'); };
-            recognition.onend = () => { isListening = false; const b = document.getElementById('mic-btn'); if(b) b.classList.remove('listening'); };
-            recognition.onresult = (e) => evaluateSpeech(e.results[0][0].transcript);
-        }
-
-        function toggleTheme() {
-            isDarkMode = !isDarkMode;
-            document.body.classList.toggle('dark', isDarkMode);
-            document.getElementById('theme-icon').innerText = isDarkMode ? '☀️' : '✨';
+            recognition.onstart = () => { isListening = true; render(); };
+            recognition.onend = () => { isListening = false; render(); };
+            recognition.onresult = (e) => checkReading(e.results[0][0].transcript);
         }
 
         function goHome() {
             currentView = 'home';
+            document.getElementById('quiz-footer').classList.add('hidden');
+            document.getElementById('progress-container').classList.add('hidden');
             render();
             window.scrollTo(0, 0);
         }
 
-        function adjustFont(val) {
-            fontSize = Math.max(16, Math.min(48, fontSize + val));
-            document.documentElement.style.setProperty('--user-font-size', `${fontSize}px`);
-        }
-
         function startSection(type) {
             currentActivityType = type;
-            let baseData = [];
-            let perPage = 5;
-
-            switch(type) {
-                case 'lesson': activeData = lessonData; break;
-                case 'wordparts': activeData = wordPartsData; break;
-                case 'stories':
-                    activeData = storiesData.map(s => ({
-                        ...s,
-                        qs: s.qs.map((q, i) => ({ ...q, q: (i+1).toString() }))
-                    }));
-                    break;
-                case 'reading':
-                    perPage = 1;
-                    const rawSents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I can read."];
-                    activeData = shuffle([...rawSents]).map((s, i) => ({
-                        title: `Reading Mastery #${i+1}`,
-                        instr: "Read the sentence out loud!",
-                        qs: [{ q: s, originalText: s, opts: ["Voice Check"], c: 0, isReading: true }]
-                    }));
-                    break;
-                case 'coin': baseData = shuffle([...initialCoinData]); perPage = 2; break;
-                case 'time': baseData = shuffle(generateTimeData()); perPage = 8; break;
-                case 'math': baseData = shuffle(generateMathData()); perPage = 10; break;
-                case 'shapes': baseData = shuffle(generateShapesData()); perPage = 5; break;
-                case 'grammar': baseData = shuffle(generateGrammarData()); perPage = 10; break;
-            }
-
-            if (['coin', 'time', 'math', 'shapes', 'grammar'].includes(type)) {
-                activeData = [];
-                for (let i = 0; i < baseData.length; i += perPage) {
-                    activeData.push({
-                        title: `The ${type.toUpperCase()} Quest`,
-                        instr: "Solve these puzzles! 🏆",
-                        qs: baseData.slice(i, i + perPage)
-                    });
+            let rawData = [];
+            
+            if (type === 'reading') {
+                const sents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I love to read!", "Learning is so much fun.", "Merola is a superstar."];
+                activeData = sents.map((s, i) => ({
+                    title: `Reading Mastery #${i+1}`,
+                    instr: "Read the sentence loud and clear!",
+                    qs: [{ q: s, original: s, isReading: true }]
+                }));
+            } else {
+                switch(type) {
+                    case 'lesson': activeData = lessonData; break;
+                    case 'stories': activeData = storiesData; break;
+                    case 'wordparts': activeData = wordPartsData; break;
+                    case 'coin': activeData = chunkData(shuffle([...initialCoinData]), 2); break;
+                    case 'time': activeData = chunkData(generateTimeData(), 8); break;
+                    case 'math': activeData = chunkData(generateMathData(), 10); break;
+                    case 'shapes': activeData = chunkData(generateShapesData(), 5); break;
+                    case 'grammar': activeData = chunkData(generateGrammarData(), 10); break;
                 }
             }
-
+            
             currentPage = 0;
             userAnswers = {};
             currentView = 'quiz';
@@ -257,129 +200,157 @@
             window.scrollTo(0, 0);
         }
 
-        function handleAnswer(qIdx, oIdx) {
+        function chunkData(data, size) {
+            let res = [];
+            for (let i = 0; i < data.length; i += size) {
+                res.push({ title: "Quest Adventure", instr: "Finish all to earn stars!", qs: data.slice(i, i + size) });
+            }
+            return res;
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function toggleMic() {
+            if (!recognition) return;
+            if (isListening) recognition.stop();
+            else recognition.start();
+        }
+
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function checkReading(heard) {
+            const target = activeData[currentPage].qs[0].original.toLowerCase().replace(/[.,!?;:]/g, "");
+            const words = heard.toLowerCase().split(" ");
+            let match = 0;
+            target.split(" ").forEach(w => { if(words.includes(w)) match++; });
+            
+            if (match / target.split(" ").length >= 0.6) {
+                handleAnswer(0, 0, true);
+            } else {
+                showToast("Try again! 🎤", "#F44336");
+            }
+        }
+
+        function handleAnswer(qIdx, oIdx, isCorrect = null) {
             const key = `${currentPage}-${qIdx}`;
             if (userAnswers[key] !== undefined) return;
-            userAnswers[key] = oIdx;
-            const isCorrect = oIdx === activeData[currentPage].qs[qIdx].c;
-            if (isCorrect) globalScore++;
             
-            const toast = document.getElementById('toast');
-            const messages = isCorrect ? ["BOOM! 💥", "WIZARD! 🧙‍♂️", "GENIUS! 🧠", "HOORAY! 🎉"] : ["OOPSIE! 🍌", "TRY AGAIN! 🧐"];
-            toast.innerText = messages[Math.floor(Math.random()*messages.length)];
-            toast.style.backgroundColor = isCorrect ? "#4CAF50" : "#F44336";
-            toast.style.opacity = "1";
-            setTimeout(() => toast.style.opacity = "0", 1200);
+            const q = activeData[currentPage].qs[qIdx];
+            const finalCorrect = isCorrect !== null ? isCorrect : (oIdx === q.c);
+            
+            userAnswers[key] = oIdx;
+            if (finalCorrect) {
+                globalScore++;
+                showToast("BINGO! ⭐", "#4CAF50");
+            } else {
+                showToast("TRY AGAIN! 🍌", "#F44336");
+            }
             render();
+        }
+
+        function showToast(msg, color) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.backgroundColor = color;
+            t.style.opacity = "1";
+            setTimeout(() => t.style.opacity = "0", 1500);
         }
 
         function render() {
             const main = document.getElementById('main-view');
-            const footer = document.getElementById('quiz-footer');
-            const progress = document.getElementById('progress-container');
             const scoreVal = document.getElementById('score-val');
-
             scoreVal.innerText = globalScore;
 
             if (currentView === 'home') {
-                footer.classList.add('hidden');
-                progress.classList.add('hidden');
                 main.innerHTML = `
-                    <div class="text-center py-6">
-                        <div class="inline-block bg-white dark:bg-gray-800 p-6 rounded-3xl border-4 border-purple-400 rotate-2 mb-10 shadow-lg">
-                             <h2 class="text-3xl lg:text-5xl font-black text-purple-600 dark:text-purple-300">PICK YOUR ADVENTURE! 🏰</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${['lesson', 'stories', 'wordparts', 'reading', 'coin', 'time', 'math', 'shapes', 'grammar'].map(type => `
+                        <div onclick="startSection('${type}')" class="hub-card p-12 text-white text-center shadow-xl ${type}-gradient">
+                            <div class="text-7xl mb-4 drop-shadow-md">${getEmoji(type)}</div>
+                            <h3 class="text-3xl font-black uppercase tracking-tight">${type.replace('parts', ' parts')}</h3>
+                            <p class="text-white/70 font-bold mt-2">10+ Pages</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div onclick="startSection('lesson')" class="hub-card lesson-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">📖</div>
-                                <h3 class="text-3xl font-black mb-1">Lesson Mastery</h3>
-                            </div>
-                            <div onclick="startSection('stories')" class="hub-card stories-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">📚</div>
-                                <h3 class="text-3xl font-black mb-1">Story Lab</h3>
-                            </div>
-                            <div onclick="startSection('wordparts')" class="hub-card wordparts-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">🧩</div>
-                                <h3 class="text-3xl font-black mb-1">Word Parts</h3>
-                            </div>
-                            <div onclick="startSection('reading')" class="hub-card reading-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">🎙️</div>
-                                <h3 class="text-3xl font-black mb-1">Reading Lab</h3>
-                            </div>
-                            <div onclick="startSection('coin')" class="hub-card coin-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">💰</div>
-                                <h3 class="text-3xl font-black mb-1">Coin Lab</h3>
-                            </div>
-                            <div onclick="startSection('time')" class="hub-card time-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">⏰</div>
-                                <h3 class="text-3xl font-black mb-1">Time Lab</h3>
-                            </div>
-                            <div onclick="startSection('math')" class="hub-card math-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">➕</div>
-                                <h3 class="text-3xl font-black mb-1">Math Lab</h3>
-                            </div>
-                            <div onclick="startSection('shapes')" class="hub-card shapes-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">📐</div>
-                                <h3 class="text-3xl font-black mb-1">Shapes Lab</h3>
-                            </div>
-                            <div onclick="startSection('grammar')" class="hub-card grammar-gradient p-8 text-white shadow-xl">
-                                <div class="text-6xl mb-4">🖍️</div>
-                                <h3 class="text-3xl font-black mb-1">Grammar Lab</h3>
-                            </div>
-                        </div>
-                    </div>`;
+                    `).join('')}
+                </div>`;
             } else if (currentView === 'quiz') {
-                footer.classList.remove('hidden');
-                progress.classList.remove('hidden');
-                const data = activeData[currentPage];
-                const prog = ((currentPage + 1) / activeData.length) * 100;
-                document.getElementById('progress-bar').style.width = `${prog}%`;
-                document.getElementById('page-indicator').innerText = `${currentPage + 1}/${activeData.length}`;
-
-                let passageHtml = data.passage ? `
-                    <div class="sticky-passage-wrapper">
-                        <div class="passage-box p-6 md:p-8 shadow-xl">
-                            <p class="font-bold passage-text">${data.passage}</p>
-                        </div>
-                    </div>` : '';
+                document.getElementById('quiz-footer').classList.remove('hidden');
+                document.getElementById('progress-container').classList.remove('hidden');
                 
-                let questionsHtml = data.qs.map((q, qIdx) => {
-                    const key = `${currentPage}-${qIdx}`;
-                    const ans = userAnswers[key];
-                    const answered = ans !== undefined;
-                    return `
-                    <div class="card p-8 mb-6">
-                        <div class="font-black mb-6 text-xl q-text">${q.qText ? q.qText : q.q}</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            ${q.opts.map((opt, oIdx) => {
-                                let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "";
-                                return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn w-full py-4 px-2 font-bold transition-all ${cls}">${opt}</button>`;
-                            }).join('')}
+                const data = activeData[currentPage];
+                const progress = ((currentPage + 1) / activeData.length) * 100;
+                document.getElementById('progress-bar').style.width = progress + "%";
+
+                if (currentActivityType === 'reading') {
+                    const q = data.qs[0];
+                    const answered = userAnswers[`${currentPage}-0`] !== undefined;
+                    main.innerHTML = `
+                    <div class="text-center max-w-2xl mx-auto">
+                        <h2 class="text-4xl font-black mb-10 text-purple-600">${data.title}</h2>
+                        <div class="card p-14 mb-8 flex flex-col items-center border-dashed">
+                            <div class="text-5xl font-black mb-16 text-gray-800 leading-tight">"${q.q}"</div>
+                            
+                            <div class="flex flex-col items-center gap-12">
+                                <div class="relative flex items-center justify-center">
+                                    ${isListening ? '<div class="listening-ring"></div>' : ''}
+                                    <button onclick="toggleMic()" class="w-28 h-28 rounded-full ${isListening ? 'bg-red-500 shadow-[0_0_30px_#ef4444]' : 'bg-purple-600 shadow-xl'} text-white flex items-center justify-center text-5xl z-10 transition-all transform ${answered ? 'opacity-30 grayscale pointer-events-none' : 'hover:scale-110'}">
+                                        ${isListening ? '🛑' : '🎤'}
+                                    </button>
+                                </div>
+
+                                ${isListening ? `
+                                    <div class="flex items-end gap-2 h-12">
+                                        <div class="wave-bar" style="animation-delay: 0.1s"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.4s"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.2s"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.5s"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.3s"></div>
+                                    </div>
+                                ` : ''}
+
+                                <button onclick="speak('${q.original}')" class="px-12 py-5 bg-blue-500 text-white rounded-3xl font-black text-2xl flex items-center gap-4 shadow-xl hover:bg-blue-600 active:translate-y-1 transition-all">
+                                    <span>🔊</span> LISTEN
+                                </button>
+                                
+                                ${answered ? '<div class="text-7xl animate-bounce">✅⭐</div>' : ''}
+                            </div>
                         </div>
                     </div>`;
-                }).join('');
+                } else {
+                    let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-8 shadow-xl mb-8 text-2xl font-black leading-relaxed text-gray-700">${data.passage}</div></div>` : '';
+                    let qsHtml = data.qs.map((q, qIdx) => {
+                        const ans = userAnswers[`${currentPage}-${qIdx}`];
+                        const answered = ans !== undefined;
+                        return `
+                        <div class="card p-10 mb-8 transform transition-all">
+                            <div class="q-text mb-8 text-3xl text-gray-800 leading-snug">${q.qText || q.q}</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                ${q.opts.map((opt, oIdx) => {
+                                    let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "hover:bg-purple-50";
+                                    return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn p-5 font-black text-xl transition-all ${cls}">${opt}</button>`;
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    }).join('');
 
-                main.innerHTML = `
+                    main.innerHTML = `
                     <div class="mb-14 text-center">
-                        <h2 class="font-black text-4xl mb-4 text-purple-600 dark:text-purple-300">${data.title}</h2>
-                        <div class="inline-block bg-purple-200 dark:bg-purple-900 px-6 py-2 rounded-full font-bold text-purple-700 dark:text-purple-200">💡 ${data.instr}</div>
+                        <h2 class="text-4xl font-black text-purple-700 uppercase tracking-tight">${data.title}</h2>
+                        <div class="inline-block px-6 py-1 bg-purple-100 text-purple-600 rounded-full font-bold mt-2">💡 ${data.instr}</div>
                     </div>
-                    <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-16 items-start' : 'max-w-4xl mx-auto'}">
-                        ${passageHtml}
-                        <div>${questionsHtml}</div>
-                    </div>`;
+                    <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-14 items-start' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${qsHtml}</div></div>`;
+                }
             }
         }
 
-        function toggleMic() { recognition && (isListening ? recognition.stop() : recognition.start()); }
-        function speakSentence(txt) { window.speechSynthesis.speak(new SpeechSynthesisUtterance(txt)); }
-
-        function evaluateSpeech(heard) {
-            const target = activeData[currentPage].qs[0].originalText.toLowerCase().replace(/[.,!?;:]/g, "");
-            const words = heard.toLowerCase().split(" ");
-            let matches = 0;
-            target.split(" ").forEach(w => { if(words.includes(w)) matches++; });
-            if (matches / target.split(" ").length >= 0.6) handleAnswer(0, 0);
+        function getEmoji(type) {
+            const em = { lesson:'📖', stories:'📚', wordparts:'🧩', reading:'🎙️', coin:'💰', time:'⏰', math:'➕', shapes:'📐', grammar:'🖍️' };
+            return em[type] || '✨';
         }
 
         function handleBack() { currentPage > 0 ? (currentPage--, render(), window.scrollTo(0, 0)) : goHome(); }
@@ -389,19 +360,19 @@
             currentView = 'results';
             document.getElementById('quiz-footer').classList.add('hidden');
             document.getElementById('progress-container').classList.add('hidden');
-            document.getElementById('main-view').innerHTML = `
-                <div class="max-w-3xl mx-auto text-center py-12 px-8 bg-white dark:bg-gray-800 rounded-[4rem] shadow-2xl border-8 border-purple-200">
-                    <div class="text-9xl mb-8 animate-bounce">👑</div>
-                    <h2 class="text-5xl font-black mb-4 text-purple-600">MISSION COMPLETE!</h2>
-                    <div class="text-8xl font-black text-purple-600 mb-12">${globalScore} ⭐</div>
-                    <button onclick="goHome()" class="py-6 px-12 bg-purple-600 text-white rounded-[2.5rem] font-black text-2xl shadow-lg active:scale-95 transition-all">BACK TO BASE! 🏠</button>
+            const main = document.getElementById('main-view');
+            main.innerHTML = `
+                <div class="text-center py-20 max-w-2xl mx-auto">
+                    <div class="text-9xl mb-10 animate-bounce">👑</div>
+                    <h2 class="text-6xl font-black mb-6 text-purple-600">VICTORY!</h2>
+                    <p class="text-3xl font-bold text-gray-500 mb-12">You earned ${globalScore} stars!</p>
+                    <button onclick="goHome()" class="px-16 py-8 bg-purple-600 text-white rounded-[3rem] font-black text-3xl shadow-2xl hover:scale-110 active:scale-95 transition-all">PLAY AGAIN 🏠</button>
                 </div>`;
             window.scrollTo(0, 0);
         }
 
         window.onload = render;
     </script>
-</body> 
+</body>
 </html>
-
 
