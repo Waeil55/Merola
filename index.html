@@ -11,6 +11,7 @@
     <script src="readingData.js"></script>
     <script src="lessonData.js"></script>
     <script src="quizGenerators.js"></script>
+    <script src="wordPartsData.js"></script>
 
     <style>
         :root {
@@ -77,6 +78,7 @@
         .shapes-gradient { background: linear-gradient(135deg, #E040FB, #7B1FA2); }
         .grammar-gradient { background: linear-gradient(135deg, #03A9F4, #0288D1); }
         .reading-gradient { background: linear-gradient(135deg, #FF5252, #FF1744); }
+        .wordparts-gradient { background: linear-gradient(135deg, #6C5CE7, #a29bfe); }
 
         .coin-img { display: inline-block; vertical-align: middle; filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1)); animation: wiggle 2s infinite ease-in-out; margin: 0 2px; }
         .dark .card { background-color: var(--card-bg); }
@@ -214,6 +216,9 @@
                 case 'lesson': 
                     activeData = lessonData; 
                     break;
+                case 'wordparts':
+                    activeData = wordPartsData;
+                    break;
                 case 'reading':
                     perPage = 1;
                     const rawSents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I can read."];
@@ -245,7 +250,7 @@
                     break;
             }
 
-            if (type !== 'lesson' && type !== 'reading') {
+            if (type !== 'lesson' && type !== 'reading' && type !== 'wordparts') {
                 activeData = [];
                 for (let i = 0; i < baseData.length; i += perPage) {
                     activeData.push({
@@ -299,6 +304,11 @@
                                 <div class="text-6xl mb-4">📖</div>
                                 <h3 class="text-3xl font-black mb-1">Lesson Mastery</h3>
                                 <p class="font-bold opacity-80">Full PDF Review</p>
+                            </div>
+                            <div onclick="startSection('wordparts')" class="hub-card wordparts-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">🧩</div>
+                                <h3 class="text-3xl font-black mb-1">Word Parts</h3>
+                                <p class="font-bold opacity-80">Prefix & Suffix Lab</p>
                             </div>
                             <div onclick="startSection('reading')" class="hub-card reading-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">🎙️</div>
