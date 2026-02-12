@@ -13,6 +13,7 @@
     <script src="quizGenerators.js"></script>
     <script src="wordPartsData.js"></script>
     <script src="storiesData.js"></script>
+    <script src="writingData.js"></script>
 
     <style>
         :root {
@@ -98,8 +99,25 @@
         .shapes-gradient { background: linear-gradient(135deg, #E040FB, #7B1FA2); }
         .grammar-gradient { background: linear-gradient(135deg, #03A9F4, #0288D1); }
         .wordparts-gradient { background: linear-gradient(135deg, #6C5CE7, #a29bfe); }
+        .writing-gradient { background: linear-gradient(135deg, #fdcb6e, #e17055); }
 
         .glass-header { background: var(--header-bg); border-bottom: 5px dashed rgba(255,255,255,0.3); border-radius: 0 0 25px 25px; }
+
+        /* Writing Lab styles */
+        .writing-input {
+            width: 100%;
+            border: 4px solid var(--border-color);
+            border-radius: 20px;
+            padding: 15px;
+            font-family: 'Comic Neue', cursive;
+            font-weight: 700;
+            outline: none;
+            background: #fdfdfd;
+        }
+        .writing-input:focus {
+            border-color: var(--primary-action);
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.2);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -211,6 +229,8 @@
                     instr: "Try to speak first, then you can listen!",
                     qs: [{ q: s, original: s, isReading: true }]
                 }));
+            } else if (type === 'writing') {
+                activeData = writingData;
             } else {
                 switch(type) {
                     case 'lesson': activeData = lessonData; break;
@@ -245,7 +265,7 @@
 
         function toggleMic() {
             if (!recognition) return;
-            micUsedOnThisPage = true; // Unlock the Listen button
+            micUsedOnThisPage = true; 
             if (isListening) recognition.stop();
             else recognition.start();
         }
@@ -263,6 +283,19 @@
             target.split(" ").forEach(w => { if(words.includes(w)) match++; });
             if (match / target.split(" ").length >= 0.6) handleAnswer(0, 0, true);
             else showToast("Try again! 🎤", "#F44336");
+        }
+
+        function checkWriting(qIdx) {
+            const input = document.getElementById(`writing-input-${qIdx}`);
+            const target = activeData[currentPage].qs[qIdx].target;
+            
+            if (input.value.trim().toLowerCase() === target.toLowerCase()) {
+                handleAnswer(qIdx, 0, true);
+            } else {
+                showToast("Not quite! Check spelling.", "#F44336");
+                input.classList.add('animate-shake');
+                setTimeout(() => input.classList.remove('animate-shake'), 500);
+            }
         }
 
         function handleAnswer(qIdx, oIdx, isCorrect = null) {
@@ -295,7 +328,7 @@
             if (currentView === 'home') {
                 main.innerHTML = `
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
-                    ${['lesson', 'stories', 'wordparts', 'reading', 'coin', 'time', 'math', 'shapes', 'grammar'].map(type => `
+                    ${['lesson', 'stories', 'wordparts', 'reading', 'writing', 'coin', 'time', 'math', 'shapes', 'grammar'].map(type => `
                         <div onclick="startSection('${type}')" class="hub-card p-6 sm:p-10 text-white text-center shadow-xl ${type}-gradient">
                             <div class="text-4xl sm:text-6xl mb-2 sm:mb-4 drop-shadow-md">${getEmoji(type)}</div>
                             <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight">${type.replace('parts', ' parts')}</h3>
@@ -335,6 +368,30 @@
                             </div>
                         </div>
                     </div>`;
+                } else if (currentActivityType === 'writing') {
+                    let qsHtml = data.qs.map((q, qIdx) => {
+                        const answered = userAnswers[`${currentPage}-${qIdx}`] !== undefined;
+                        return `
+                        <div class="card p-6 sm:p-10 mb-6 flex flex-col items-center">
+                            <div class="q-text mb-6 text-purple-600">"${q.q}"</div>
+                            <input type="text" id="writing-input-${qIdx}" 
+                                class="writing-input text-xl sm:text-3xl mb-6 text-center ${answered ? 'bg-green-100 border-green-500 text-green-700' : ''}" 
+                                placeholder="Type here..." 
+                                ${answered ? 'disabled value="' + q.target + '"' : ''}
+                                onkeydown="if(event.key==='Enter') checkWriting(${qIdx})">
+                            
+                            ${!answered ? `
+                                <button onclick="checkWriting(${qIdx})" class="px-10 py-3 bg-green-500 text-white rounded-full font-black text-xl shadow-lg active:scale-95 transition-all">CHECK ✅</button>
+                            ` : '<div class="text-5xl animate-bounce">✨🏆✨</div>'}
+                        </div>`;
+                    }).join('');
+
+                    main.innerHTML = `
+                    <div class="mb-10 text-center px-2">
+                        <h2 class="text-2xl sm:text-4xl font-black text-orange-500 uppercase tracking-tight">${data.title}</h2>
+                        <div class="inline-block px-4 py-1 bg-orange-100 text-orange-600 rounded-full font-bold mt-1 instr-text">💡 ${data.instr}</div>
+                    </div>
+                    <div class="max-w-2xl mx-auto">${qsHtml}</div>`;
                 } else {
                     let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-6 sm:p-8 shadow-xl mb-6 sm:mb-8 passage-text font-black text-gray-700">${data.passage}</div></div>` : '';
                     let qsHtml = data.qs.map((q, qIdx) => {
@@ -363,7 +420,7 @@
         }
 
         function getEmoji(type) {
-            const em = { lesson:'📖', stories:'📚', wordparts:'🧩', reading:'🎙️', coin:'💰', time:'⏰', math:'➕', shapes:'📐', grammar:'🖍️' };
+            const em = { lesson:'📖', stories:'📚', wordparts:'🧩', reading:'🎙️', writing:'✏️', coin:'💰', time:'⏰', math:'➕', shapes:'📐', grammar:'🖍️' };
             return em[type] || '✨';
         }
 
