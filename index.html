@@ -43,11 +43,11 @@
         .dark {
             --bg-color: #1A1A2E;
             --card-bg: #2D3436;
-            --text-color: #F3E5F5; /* This ensures text like 'Opposite of hot' is bright */
+            --text-color: #F3E5F5;
             --title-color: #BB86FC;
             --border-color: #5E35B1;
             --header-bg: #311B92;
-            --passage-bg: #2C3E50; /* High contrast background for stories in dark mode */
+            --passage-bg: #2C3E50;
         }
 
         body {
@@ -61,7 +61,7 @@
             overflow-x: hidden;
         }
 
-        /* Question & Passage Text - FORCED THEME COLORS */
+        /* Dynamic Sizing & Colors */
         .q-text { 
             font-size: var(--user-font-size) !important; 
             font-family: 'Comic Neue', cursive; 
@@ -167,14 +167,15 @@
         </div>
     </header>
 
-    <main class="flex-grow max-w-5xl mx-auto px-4 py-6 sm:py-10 w-full mb-24">
+    <main class="flex-grow max-w-5xl mx-auto px-4 py-6 sm:py-10 w-full mb-20">
         <div id="main-view"></div>
     </main>
 
-    <footer id="quiz-footer" class="hidden fixed bottom-0 left-0 right-0 py-4 px-4 sm:px-6 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t-4 border-purple-200">
+    <!-- Reduced height footer -->
+    <footer id="quiz-footer" class="hidden fixed bottom-0 left-0 right-0 py-2.5 px-4 sm:px-6 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t-4 border-purple-200">
         <div class="max-w-xl mx-auto flex gap-4 sm:gap-6">
-            <button onclick="handleBack()" class="flex-1 py-3 sm:py-4 bg-white dark:bg-gray-800 border-b-4 border-gray-300 rounded-3xl font-black text-lg sm:text-xl text-gray-600 dark:text-gray-200 active:translate-y-1 active:border-b-0 transition-all uppercase">Back</button>
-            <button onclick="nextPage()" class="flex-1 py-3 sm:py-4 bg-purple-600 text-white border-b-4 border-purple-800 rounded-3xl font-black text-lg sm:text-xl shadow-xl active:translate-y-1 active:border-b-0 transition-all uppercase">Next 🚀</button>
+            <button onclick="handleBack()" class="flex-1 py-2 sm:py-2.5 bg-white dark:bg-gray-800 border-b-4 border-gray-300 rounded-3xl font-black text-lg sm:text-xl text-gray-600 dark:text-gray-200 active:translate-y-1 active:border-b-0 transition-all uppercase">Back</button>
+            <button onclick="nextPage()" class="flex-1 py-2 sm:py-2.5 bg-purple-600 text-white border-b-4 border-purple-800 rounded-3xl font-black text-lg sm:text-xl shadow-xl active:translate-y-1 active:border-b-0 transition-all uppercase">Next 🚀</button>
         </div>
     </footer>
 
@@ -319,6 +320,7 @@
 
             if (currentView === 'home') {
                 main.innerHTML = `<div class="space-y-12 max-w-4xl mx-auto">
+                    <!-- English Section -->
                     <section><h2 class="text-2xl font-black text-rose-500 mb-6 border-b-4 border-rose-100 flex items-center gap-2 pb-2"><span>📕</span> ENGLISH STARS</h2>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-5">
                             ${renderHubItem('reading', 'Reading', '🎙️', 'from-rose-400 to-orange-400')}
@@ -328,6 +330,7 @@
                             ${renderHubItem('grammar', 'Grammar', '🖍️', 'from-lime-400 to-teal-400')}
                         </div>
                     </section>
+                    <!-- Math Section -->
                     <section><h2 class="text-2xl font-black text-amber-500 mb-6 border-b-4 border-amber-100 flex items-center gap-2 pb-2"><span>🔢</span> MATH WIZARDS</h2>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             ${renderHubItem('math', 'Math Lab', '➕', 'from-blue-500 to-indigo-600')}
@@ -336,6 +339,7 @@
                             ${renderHubItem('shapes', 'Shapes Lab', '📐', 'from-fuchsia-500 to-pink-600')}
                         </div>
                     </section>
+                    <!-- Daily Work -->
                     <section><h2 class="text-2xl font-black text-purple-600 mb-6 border-b-4 border-purple-100 flex items-center gap-2 pb-2"><span>🎓</span> DAILY MISSIONS</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             ${renderHubItem('lesson', 'Lesson Mastery', '📖', 'from-violet-500 to-purple-800')}
