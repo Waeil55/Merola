@@ -246,7 +246,7 @@
     <footer id="quiz-footer" class="hidden fixed bottom-0 left-0 right-0 py-3 px-4 sm:px-6 z-40 app-footer backdrop-blur-lg">
         <div class="max-w-xl mx-auto flex gap-4 sm:gap-6">
             <button onclick="handleBack()" class="flex-1 py-3 bg-white dark:bg-gray-800 border-b-4 border-gray-300 dark:border-gray-900 rounded-3xl font-black text-lg text-gray-600 dark:text-gray-300 active:translate-y-1 active:border-b-0 transition-all uppercase">Back</button>
-            <button onclick="nextPage()" class="flex-1 py-3 bg-[#673AB7] text-white border-b-4 border-[#4527A0] rounded-3xl font-black text-lg shadow-lg active:translate-y-1 active:border-b-0 transition-all uppercase">Next 🚀</button>
+            <button id="next-btn" onclick="nextPage()" class="flex-1 py-3 bg-[#673AB7] text-white border-b-4 border-[#4527A0] rounded-3xl font-black text-lg shadow-lg active:translate-y-1 active:border-b-0 transition-all uppercase">Next 🚀</button>
         </div>
     </footer>
 
@@ -449,6 +449,18 @@
                 document.getElementById('progress-container').classList.remove('hidden');
                 const data = activeData[currentPage], progress = ((currentPage + 1) / activeData.length) * 100;
                 document.getElementById('progress-bar').style.width = progress + "%";
+
+                // Update Next Button State (Inactive until answered)
+                const nextBtn = document.getElementById('next-btn');
+                if (nextBtn) {
+                    const isPageAnswered = data.qs.every((_, qIdx) => userAnswers[`${currentPage}-${qIdx}`] !== undefined);
+                    nextBtn.disabled = !isPageAnswered;
+                    if (!isPageAnswered) {
+                        nextBtn.classList.add('opacity-40', 'pointer-events-none', 'grayscale-[0.4]');
+                    } else {
+                        nextBtn.classList.remove('opacity-40', 'pointer-events-none', 'grayscale-[0.4]');
+                    }
+                }
 
                 if (currentActivityType === 'reading') {
                     const q = data.qs[0], answered = userAnswers[`${currentPage}-0`] !== undefined, canListen = micUsedOnThisPage || answered;
