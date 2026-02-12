@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700;900&display=swap" rel="stylesheet">
     
-    <!-- Data & Generator Imports -->
+    <!-- Data Imports -->
     <script src="readingData.js"></script>
     <script src="lessonData.js"></script>
     <script src="quizGenerators.js"></script>
@@ -26,8 +26,6 @@
             --primary-action: #6C5CE7;
             --user-font-size: 22px;
             --header-bg: #673AB7;
-            --footer-bg: #F3E5F5;
-            --passage-bg: #E1F5FE;
         }
 
         body {
@@ -44,22 +42,18 @@
             --card-bg: #2D3436;
             --text-color: #E1BEE7;
             --title-color: #BB86FC;
-            --instr-color: #CFD8DC;
             --border-color: #5E35B1;
-            --primary-action: #03DAC6;
             --header-bg: #311B92;
-            --footer-bg: #1A1A2E;
-            --passage-bg: #37474F;
         }
 
         /* Dynamic Font Size Classes */
         .q-text { font-size: var(--user-font-size) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
-        .instr-text { font-size: calc(var(--user-font-size) * 0.7) !important; line-height: 1.2; }
+        .instr-text { font-size: calc(var(--user-font-size) * 0.7) !important; line-height: 1.2; font-weight: bold; }
         .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border-radius: 25px; background: var(--card-bg); box-shadow: 0 6px 0 var(--border-color); border: 2px solid var(--border-color); color: var(--text-color); }
         .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
-        .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6; }
+        .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6; font-weight: bold; }
 
-        /* Animations */
+        /* Advanced UI Animations */
         @keyframes pulse-ring {
             0% { transform: scale(0.8); opacity: 0.5; }
             100% { transform: scale(1.6); opacity: 0; }
@@ -82,16 +76,17 @@
 
         .card { background-color: var(--card-bg); border: 4px solid var(--border-color); border-radius: 40px; box-shadow: 8px 8px 0px var(--border-color); }
         .sticky-passage-wrapper { position: sticky; top: 85px; z-index: 30; padding-bottom: 1rem; }
-        .passage-box { background: var(--passage-bg) !important; border: 4px dotted var(--primary-action) !important; border-radius: 30px !important; }
+        .passage-box { background: #E1F5FE !important; border: 4px dotted var(--primary-action) !important; border-radius: 30px !important; }
 
-        .correct { background: #4CAF50 !important; color: white !important; border-color: #2E7D32 !important; }
-        .wrong { background: #F44336 !important; color: white !important; border-color: #B71C1C !important; }
-        
         .hub-card { border-radius: 40px; border: 5px solid rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .hub-card:hover { transform: scale(1.05) rotate(-1deg); }
 
+        .correct { background: #4CAF50 !important; color: white !important; border-color: #2E7D32 !important; }
+        .wrong { background: #F44336 !important; color: white !important; border-color: #B71C1C !important; }
+
         .lesson-gradient { background: linear-gradient(135deg, #9C27B0, #E91E63); }
         .reading-gradient { background: linear-gradient(135deg, #FF5252, #FF1744); }
+        .writing-gradient { background: linear-gradient(135deg, #fdcb6e, #e17055); }
         .stories-gradient { background: linear-gradient(135deg, #10b981, #059669); }
         .math-gradient { background: linear-gradient(135deg, #FF9800, #F57C00); }
         .coin-gradient { background: linear-gradient(135deg, #009688, #00796B); }
@@ -99,7 +94,6 @@
         .shapes-gradient { background: linear-gradient(135deg, #E040FB, #7B1FA2); }
         .grammar-gradient { background: linear-gradient(135deg, #03A9F4, #0288D1); }
         .wordparts-gradient { background: linear-gradient(135deg, #6C5CE7, #a29bfe); }
-        .writing-gradient { background: linear-gradient(135deg, #fdcb6e, #e17055); }
 
         .glass-header { background: var(--header-bg); border-bottom: 5px dashed rgba(255,255,255,0.3); border-radius: 0 0 25px 25px; }
 
@@ -125,7 +119,7 @@
                 <span class="text-2xl sm:text-3xl animate-bounce">🍦</span>
                 <div>
                     <h1 class="text-base sm:text-xl font-black font-['Comic_Neue'] tracking-tight leading-none uppercase">Merola's Lab</h1>
-                    <p class="text-[8px] sm:text-[10px] uppercase font-bold text-yellow-300 leading-none mt-0.5">Grade 2 Fun!</p>
+                    <p class="text-[8px] sm:text-[10px] uppercase font-bold text-yellow-300 leading-none mt-0.5">Grade 2 Discovery!</p>
                 </div>
             </div>
 
@@ -174,11 +168,11 @@
         let userAnswers = {};
         let fontSize = 22;
         let globalScore = 0;
+        let isDarkMode = false;
         let isListening = false;
         let micUsedOnThisPage = false;
         let recognition = null;
         let currentActivityType = '';
-        let isDarkMode = false;
 
         function adjustFont(val) {
             fontSize = Math.max(16, Math.min(42, fontSize + val));
@@ -191,6 +185,16 @@
             document.getElementById('theme-icon').innerText = isDarkMode ? '🌙' : '✨';
         }
 
+        function shuffle(array) {
+            let cur = array.length, temp, rand;
+            while (0 !== cur) {
+                rand = Math.floor(Math.random() * cur); cur -= 1;
+                temp = array[cur]; array[cur] = array[rand]; array[rand] = temp;
+            }
+            return array;
+        }
+
+        // Initialize Speech
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -213,15 +217,9 @@
             currentActivityType = type;
             micUsedOnThisPage = false;
             
-            if (type === 'reading') {
-                const sents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I love to read!", "Learning is fun."];
-                activeData = sents.map((s, i) => ({
-                    title: `Reading Lab #${i+1}`,
-                    instr: "Try to speak first, then you can listen!",
-                    qs: [{ q: s, original: s, isReading: true }]
-                }));
-            } else if (type === 'writing') {
-                const shuffled = shuffle([...spellingWords]);
+            if (type === 'writing') {
+                const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple", "school", "pencil", "brave", "kind"];
+                const shuffled = shuffle([...wordsSource]);
                 activeData = [];
                 for(let i=0; i<10; i++) {
                     const pageWords = shuffled.slice(i*5, (i+1)*5);
@@ -231,6 +229,13 @@
                         qs: pageWords.map(w => ({ target: w, isWriting: true }))
                     });
                 }
+            } else if (type === 'reading') {
+                const sentsSource = (typeof readingSentences !== 'undefined') ? readingSentences : ["I love learning!", "Reading is fun."];
+                activeData = sentsSource.map((s, i) => ({
+                    title: `Reading Mastery #${i+1}`,
+                    instr: "Try to speak first, then you can listen!",
+                    qs: [{ q: s, original: s, isReading: true }]
+                }));
             } else {
                 switch(type) {
                     case 'lesson': activeData = lessonData; break;
@@ -254,18 +259,9 @@
         function chunkData(data, size) {
             let res = [];
             for (let i = 0; i < data.length; i += size) {
-                res.push({ title: "Adventure Lab", instr: "Finish to earn stars!", qs: data.slice(i, i + size) });
+                res.push({ title: "Quest Adventure", instr: "Finish all to earn stars!", qs: data.slice(i, i + size) });
             }
             return res;
-        }
-
-        function shuffle(array) {
-            let cur = array.length, temp, rand;
-            while (0 !== cur) {
-                rand = Math.floor(Math.random() * cur); cur -= 1;
-                temp = array[cur]; array[cur] = array[rand]; array[rand] = temp;
-            }
-            return array;
         }
 
         function toggleMic() {
@@ -297,7 +293,7 @@
             if (input.value.trim().toLowerCase() === target.toLowerCase()) {
                 handleAnswer(qIdx, 0, true);
             } else {
-                showToast("Try again!", "#F44336");
+                showToast("Try again! Check the letters.", "#F44336");
                 input.animate([{transform: 'translateX(0)'}, {transform: 'translateX(10px)'}, {transform: 'translateX(-10px)'}, {transform: 'translateX(0)'}], {duration: 200});
             }
         }
@@ -310,7 +306,9 @@
             userAnswers[key] = oIdx;
             if (finalCorrect) {
                 globalScore++;
-                showToast("GREAT! ⭐", "#4CAF50");
+                showToast("BINGO! ⭐", "#4CAF50");
+            } else {
+                showToast("OOPS! 🍌", "#F44336");
             }
             render();
         }
@@ -328,12 +326,12 @@
             document.getElementById('score-val').innerText = globalScore;
 
             if (currentView === 'home') {
-                main.innerHTML = `
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+                main.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
                     ${['lesson', 'stories', 'wordparts', 'reading', 'writing', 'coin', 'time', 'math', 'shapes', 'grammar'].map(type => `
                         <div onclick="startSection('${type}')" class="hub-card p-6 sm:p-10 text-white text-center shadow-xl ${type}-gradient">
                             <div class="text-4xl sm:text-6xl mb-2 sm:mb-4 drop-shadow-md">${getEmoji(type)}</div>
                             <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight">${type === 'writing' ? 'Spelling' : type.replace('parts', ' parts')}</h3>
+                            <p class="text-white/70 text-[10px] sm:text-sm font-bold mt-1">10+ PAGES</p>
                         </div>
                     `).join('')}
                 </div>`;
@@ -348,46 +346,27 @@
                     const q = data.qs[0];
                     const answered = userAnswers[`${currentPage}-0`] !== undefined;
                     const canListen = micUsedOnThisPage || answered;
-
-                    main.innerHTML = `
-                    <div class="text-center max-w-2xl mx-auto">
-                        <h2 class="text-2xl sm:text-3xl font-black mb-4 text-purple-600 uppercase font-['Comic_Neue']">${data.title}</h2>
-                        <div class="instr-text mb-6">💡 ${data.instr}</div>
-                        <div class="card p-6 sm:p-14 mb-8 flex flex-col items-center border-dashed">
-                            <div class="q-text mb-12 text-gray-800 leading-tight">"${q.q}"</div>
+                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-2xl sm:text-3xl font-black mb-4 text-purple-600 uppercase font-['Comic_Neue']">${data.title}</h2><div class="instr-text mb-6">💡 ${data.instr}</div>
+                        <div class="card p-6 sm:p-14 mb-8 flex flex-col items-center border-dashed"><div class="q-text mb-12 text-gray-800 leading-tight">"${q.q}"</div>
                             <div class="flex flex-col items-center gap-10">
-                                <div class="relative flex items-center justify-center">
-                                    ${isListening ? '<div class="listening-ring"></div>' : ''}
-                                    <button onclick="toggleMic()" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full ${isListening ? 'bg-red-500 shadow-[0_0_30px_#ef4444]' : 'bg-purple-600 shadow-xl'} text-white flex items-center justify-center text-4xl sm:text-6xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-110'}">
-                                        ${isListening ? '🛑' : '🎤'}
-                                    </button>
+                                <div class="relative flex items-center justify-center">${isListening ? '<div class="listening-ring"></div>' : ''}
+                                    <button onclick="toggleMic()" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full ${isListening ? 'bg-red-500 shadow-[0_0_30px_#ef4444]' : 'bg-purple-600 shadow-xl'} text-white flex items-center justify-center text-4xl sm:text-6xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-110'}">${isListening ? '🛑' : '🎤'}</button>
                                 </div>
-                                ${isListening ? `
-                                    <div class="flex items-end gap-2 h-10 sm:h-12">
-                                        <div class="wave-bar" style="animation-delay: 0.1s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.4s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.2s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.5s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.3s"></div>
-                                    </div>
-                                ` : ''}
-                                <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="px-10 py-4 sm:px-14 sm:py-5 bg-blue-500 text-white rounded-3xl font-black text-xl sm:text-2xl flex items-center gap-3 shadow-xl transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-1'}">
-                                    🔊 Listen
-                                </button>
+                                <div class="flex items-end gap-1.5 h-10 sm:h-12">${[1,2,3,4,5].map(()=>`<div class="wave-bar" style="animation-delay:${Math.random()}s"></div>`).join('')}</div>
+                                <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="px-10 py-4 sm:px-14 sm:py-5 bg-blue-500 text-white rounded-3xl font-black text-xl sm:text-2xl shadow-xl transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-1'}">🔊 Listen</button>
                                 ${answered ? '<div class="text-6xl sm:text-8xl animate-bounce">✅⭐</div>' : ''}
                             </div>
-                        </div>
-                    </div>`;
+                        </div></div>`;
                 } else if (currentActivityType === 'writing') {
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const answered = userAnswers[`${currentPage}-${qIdx}`] !== undefined;
                         return `<div class="card p-6 sm:p-10 mb-6 flex flex-col items-center">
                             <button onclick="speak('${q.target}')" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-500 text-white shadow-lg flex items-center justify-center text-4xl sm:text-5xl mb-6 hover:scale-110 active:scale-95 transition-all">🔊</button>
-                            <input type="text" id="spell-input-${qIdx}" class="spelling-input text-2xl sm:text-3xl mb-4 ${answered ? 'bg-green-100 border-green-500' : ''}" placeholder="Type here..." ${answered ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${qIdx})">
-                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-10 py-3 bg-green-500 text-white rounded-full font-black shadow-lg uppercase">Check</button>` : '<div class="text-3xl font-black text-green-600">✨ CORRECT ✨</div>'}
+                            <input type="text" id="spell-input-${qIdx}" class="spelling-input text-2xl sm:text-3xl mb-4 ${answered ? 'bg-green-100 border-green-500 text-green-700 font-bold' : ''}" placeholder="Type here..." ${answered ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${qIdx})">
+                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-10 py-3 bg-green-500 text-white rounded-full font-black shadow-lg uppercase">Check</button>` : '<div class="text-2xl font-black text-green-600">✨ CORRECT ✨</div>'}
                         </div>`;
                     }).join('');
-                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-2xl sm:text-3xl font-black mb-4 text-orange-600 uppercase">${data.title}</h2><div class="instr-text mb-6">💡 ${data.instr}</div>${qsHtml}</div>`;
+                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-2xl sm:text-3xl font-black mb-4 text-orange-600 uppercase font-['Comic_Neue']">${data.title}</h2><div class="instr-text mb-6">💡 ${data.instr}</div>${qsHtml}</div>`;
                 } else {
                     let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-6 sm:p-8 shadow-xl mb-6 sm:mb-8 text-lg sm:text-2xl font-black leading-relaxed text-gray-700">${data.passage}</div></div>` : '';
                     let qsHtml = data.qs.map((q, qIdx) => {
@@ -403,7 +382,7 @@
                             </div>
                         </div>`;
                     }).join('');
-                    main.innerHTML = `<div class="mb-10 text-center px-2"><h2 class="text-2xl sm:text-4xl font-black text-purple-700 uppercase tracking-tight">${data.title}</h2><div class="inline-block px-4 py-1 bg-purple-100 text-purple-600 rounded-full font-bold text-xs sm:text-sm mt-1 instr-text">💡 ${data.instr}</div></div><div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-14 items-start' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${qsHtml}</div></div>`;
+                    main.innerHTML = `<div class="mb-10 text-center px-2"><h2 class="text-2xl sm:text-4xl font-black text-purple-700 uppercase tracking-tight font-['Comic_Neue']">${data.title}</h2><div class="inline-block px-4 py-1 bg-purple-100 text-purple-600 rounded-full font-bold text-xs sm:text-sm mt-1 instr-text">💡 ${data.instr}</div></div><div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-14 items-start' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${qsHtml}</div></div>`;
                 }
             }
         }
@@ -412,8 +391,14 @@
             return { lesson:'📖', stories:'📚', wordparts:'🧩', reading:'🎙️', writing:'✏️', coin:'💰', time:'⏰', math:'➕', shapes:'📐', grammar:'🖍️' }[type] || '✨';
         }
 
-        function handleBack() { micUsedOnThisPage = false; currentPage > 0 ? (currentPage--, render(), window.scrollTo(0, 0)) : goHome(); }
-        function nextPage() { micUsedOnThisPage = false; currentPage < activeData.length - 1 ? (currentPage++, render(), window.scrollTo(0, 0)) : finish(); }
+        function handleBack() { 
+            micUsedOnThisPage = false; 
+            currentPage > 0 ? (currentPage--, render(), window.scrollTo(0, 0)) : goHome(); 
+        }
+        function nextPage() { 
+            micUsedOnThisPage = false; 
+            currentPage < activeData.length - 1 ? (currentPage++, render(), window.scrollTo(0, 0)) : finish(); 
+        }
 
         function finish() {
             currentView = 'results';
