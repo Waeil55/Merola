@@ -29,10 +29,13 @@
             --passage-bg: #E1F5FE;
         }
 
-        /* Applying the variables to body and elements */
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
+            font-family: 'Bubblegum Sans', cursive;
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .dark {
@@ -48,14 +51,14 @@
             --passage-bg: #37474F;
         }
 
-        body {
-            font-family: 'Bubblegum Sans', cursive;
-            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
-            background-size: 30px 30px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+        /* Dynamic Font Size Classes */
+        .q-text { font-size: var(--user-font-size) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
+        .instr-text { font-size: calc(var(--user-font-size) * 0.7) !important; line-height: 1.2; }
+        .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border-radius: 25px; background: var(--card-bg); box-shadow: 0 6px 0 var(--border-color); border: 2px solid var(--border-color); color: var(--text-color); }
+        .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
+        .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6; }
 
-        /* Advanced UI Animations */
+        /* Animations */
         @keyframes pulse-ring {
             0% { transform: scale(0.8); opacity: 0.5; }
             100% { transform: scale(1.6); opacity: 0; }
@@ -66,7 +69,7 @@
         }
         .listening-ring {
             position: absolute;
-            width: 100px; height: 100px;
+            width: 110px; height: 110px;
             border-radius: 50%;
             border: 5px solid #ef4444;
             animation: pulse-ring 1.5s infinite;
@@ -77,10 +80,6 @@
         }
 
         .card { background-color: var(--card-bg); border: 4px solid var(--border-color); border-radius: 40px; box-shadow: 8px 8px 0px var(--border-color); }
-        .q-text { font-size: var(--user-font-size) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
-        .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border-radius: 25px; background: var(--card-bg); box-shadow: 0 6px 0 var(--border-color); border: 2px solid var(--border-color); color: var(--text-color); }
-        .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
-        
         .sticky-passage-wrapper { position: sticky; top: 85px; z-index: 30; padding-bottom: 1rem; }
         .passage-box { background: var(--passage-bg) !important; border: 4px dotted var(--primary-action) !important; border-radius: 30px !important; }
 
@@ -107,7 +106,6 @@
 
     <header class="glass-header sticky top-0 z-50 px-4 py-2 flex flex-col gap-1 shadow-xl text-white">
         <div class="flex justify-between items-center max-w-5xl mx-auto w-full">
-            <!-- App Name - Always Visible -->
             <div class="flex items-center gap-2">
                 <span class="text-2xl sm:text-3xl animate-bounce">🍦</span>
                 <div>
@@ -116,22 +114,24 @@
                 </div>
             </div>
 
-            <!-- Font Adjustment, Theme & Score -->
             <div class="flex items-center gap-1.5 sm:gap-4">
+                <!-- Font Buttons -->
                 <div class="flex items-center bg-white/20 backdrop-blur rounded-full p-0.5 sm:p-1 border border-white/30">
                     <button onclick="adjustFont(-2)" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center font-black hover:bg-white/30 text-white text-[10px] sm:text-xs">A-</button>
                     <button onclick="adjustFont(2)" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center font-black hover:bg-white/30 ml-0.5 sm:ml-1 text-white text-[10px] sm:text-xs">A+</button>
                 </div>
 
-                <!-- Theme Toggle Button -->
+                <!-- Theme Button -->
                 <button onclick="toggleTheme()" class="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center text-sm sm:text-lg border border-white/30">
                     <span id="theme-icon">✨</span>
                 </button>
 
+                <!-- Score -->
                 <div class="bg-yellow-400 text-yellow-900 px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-full font-black border-2 border-white shadow-md">
                     ⭐ <span id="score-val" class="text-sm sm:text-lg">0</span>
                 </div>
                 
+                <!-- Home -->
                 <button onclick="goHome()" class="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center text-lg sm:text-xl border border-white/30">🏠</button>
             </div>
         </div>
@@ -166,26 +166,22 @@
         let fontSize = 22;
         let globalScore = 0;
         let isListening = false;
+        let micUsedOnThisPage = false;
         let recognition = null;
         let currentActivityType = '';
         let isDarkMode = false;
 
-        // Font Adjustment Logic
         function adjustFont(val) {
             fontSize = Math.max(16, Math.min(42, fontSize + val));
             document.documentElement.style.setProperty('--user-font-size', fontSize + 'px');
-            showToast("Font Size: " + fontSize + "px", "#6C5CE7");
         }
 
-        // Theme Toggle Logic
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
             document.getElementById('theme-icon').innerText = isDarkMode ? '🌙' : '✨';
-            showToast(isDarkMode ? "Dark Mode 🌙" : "Light Mode ✨", "#6C5CE7");
         }
 
-        // Speech Recognition Setup
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -206,13 +202,13 @@
 
         function startSection(type) {
             currentActivityType = type;
-            let rawData = [];
+            micUsedOnThisPage = false;
             
             if (type === 'reading') {
-                const sents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I love to read!", "Learning is so much fun.", "Merola is a superstar."];
+                const sents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I love to read!", "Learning is fun."];
                 activeData = sents.map((s, i) => ({
-                    title: `Reading Mastery #${i+1}`,
-                    instr: "Read the sentence loud and clear!",
+                    title: `Reading Lab #${i+1}`,
+                    instr: "Try to speak first, then you can listen!",
                     qs: [{ q: s, original: s, isReading: true }]
                 }));
             } else {
@@ -249,6 +245,7 @@
 
         function toggleMic() {
             if (!recognition) return;
+            micUsedOnThisPage = true; // Unlock the Listen button
             if (isListening) recognition.stop();
             else recognition.start();
         }
@@ -264,27 +261,21 @@
             const words = heard.toLowerCase().split(" ");
             let match = 0;
             target.split(" ").forEach(w => { if(words.includes(w)) match++; });
-            
-            if (match / target.split(" ").length >= 0.6) {
-                handleAnswer(0, 0, true);
-            } else {
-                showToast("Try again! 🎤", "#F44336");
-            }
+            if (match / target.split(" ").length >= 0.6) handleAnswer(0, 0, true);
+            else showToast("Try again! 🎤", "#F44336");
         }
 
         function handleAnswer(qIdx, oIdx, isCorrect = null) {
             const key = `${currentPage}-${qIdx}`;
             if (userAnswers[key] !== undefined) return;
-            
             const q = activeData[currentPage].qs[qIdx];
             const finalCorrect = isCorrect !== null ? isCorrect : (oIdx === q.c);
-            
             userAnswers[key] = oIdx;
             if (finalCorrect) {
                 globalScore++;
                 showToast("BINGO! ⭐", "#4CAF50");
             } else {
-                showToast("TRY AGAIN! 🍌", "#F44336");
+                showToast("OOPS! 🍌", "#F44336");
             }
             render();
         }
@@ -299,8 +290,7 @@
 
         function render() {
             const main = document.getElementById('main-view');
-            const scoreVal = document.getElementById('score-val');
-            scoreVal.innerText = globalScore;
+            document.getElementById('score-val').innerText = globalScore;
 
             if (currentView === 'home') {
                 main.innerHTML = `
@@ -316,7 +306,6 @@
             } else if (currentView === 'quiz') {
                 document.getElementById('quiz-footer').classList.remove('hidden');
                 document.getElementById('progress-container').classList.remove('hidden');
-                
                 const data = activeData[currentPage];
                 const progress = ((currentPage + 1) / activeData.length) * 100;
                 document.getElementById('progress-bar').style.width = progress + "%";
@@ -324,50 +313,40 @@
                 if (currentActivityType === 'reading') {
                     const q = data.qs[0];
                     const answered = userAnswers[`${currentPage}-0`] !== undefined;
+                    const canListen = micUsedOnThisPage || answered;
+
                     main.innerHTML = `
                     <div class="text-center max-w-2xl mx-auto">
-                        <h2 class="text-2xl sm:text-3xl font-black mb-6 sm:mb-10 text-purple-600 uppercase">${data.title}</h2>
+                        <h2 class="text-2xl sm:text-3xl font-black mb-6 text-purple-600 uppercase">${data.title}</h2>
                         <div class="card p-6 sm:p-14 mb-8 flex flex-col items-center border-dashed">
-                            <div class="text-2xl sm:text-5xl font-black mb-10 sm:mb-16 text-gray-800 leading-tight">"${q.q}"</div>
-                            
-                            <div class="flex flex-col items-center gap-8 sm:gap-12">
+                            <div class="q-text mb-10 text-gray-800 leading-tight">"${q.q}"</div>
+                            <div class="flex flex-col items-center gap-8">
                                 <div class="relative flex items-center justify-center">
                                     ${isListening ? '<div class="listening-ring"></div>' : ''}
-                                    <button onclick="toggleMic()" class="w-20 h-20 sm:w-28 sm:h-28 rounded-full ${isListening ? 'bg-red-500 shadow-[0_0_20px_#ef4444]' : 'bg-purple-600 shadow-xl'} text-white flex items-center justify-center text-3xl sm:text-5xl z-10 transition-all transform ${answered ? 'opacity-30 grayscale pointer-events-none' : 'hover:scale-110'}">
+                                    <button onclick="toggleMic()" class="w-20 h-20 sm:w-28 sm:h-28 rounded-full ${isListening ? 'bg-red-500' : 'bg-purple-600'} text-white shadow-xl flex items-center justify-center text-3xl sm:text-5xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : ''}">
                                         ${isListening ? '🛑' : '🎤'}
                                     </button>
                                 </div>
-
-                                ${isListening ? `
-                                    <div class="flex items-end gap-1.5 h-8 sm:h-12">
-                                        <div class="wave-bar" style="animation-delay: 0.1s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.4s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.2s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.5s"></div>
-                                        <div class="wave-bar" style="animation-delay: 0.3s"></div>
-                                    </div>
-                                ` : ''}
-
-                                <button onclick="speak('${q.original}')" class="px-8 py-3.5 sm:px-12 sm:py-5 bg-blue-500 text-white rounded-3xl font-black text-lg sm:text-2xl flex items-center gap-3 shadow-xl active:translate-y-1 transition-all uppercase">
-                                    <span>🔊</span> Listen
+                                ${isListening ? `<div class="flex items-end gap-1 h-8"><div class="wave-bar"></div><div class="wave-bar" style="animation-delay:0.2s"></div><div class="wave-bar" style="animation-delay:0.4s"></div></div>` : ''}
+                                <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="px-8 py-3.5 sm:px-12 sm:py-5 bg-blue-500 text-white rounded-3xl font-black text-lg sm:text-2xl shadow-xl transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-1'}">
+                                    🔊 Listen
                                 </button>
-                                
-                                ${answered ? '<div class="text-5xl sm:text-7xl animate-bounce">✅⭐</div>' : ''}
+                                ${answered ? '<div class="text-5xl animate-bounce">✅⭐</div>' : ''}
                             </div>
                         </div>
                     </div>`;
                 } else {
-                    let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-6 sm:p-8 shadow-xl mb-6 sm:mb-8 text-lg sm:text-2xl font-black leading-relaxed text-gray-700">${data.passage}</div></div>` : '';
+                    let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-6 sm:p-8 shadow-xl mb-6 sm:mb-8 passage-text font-black text-gray-700">${data.passage}</div></div>` : '';
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const ans = userAnswers[`${currentPage}-${qIdx}`];
                         const answered = ans !== undefined;
                         return `
-                        <div class="card p-6 sm:p-10 mb-6 sm:mb-8 transform transition-all">
-                            <div class="q-text mb-6 sm:mb-8 text-xl sm:text-3xl text-gray-800 leading-snug">${q.qText || q.q}</div>
+                        <div class="card p-6 sm:p-10 mb-6 sm:mb-8">
+                            <div class="q-text mb-6 sm:mb-8 text-gray-800 leading-snug">${q.qText || q.q}</div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                                 ${q.opts.map((opt, oIdx) => {
-                                    let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "hover:bg-purple-50";
-                                    return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn p-4 sm:p-5 font-black text-base sm:text-xl transition-all ${cls}">${opt}</button>`;
+                                    let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "";
+                                    return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn p-4 sm:p-5 font-black transition-all ${cls}">${opt}</button>`;
                                 }).join('')}
                             </div>
                         </div>`;
@@ -376,7 +355,7 @@
                     main.innerHTML = `
                     <div class="mb-10 text-center px-2">
                         <h2 class="text-2xl sm:text-4xl font-black text-purple-700 uppercase tracking-tight">${data.title}</h2>
-                        <div class="inline-block px-4 py-1 bg-purple-100 text-purple-600 rounded-full font-bold text-xs sm:text-sm mt-1">💡 ${data.instr}</div>
+                        <div class="inline-block px-4 py-1 bg-purple-100 text-purple-600 rounded-full font-bold mt-1 instr-text">💡 ${data.instr}</div>
                     </div>
                     <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-14 items-start' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${qsHtml}</div></div>`;
                 }
@@ -388,18 +367,23 @@
             return em[type] || '✨';
         }
 
-        function handleBack() { currentPage > 0 ? (currentPage--, render(), window.scrollTo(0, 0)) : goHome(); }
-        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render(), window.scrollTo(0, 0)) : finish(); }
+        function handleBack() { 
+            micUsedOnThisPage = false;
+            currentPage > 0 ? (currentPage--, render(), window.scrollTo(0, 0)) : goHome(); 
+        }
+        function nextPage() { 
+            micUsedOnThisPage = false;
+            currentPage < activeData.length - 1 ? (currentPage++, render(), window.scrollTo(0, 0)) : finish(); 
+        }
 
         function finish() {
             currentView = 'results';
             document.getElementById('quiz-footer').classList.add('hidden');
             document.getElementById('progress-container').classList.add('hidden');
-            const main = document.getElementById('main-view');
-            main.innerHTML = `
+            document.getElementById('main-view').innerHTML = `
                 <div class="text-center py-14 max-w-2xl mx-auto px-4">
                     <div class="text-8xl sm:text-9xl mb-8 animate-bounce">👑</div>
-                    <h2 class="text-4xl sm:text-6xl font-black mb-4 text-purple-600">VICTORY!</h2>
+                    <h2 class="text-4xl sm:text-6xl font-black mb-4 text-purple-600 uppercase">Victory!</h2>
                     <p class="text-xl sm:text-3xl font-bold text-gray-500 mb-10">You earned ${globalScore} stars!</p>
                     <button onclick="goHome()" class="px-12 py-5 sm:px-16 sm:py-8 bg-purple-600 text-white rounded-[3rem] font-black text-xl sm:text-3xl shadow-2xl hover:scale-110 active:scale-95 transition-all w-full sm:w-auto uppercase">Play Again 🏠</button>
                 </div>`;
