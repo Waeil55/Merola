@@ -1,76 +1,23 @@
-const writingData = [
-    {
-        title: "Word Writing: Fruit",
-        instr: "Type the word exactly as you see it!",
-        qs: [
-            { q: "apple", target: "apple", isWriting: true },
-            { q: "banana", target: "banana", isWriting: true }
-        ]
-    },
-    {
-        title: "Word Writing: School",
-        instr: "Watch your spelling!",
-        qs: [
-            { q: "teacher", target: "teacher", isWriting: true },
-            { q: "pencil", target: "pencil", isWriting: true }
-        ]
-    },
-    {
-        title: "Word Writing: Colors",
-        instr: "Type these colors!",
-        qs: [
-            { q: "purple", target: "purple", isWriting: true },
-            { q: "orange", target: "orange", isWriting: true }
-        ]
-    },
-    {
-        title: "Sentence Lab: Level 1",
-        instr: "Type the whole sentence. Don't forget the period!",
-        qs: [
-            { q: "I like to play.", target: "I like to play.", isWriting: true }
-        ]
-    },
-    {
-        title: "Sentence Lab: Level 2",
-        instr: "You are doing great! Type this:",
-        qs: [
-            { q: "The sun is hot.", target: "The sun is hot.", isWriting: true }
-        ]
-    },
-    {
-        title: "Sentence Lab: Level 3",
-        instr: "Careful with the spaces!",
-        qs: [
-            { q: "My cat is cute.", target: "My cat is cute.", isWriting: true }
-        ]
-    },
-    {
-        title: "Sentence Lab: Level 4",
-        instr: "Type the sentence below:",
-        qs: [
-            { q: "We go to school.", target: "We go to school.", isWriting: true }
-        ]
-    },
-    {
-        title: "Sentence Lab: Level 5",
-        instr: "Almost a writing pro!",
-        qs: [
-            { q: "The bird can fly.", target: "The bird can fly.", isWriting: true }
-        ]
-    },
-    {
-        title: "Sentence Lab: Level 6",
-        instr: "Type this long one:",
-        qs: [
-            { q: "I have a red ball.", target: "I have a red ball.", isWriting: true }
-        ]
-    },
-    {
-        title: "Writing Master Challenge",
-        instr: "The final writing test!",
-        qs: [
-            { q: "Learning is so much fun!", target: "Learning is so much fun!", isWriting: true }
-        ]
-    }
+const spellingWords = [
+    "apple", "banana", "orange", "grape", "melon", "cherry", "pear", "peach", "berry", "lemon",
+    "green", "yellow", "purple", "orange", "black", "white", "brown", "silver", "golden", "bright",
+    "mother", "father", "sister", "brother", "grandpa", "grandma", "family", "house", "home", "door",
+    "school", "teacher", "pencil", "paper", "book", "desk", "chair", "friend", "learn", "study",
+    "happy", "funny", "silly", "brave", "kind", "sweet", "smart", "quick", "quiet", "proud",
+    "animal", "rabbit", "turtle", "monkey", "tiger", "lion", "zebra", "horse", "puppy", "kitten",
+    "bird", "eagle", "parrot", "duck", "chicken", "snake", "frog", "fish", "whale", "shark",
+    "summer", "winter", "spring", "autumn", "weather", "sunny", "rainy", "snowy", "cloudy", "windy",
+    "monday", "friday", "sunday", "morning", "night", "today", "yesterday", "tomorrow", "clock", "time",
+    "water", "bread", "juice", "milk", "cheese", "snack", "lunch", "dinner", "pizza", "cookie",
+    "jump", "run", "walk", "sing", "dance", "read", "write", "draw", "paint", "sleep",
+    "climb", "swim", "play", "catch", "throw", "shout", "smile", "laugh", "watch", "listen",
+    "small", "large", "heavy", "light", "clean", "dirty", "empty", "full", "short", "tall",
+    "around", "behind", "before", "under", "beside", "inside", "outside", "above", "below", "between",
+    "always", "never", "often", "sometimes", "first", "second", "third", "last", "every", "again",
+    "because", "could", "should", "would", "about", "thing", "think", "bring", "thank", "please",
+    "number", "seven", "eight", "eleven", "twelve", "twenty", "thirty", "forty", "fifty", "hundred",
+    "earth", "planet", "stars", "moon", "space", "rocket", "plane", "truck", "train", "boat",
+    "garden", "forest", "mountain", "river", "ocean", "beach", "island", "bridge", "street", "city",
+    "butterfly", "ladybug", "spider", "insect", "flower", "grass", "leaves", "trees", "plants", "roots"
 ];
 
