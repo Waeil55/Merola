@@ -12,6 +12,7 @@
     <script src="lessonData.js"></script>
     <script src="quizGenerators.js"></script>
     <script src="wordPartsData.js"></script>
+    <script src="storiesData.js"></script>
 
     <style>
         :root {
@@ -79,6 +80,7 @@
         .grammar-gradient { background: linear-gradient(135deg, #03A9F4, #0288D1); }
         .reading-gradient { background: linear-gradient(135deg, #FF5252, #FF1744); }
         .wordparts-gradient { background: linear-gradient(135deg, #6C5CE7, #a29bfe); }
+        .stories-gradient { background: linear-gradient(135deg, #10b981, #059669); }
 
         .coin-img { display: inline-block; vertical-align: middle; filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1)); animation: wiggle 2s infinite ease-in-out; margin: 0 2px; }
         .dark .card { background-color: var(--card-bg); }
@@ -219,6 +221,12 @@
                 case 'wordparts':
                     activeData = wordPartsData;
                     break;
+                case 'stories':
+                    activeData = storiesData.map(s => ({
+                        ...s,
+                        qs: s.qs.map((q, i) => ({ ...q, q: (i+1).toString() }))
+                    }));
+                    break;
                 case 'reading':
                     perPage = 1;
                     const rawSents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I can read."];
@@ -250,7 +258,7 @@
                     break;
             }
 
-            if (type !== 'lesson' && type !== 'reading' && type !== 'wordparts') {
+            if (type !== 'lesson' && type !== 'reading' && type !== 'wordparts' && type !== 'stories') {
                 activeData = [];
                 for (let i = 0; i < baseData.length; i += perPage) {
                     activeData.push({
@@ -305,6 +313,11 @@
                                 <div class="text-6xl mb-4">📖</div>
                                 <h3 class="text-3xl font-black mb-1">Lesson Mastery</h3>
                                 <p class="font-bold opacity-80">Full PDF Review</p>
+                            </div>
+                            <div onclick="startSection('stories')" class="hub-card stories-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">📚</div>
+                                <h3 class="text-3xl font-black mb-1">Story Lab</h3>
+                                <p class="font-bold opacity-80">Reading Comprehension</p>
                             </div>
                             <div onclick="startSection('wordparts')" class="hub-card wordparts-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">🧩</div>
