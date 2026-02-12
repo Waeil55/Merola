@@ -265,6 +265,7 @@
             userAnswers = {};
             currentView = 'quiz';
             render();
+            window.scrollTo(0, 0);
         }
 
         function handleAnswer(qIdx, oIdx) {
@@ -414,8 +415,25 @@
             }
         }
 
-        function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); }
-        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render()) : finish(); }
+        function handleBack() { 
+            if (currentPage > 0) {
+                currentPage--; 
+                render(); 
+                window.scrollTo(0, 0);
+            } else {
+                goHome();
+            }
+        }
+
+        function nextPage() { 
+            if (currentPage < activeData.length - 1) {
+                currentPage++; 
+                render(); 
+                window.scrollTo(0, 0);
+            } else {
+                finish();
+            }
+        }
 
         function finish() {
             currentView = 'results';
@@ -428,6 +446,7 @@
                     <div class="text-8xl font-black text-purple-600 mb-12">${globalScore} ⭐</div>
                     <button onclick="goHome()" class="py-6 px-12 bg-purple-600 text-white rounded-[2.5rem] font-black text-2xl shadow-lg active:scale-95 transition-all">BACK TO BASE! 🏠</button>
                 </div>`;
+            window.scrollTo(0, 0);
         }
 
         window.onload = render;
