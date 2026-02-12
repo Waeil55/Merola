@@ -213,24 +213,36 @@
             window.scrollTo(0, 0);
         }
 
+        // Helper to flatten data for "One Question Each Time"
+        function flattenData(source) {
+            let flat = [];
+            source.forEach(page => {
+                page.qs.forEach(q => {
+                    flat.push({
+                        title: page.title,
+                        instr: page.instr,
+                        passage: page.passage || null,
+                        qs: [q]
+                    });
+                });
+            });
+            return flat;
+        }
+
         function startSection(type) {
             currentActivityType = type;
             micUsedOnThisPage = false;
             
             if (type === 'writing') {
-                const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple", "school", "pencil", "brave", "kind"];
-                const shuffled = shuffle([...wordsSource]);
-                activeData = [];
-                for(let i=0; i<10; i++) {
-                    const pageWords = shuffled.slice(i*5, (i+1)*5);
-                    activeData.push({
-                        title: `Spelling Challenge #${i+1}`,
-                        instr: "Listen carefully and type the word!",
-                        qs: pageWords.map(w => ({ target: w, isWriting: true }))
-                    });
-                }
+                const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple", "school", "pencil"];
+                const shuffled = shuffle([...wordsSource]).slice(0, 50); // limit to 50 for session
+                activeData = shuffled.map((w, i) => ({
+                    title: `Spelling Word #${i+1}`,
+                    instr: "Listen carefully and type the word!",
+                    qs: [{ target: w, isWriting: true }]
+                }));
             } else if (type === 'reading') {
-                const sentsSource = (typeof readingSentences !== 'undefined') ? readingSentences : ["I love learning!", "Reading is fun."];
+                const sentsSource = (typeof readingSentences !== 'undefined') ? readingSentences : ["Reading is fun."];
                 activeData = sentsSource.map((s, i) => ({
                     title: `Reading Mastery #${i+1}`,
                     instr: "Try to speak first, then you can listen!",
@@ -238,14 +250,14 @@
                 }));
             } else {
                 switch(type) {
-                    case 'lesson': activeData = lessonData; break;
-                    case 'stories': activeData = storiesData; break;
-                    case 'wordparts': activeData = wordPartsData; break;
-                    case 'coin': activeData = chunkData(shuffle([...initialCoinData]), 2); break;
-                    case 'time': activeData = chunkData(generateTimeData(), 8); break;
-                    case 'math': activeData = chunkData(generateMathData(), 10); break;
-                    case 'shapes': activeData = chunkData(generateShapesData(), 5); break;
-                    case 'grammar': activeData = chunkData(generateGrammarData(), 10); break;
+                    case 'lesson': activeData = flattenData(lessonData); break;
+                    case 'stories': activeData = flattenData(storiesData); break;
+                    case 'wordparts': activeData = flattenData(wordPartsData); break;
+                    case 'coin': activeData = flattenData([{ qs: shuffle([...initialCoinData]), title: "Coin Lab", instr: "Count the coins!" }]); break;
+                    case 'time': activeData = flattenData([{ qs: generateTimeData(), title: "Time Lab", instr: "Read the clock!" }]); break;
+                    case 'math': activeData = flattenData([{ qs: generateMathData(), title: "Math Lab", instr: "Solve the problem!" }]); break;
+                    case 'shapes': activeData = flattenData([{ qs: generateShapesData(), title: "Shapes Lab", instr: "Identify the shape!" }]); break;
+                    case 'grammar': activeData = flattenData([{ qs: generateGrammarData(), title: "Grammar Lab", instr: "Noun or Verb?" }]); break;
                 }
             }
             
@@ -254,14 +266,6 @@
             currentView = 'quiz';
             render();
             window.scrollTo(0, 0);
-        }
-
-        function chunkData(data, size) {
-            let res = [];
-            for (let i = 0; i < data.length; i += size) {
-                res.push({ title: "Quest Adventure", instr: "Finish all to earn stars!", qs: data.slice(i, i + size) });
-            }
-            return res;
         }
 
         function toggleMic() {
@@ -331,7 +335,6 @@
                         <div onclick="startSection('${type}')" class="hub-card p-6 sm:p-10 text-white text-center shadow-xl ${type}-gradient">
                             <div class="text-4xl sm:text-6xl mb-2 sm:mb-4 drop-shadow-md">${getEmoji(type)}</div>
                             <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight">${type === 'writing' ? 'Spelling' : type.replace('parts', ' parts')}</h3>
-                            <p class="text-white/70 text-[10px] sm:text-sm font-bold mt-1">10+ PAGES</p>
                         </div>
                     `).join('')}
                 </div>`;
@@ -352,7 +355,6 @@
                                 <div class="relative flex items-center justify-center">${isListening ? '<div class="listening-ring"></div>' : ''}
                                     <button onclick="toggleMic()" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full ${isListening ? 'bg-red-500 shadow-[0_0_30px_#ef4444]' : 'bg-purple-600 shadow-xl'} text-white flex items-center justify-center text-4xl sm:text-6xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-110'}">${isListening ? '🛑' : '🎤'}</button>
                                 </div>
-                                <div class="flex items-end gap-1.5 h-10 sm:h-12">${[1,2,3,4,5].map(()=>`<div class="wave-bar" style="animation-delay:${Math.random()}s"></div>`).join('')}</div>
                                 <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="px-10 py-4 sm:px-14 sm:py-5 bg-blue-500 text-white rounded-3xl font-black text-xl sm:text-2xl shadow-xl transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-1'}">🔊 Listen</button>
                                 ${answered ? '<div class="text-6xl sm:text-8xl animate-bounce">✅⭐</div>' : ''}
                             </div>
