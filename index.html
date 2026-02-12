@@ -51,7 +51,14 @@
         .instr-text { font-size: calc(var(--user-font-size) * 0.7) !important; line-height: 1.2; font-weight: bold; }
         .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border-radius: 25px; background: var(--card-bg); box-shadow: 0 6px 0 var(--border-color); border: 2px solid var(--border-color); color: var(--text-color); }
         .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
-        .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6; font-weight: bold; }
+        
+        /* Fixed: Linked passage-text to user-font-size */
+        .passage-text { 
+            font-size: var(--user-font-size) !important; 
+            line-height: 1.6; 
+            font-weight: 900; 
+            font-family: 'Comic Neue', cursive;
+        }
 
         /* Advanced UI Animations */
         @keyframes pulse-ring {
@@ -235,7 +242,7 @@
             
             if (type === 'writing') {
                 const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple", "school", "pencil"];
-                const shuffled = shuffle([...wordsSource]).slice(0, 50); // limit to 50 for session
+                const shuffled = shuffle([...wordsSource]).slice(0, 50); 
                 activeData = shuffled.map((w, i) => ({
                     title: `Spelling Word #${i+1}`,
                     instr: "Listen carefully and type the word!",
@@ -334,7 +341,8 @@
                     ${['lesson', 'stories', 'wordparts', 'reading', 'writing', 'coin', 'time', 'math', 'shapes', 'grammar'].map(type => `
                         <div onclick="startSection('${type}')" class="hub-card p-6 sm:p-10 text-white text-center shadow-xl ${type}-gradient">
                             <div class="text-4xl sm:text-6xl mb-2 sm:mb-4 drop-shadow-md">${getEmoji(type)}</div>
-                            <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight">${type === 'writing' ? 'Spelling' : type.replace('parts', ' parts')}</h3>
+                            <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight font-['Comic_Neue']">${type === 'writing' ? 'Spelling' : type.replace('parts', ' parts')}</h3>
+                            <p class="text-white/70 text-[10px] sm:text-sm font-bold mt-1 uppercase">10+ Pages</p>
                         </div>
                     `).join('')}
                 </div>`;
@@ -370,7 +378,7 @@
                     }).join('');
                     main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-2xl sm:text-3xl font-black mb-4 text-orange-600 uppercase font-['Comic_Neue']">${data.title}</h2><div class="instr-text mb-6">💡 ${data.instr}</div>${qsHtml}</div>`;
                 } else {
-                    let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-6 sm:p-8 shadow-xl mb-6 sm:mb-8 text-lg sm:text-2xl font-black leading-relaxed text-gray-700">${data.passage}</div></div>` : '';
+                    let passageHtml = data.passage ? `<div class="sticky-passage-wrapper"><div class="passage-box p-6 sm:p-8 shadow-xl mb-6 sm:mb-8 passage-text text-gray-700">${data.passage}</div></div>` : '';
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const ans = userAnswers[`${currentPage}-${qIdx}`];
                         const answered = ans !== undefined;
