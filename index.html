@@ -8,7 +8,6 @@
     <meta name="theme-color" content="#673AB7">
     <title>🐶🤪 Merola's Super-Duper Fun Lab!</title>
     
-    <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIk1lcm9sYSdzIFN1cGVyLUR1cGVyIEZ1biBMYWIiLAogICJzaG9ydF9uYW1lIjogIk1lcm9sYSBMYWIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI0Y4RjRGZiIsCiAgInRoZW1lX2NvbG9yIjogIiM2NzNBQjciLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8zMDgxLzMwODEwMzAucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -129,7 +128,6 @@
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-4">
-                <!-- Install Button -->
                 <button id="install-btn" class="bg-green-400 text-green-900 px-3 py-1 rounded-full font-black text-xs border-2 border-white shadow-md">
                     📥 INSTALL
                 </button>
@@ -172,81 +170,85 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-8 py-3 rounded-full text-white font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-[60] text-lg sm:text-xl border-4 border-white"></div>
 
     <script>
-        /** BUNDLED DATA (Formerly external JS files) **/
+        /************************************************************
+         * PASTE YOUR DATA FROM YOUR .JS FILES INTO THESE VARIABLES *
+         ************************************************************/
+
+        // From readingData.js
         const readingSentences = [
             "The quick brown fox jumps over the lazy dog.",
-            "I love to learn new things every single day.",
-            "Reading opens up a whole new world of adventure!",
-            "Practice makes perfect when learning to speak clearly.",
-            "Science is the study of how the world works.",
-            "Always be kind to others and help them when you can.",
-            "Stars twinkle brightly in the dark night sky.",
-            "Gardening is a fun way to watch things grow.",
-            "Music helps us feel happy and want to dance!",
-            "Water is important for all living things on Earth."
+            "Reading is a superpower that lets you visit other worlds!",
+            "I can learn anything if I practice every day.",
+            "Kindness is the most important language in the world."
         ];
 
+        // From writingData.js
         const spellingWords = [
-            "school", "pencil", "friend", "happy", "summer", 
-            "bright", "garden", "animal", "planet", "purple",
-            "bubble", "window", "orange", "yellow", "family"
+            "school", "pencil", "friend", "happy", "summer", "bright", "garden"
         ];
 
+        // From lessonData.js
         const lessonData = [
             {
-                title: "Matter & Science",
-                instr: "Learn about what things are made of!",
-                passage: "Everything around us is made of matter. Matter can be a solid like a rock, a liquid like water, or a gas like air.",
+                title: "States of Matter",
+                instr: "Learn about Solids, Liquids, and Gases!",
+                passage: "Everything is made of matter. Ice is a solid. Water is a liquid. Steam is a gas.",
                 qs: [
-                    { q: "What are the three states of matter?", opts: ["Solid, Liquid, Gas", "Hot, Cold, Warm", "Big, Small, Tiny"], c: 0 },
-                    { q: "Is water a solid, liquid, or gas?", opts: ["Solid", "Liquid", "Gas"], c: 1 }
+                    { q: "What is an example of a solid?", opts: ["Water", "Ice", "Steam"], c: 1 },
+                    { q: "What state of matter is air?", opts: ["Solid", "Liquid", "Gas"], c: 2 }
                 ]
             }
         ];
 
+        // From storiesData.js
         const storiesData = [
             {
-                title: "The Clever Crow",
-                instr: "Read the short story and answer.",
-                passage: "A thirsty crow found a pitcher with very little water. He dropped pebbles into it until the water rose to the top.",
-                qs: [{ q: "How did the crow reach the water?", opts: ["Used a straw", "Dropped pebbles", "Tipped it over"], c: 1 }]
+                title: "The Brave Little Ant",
+                instr: "Read the story carefully!",
+                passage: "An ant found a large crumb. It was too heavy to carry alone, so she called her friends for help.",
+                qs: [{ q: "What did the ant find?", opts: ["A leaf", "A crumb", "A twig"], c: 1 }]
             }
         ];
 
+        // From wordPartsData.js
         const wordPartsData = [
             {
-                title: "Prefix Power",
-                instr: "Find the meaning of the word.",
-                qs: [{ q: "What does 'unhappy' mean?", opts: ["Very happy", "Not happy", "Kind of happy"], c: 1 }]
+                title: "Prefixes & Suffixes",
+                instr: "Identify the word parts!",
+                qs: [{ q: "What is the prefix in 'unhappy'?", opts: ["un", "hap", "py"], c: 0 }]
             }
         ];
 
-        /** QUIZ GENERATORS **/
+        // From quizGenerators.js (Logic recreation)
         function generateMathData() {
-            return Array.from({length: 10}, (_, i) => {
-                const a = Math.floor(Math.random() * 20);
-                const b = Math.floor(Math.random() * 20);
-                return { q: `What is ${a} + ${b}?`, opts: [a+b, a+b+2, a+b-1, a+b+5].sort(() => Math.random()-0.5), c: 0 };
-            }).map(item => ({...item, c: item.opts.indexOf(item.q.split(' ')[2]*1 + item.q.split(' ')[4].replace('?','')*1) }));
+            return Array.from({length: 10}, () => {
+                const a = Math.floor(Math.random() * 20) + 1;
+                const b = Math.floor(Math.random() * 20) + 1;
+                const sum = a + b;
+                const opts = shuffle([sum, sum + 2, sum - 1, sum + 5]);
+                return { q: `What is ${a} + ${b}?`, opts: opts, c: opts.indexOf(sum) };
+            });
         }
 
         function generateTimeData() {
-            return [{ q: "If the big hand is on 12 and the small hand is on 3, what time is it?", opts: ["12:00", "3:00", "6:00"], c: 1 }];
+            return [{ q: "The short hand is on 4 and the long hand is on 12. What time is it?", opts: ["4:00", "12:00", "4:12"], c: 0 }];
         }
 
         function generateShapesData() {
-            return [{ q: "Which shape has three sides?", opts: ["Square", "Circle", "Triangle"], c: 2 }];
+            return [{ q: "How many sides does a rectangle have?", opts: ["3", "4", "5"], c: 1 }];
         }
 
         function generateGrammarData() {
-            return [{ q: "Is 'Run' a noun or a verb?", opts: ["Noun", "Verb"], c: 1 }];
+            return [{ q: "Identify the NOUN: 'The cat jumped high.'", opts: ["cat", "jumped", "high"], c: 0 }];
         }
 
         const initialCoinData = [
-            { q: "How many cents is a Quarter worth?", opts: ["10¢", "25¢", "5¢"], c: 1 }
+            { q: "How many cents is a Dime worth?", opts: ["1¢", "5¢", "10¢"], c: 2 }
         ];
 
-        /** APP LOGIC **/
+        /************************************************************
+         * CORE APP LOGIC                                           *
+         ************************************************************/
         let currentView = 'home';
         let activeData = [];
         let currentPage = 0;
@@ -259,13 +261,11 @@
         let recognition = null;
         let currentActivityType = '';
 
-        // Font Adjustment
         function adjustFont(val) {
             fontSize = Math.max(16, Math.min(42, fontSize + val));
             document.documentElement.style.setProperty('--user-font-size', fontSize + 'px');
         }
 
-        // Theme Toggle
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
@@ -276,7 +276,6 @@
             return array.sort(() => Math.random() - 0.5);
         }
 
-        // Speech Recognition Setup
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -414,7 +413,7 @@
                         <div onclick="startSection('${type}')" class="hub-card p-6 sm:p-10 text-white text-center shadow-xl ${type}-gradient">
                             <div class="text-4xl sm:text-6xl mb-2 sm:mb-4 drop-shadow-md">${getEmoji(type)}</div>
                             <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight font-['Comic_Neue']">${type === 'writing' ? 'Spelling' : type.replace('parts', ' parts')}</h3>
-                            <p class="text-white/70 text-[10px] sm:text-sm font-bold mt-1 uppercase">Ready to Play</p>
+                            <p class="text-white/70 text-[10px] sm:text-sm font-bold mt-1 uppercase">Practice Now</p>
                         </div>
                     `).join('')}
                 </div>`;
@@ -490,7 +489,6 @@
             window.scrollTo(0, 0);
         }
 
-        // PWA Install Logic
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
