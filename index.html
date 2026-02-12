@@ -297,11 +297,14 @@
         }
 
         function flattenData(source) {
+            if (!source || !Array.isArray(source)) return [];
             let flat = [];
             source.forEach(page => {
-                page.qs.forEach(q => {
-                    flat.push({ title: page.title, instr: page.instr, passage: page.passage || null, qs: [q] });
-                });
+                if (page.qs) {
+                    page.qs.forEach(q => {
+                        flat.push({ title: page.title, instr: page.instr, passage: page.passage || null, qs: [q] });
+                    });
+                }
             });
             return flat;
         }
@@ -320,8 +323,8 @@
                 dataToShuffle = shuffle([...sentsSource]).map((s) => ({ title: `Reading Mastery`, instr: "Try to speak first, then you can listen!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
-                    // Imports from lessonData.js
-                    case 'lesson': dataToShuffle = flattenData(lessonData); break;
+                    // Pulling directly from imported lessonData.js
+                    case 'lesson': dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); break;
                     case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
                     case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
                     case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
@@ -332,7 +335,6 @@
                 }
             }
             
-            // Randomize question order every time
             activeData = shuffle([...dataToShuffle]);
             
             if (type === 'writing' && activeData.length > 30) {
@@ -401,6 +403,7 @@
 
             if (currentView === 'home') {
                 main.innerHTML = `<div class="space-y-16 max-w-4xl mx-auto">
+                    <!-- English Section -->
                     <section>
                         <div class="section-header">
                             <div class="section-icon">📕</div>
@@ -415,6 +418,7 @@
                         </div>
                     </section>
                     
+                    <!-- Daily Mission -->
                     <section>
                         <div class="section-header">
                             <div class="section-icon">🎯</div>
@@ -426,6 +430,7 @@
                         </div>
                     </section>
 
+                    <!-- Math Section -->
                     <section>
                         <div class="section-header">
                             <div class="section-icon">🔢</div>
@@ -445,7 +450,7 @@
                 const data = activeData[currentPage], progress = ((currentPage + 1) / activeData.length) * 100;
                 document.getElementById('progress-bar').style.width = progress + "%";
 
-                // NEXT BUTTON LOGIC: Inactive until question is answered
+                // NEXT BUTTON VALIDATION
                 const nextBtn = document.getElementById('next-btn');
                 if (nextBtn) {
                     const isPageAnswered = data.qs.every((_, qIdx) => userAnswers[`${currentPage}-${qIdx}`] !== undefined);
