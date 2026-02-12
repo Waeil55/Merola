@@ -65,7 +65,24 @@
         .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
         .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6 !important; }
         .instruction-text { font-size: calc(var(--user-font-size) * 0.85) !important; line-height: 1.4 !important; }
-        .passage-box { background: var(--passage-bg) !important; border: 4px dotted var(--primary-action) !important; border-radius: 30px !important; position: relative; color: var(--text-color); }
+        
+        /* Sticky Passage Styles */
+        .sticky-passage-wrapper {
+            position: sticky;
+            top: 70px; /* Aligns below the sticky header */
+            z-index: 30;
+            padding-bottom: 1rem;
+        }
+
+        .passage-box { 
+            background: var(--passage-bg) !important; 
+            border: 4px dotted var(--primary-action) !important; 
+            border-radius: 30px !important; 
+            position: relative; 
+            color: var(--text-color); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
         .passage-box::before { content: "📖 Read This! 📖"; position: absolute; top: -15px; left: 20px; background: var(--primary-action); color: white; padding: 2px 15px; border-radius: 10px; font-size: 14px; }
         .correct { background: #4CAF50 !important; border-color: #2E7D32 !important; color: white !important; animation: pop 0.3s infinite; }
         .wrong { background: #F44336 !important; border-color: #B71C1C !important; color: white !important; }
@@ -364,7 +381,13 @@
                 document.getElementById('progress-bar').style.width = `${prog}%`;
                 document.getElementById('page-indicator').innerText = `${currentPage + 1}/${activeData.length}`;
 
-                let passageHtml = data.passage ? `<div class="sticky-passage mb-10"><div class="passage-box p-8 shadow-xl"><p class="font-bold passage-text">${data.passage}</p></div></div>` : '';
+                // Passage uses the wrapper for sticky behavior
+                let passageHtml = data.passage ? `
+                    <div class="sticky-passage-wrapper">
+                        <div class="passage-box p-6 md:p-8 shadow-xl">
+                            <p class="font-bold passage-text">${data.passage}</p>
+                        </div>
+                    </div>` : '';
                 
                 let questionsHtml = '';
                 if (currentActivityType === 'reading') {
@@ -386,7 +409,7 @@
                         const answered = ans !== undefined;
                         return `
                         <div class="card p-8 mb-6">
-                            <div class="font-black mb-6 text-xl q-text">${q.qText ? q.q + " " + q.qText : q.q}</div>
+                            <div class="font-black mb-6 text-xl q-text">${q.qText ? q.qText : q.q}</div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 ${q.opts.map((opt, oIdx) => {
                                     let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "";
@@ -402,7 +425,10 @@
                         <h2 class="font-black text-4xl mb-4 text-purple-600 dark:text-purple-300">${data.title}</h2>
                         <div class="inline-block bg-purple-200 dark:bg-purple-900 px-6 py-2 rounded-full font-bold text-purple-700 dark:text-purple-200">💡 ${data.instr}</div>
                     </div>
-                    <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-16' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${questionsHtml}</div></div>`;
+                    <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-16 items-start' : 'max-w-4xl mx-auto'}">
+                        ${passageHtml}
+                        <div>${questionsHtml}</div>
+                    </div>`;
             }
         }
 
