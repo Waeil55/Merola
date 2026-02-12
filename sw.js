@@ -1,4 +1,4 @@
-const CACHE_NAME = 'merola-v8';
+const CACHE_NAME = 'merola-v9';
 const assets = [
   'index.html',
   'manifest.json',
