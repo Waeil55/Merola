@@ -271,7 +271,7 @@
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
-            document.getElementById('theme-icon').innerText = isDarkMode ? '☀️' : '✨';
+            document.getElementById('theme-icon').innerText = isDarkMode ? '🌙' : '✨';
         }
 
         function shuffle(array) {
@@ -310,25 +310,37 @@
             currentActivityType = type;
             micUsedOnThisPage = false;
             
+            let dataToShuffle = [];
+
             if (type === 'writing') {
                 const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple", "school"];
-                const shuffled = shuffle([...wordsSource]).slice(0, 30); 
-                activeData = shuffled.map((w, i) => ({ title: `Spelling Word #${i+1}`, instr: "Listen carefully and type the word!", qs: [{ target: w, isWriting: true }] }));
+                // Shuffling all words first
+                dataToShuffle = shuffle([...wordsSource]).map((w, i) => ({ title: `Spelling Word`, instr: "Listen carefully and type the word!", qs: [{ target: w, isWriting: true }] }));
             } else if (type === 'reading') {
                 const sentsSource = (typeof readingSentences !== 'undefined') ? readingSentences : ["Reading is fun."];
-                activeData = sentsSource.map((s, i) => ({ title: `Reading Mastery #${i+1}`, instr: "Try to speak first, then you can listen!", qs: [{ q: s, original: s, isReading: true }] }));
+                // Shuffling all sentences
+                dataToShuffle = shuffle([...sentsSource]).map((s, i) => ({ title: `Reading Mastery`, instr: "Try to speak first, then you can listen!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
-                    case 'lesson': activeData = flattenData(lessonData); break;
-                    case 'stories': activeData = flattenData(storiesData); break;
-                    case 'wordparts': activeData = flattenData(wordPartsData); break;
-                    case 'coin': activeData = flattenData([{ qs: shuffle([...initialCoinData]), title: "Coin Lab", instr: "Count the coins!" }]); break;
-                    case 'time': activeData = flattenData([{ qs: generateTimeData(), title: "Time Lab", instr: "Read the clock!" }]); break;
-                    case 'math': activeData = flattenData([{ qs: generateMathData(), title: "Math Lab", instr: "Solve the problem!" }]); break;
-                    case 'shapes': activeData = flattenData([{ qs: generateShapesData(), title: "Shapes Lab", instr: "Identify the shape!" }]); break;
-                    case 'grammar': activeData = flattenData([{ qs: generateGrammarData(), title: "Grammar Lab", instr: "Noun or Verb?" }]); break;
+                    case 'lesson': dataToShuffle = flattenData(lessonData); break;
+                    case 'stories': dataToShuffle = flattenData(storiesData); break;
+                    case 'wordparts': dataToShuffle = flattenData(wordPartsData); break;
+                    case 'coin': dataToShuffle = flattenData([{ qs: initialCoinData, title: "Coin Lab", instr: "Count the coins!" }]); break;
+                    case 'time': dataToShuffle = flattenData([{ qs: generateTimeData(), title: "Time Lab", instr: "Read the clock!" }]); break;
+                    case 'math': dataToShuffle = flattenData([{ qs: generateMathData(), title: "Math Lab", instr: "Solve the problem!" }]); break;
+                    case 'shapes': dataToShuffle = flattenData([{ qs: generateShapesData(), title: "Shapes Lab", instr: "Identify the shape!" }]); break;
+                    case 'grammar': dataToShuffle = flattenData([{ qs: generateGrammarData(), title: "Grammar Lab", instr: "Noun or Verb?" }]); break;
                 }
             }
+            
+            // Final shuffle of the entire collection of pages/questions
+            activeData = shuffle([...dataToShuffle]);
+            
+            // Limit spelling to 30 random words if it's too long, otherwise keep the shuffle
+            if (type === 'writing' && activeData.length > 30) {
+                activeData = activeData.slice(0, 30);
+            }
+
             currentPage = 0; userAnswers = {}; currentView = 'quiz';
             render();
             window.scrollTo(0, 0);
