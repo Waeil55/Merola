@@ -1,4 +1,4 @@
-const CACHE_NAME = 'merola-v5';
+const CACHE_NAME = 'merola-v6';
 const assets = ['merola.html', 'manifest.json', 'readingData.js', 'lessonData.js', 'quizGenerators.js', 'wordPartsData.js', 'storiesData.js', 'writingData.js'];
 
 self.addEventListener('install', (e) => {
