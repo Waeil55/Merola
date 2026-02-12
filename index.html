@@ -63,13 +63,10 @@
         .q-text { font-size: var(--user-font-size) !important; color: var(--text-color) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
         .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border: 3px solid var(--border-color); border-radius: 25px; background: var(--card-bg); color: var(--text-color); box-shadow: 0 6px 0 var(--border-color); margin-bottom: 8px; }
         .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
-        .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6 !important; }
-        .instruction-text { font-size: calc(var(--user-font-size) * 0.85) !important; line-height: 1.4 !important; }
         
-        /* Sticky Passage Styles */
         .sticky-passage-wrapper {
             position: sticky;
-            top: 70px; /* Aligns below the sticky header */
+            top: 70px;
             z-index: 30;
             padding-bottom: 1rem;
         }
@@ -162,28 +159,6 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-8 py-4 rounded-full text-white font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-[60] text-xl border-4 border-white"></div>
 
     <script>
-        // Shared Utilities
-        const COIN_URLS = {
-            c1: "https://raw.githubusercontent.com/Waeil55/roma/main/1.PNG",
-            c5: "https://raw.githubusercontent.com/Waeil55/roma/main/5.PNG",
-            c10: "https://raw.githubusercontent.com/Waeil55/roma/main/10.PNG",
-            c25: "https://raw.githubusercontent.com/Waeil55/roma/main/25.PNG",
-            c100: "https://raw.githubusercontent.com/Waeil55/roma/main/1dollar.PNG"
-        };
-
-        const getCoin = (key) => {
-            const sizes = { c10: '3.5em', c1: '3.8em', c5: '4.2em', c25: '4.8em', c100: '5.2em' }; 
-            return `<img src="${COIN_URLS[key]}" class="coin-img align-middle inline-block mx-1 object-contain max-w-[20vw]" style="height: ${sizes[key]}" alt="${key}">`;
-        };
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
         // Global State
         let currentView = 'home';
         let activeData = [];
@@ -195,6 +170,15 @@
         let recognition = null;
         let isListening = false;
         let currentActivityType = '';
+
+        // Shared Utilities
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         // Init Voice
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -208,7 +192,6 @@
             recognition.onresult = (e) => evaluateSpeech(e.results[0][0].transcript);
         }
 
-        // App Core Functions
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
@@ -232,12 +215,8 @@
             let perPage = 5;
 
             switch(type) {
-                case 'lesson': 
-                    activeData = lessonData; 
-                    break;
-                case 'wordparts':
-                    activeData = wordPartsData;
-                    break;
+                case 'lesson': activeData = lessonData; break;
+                case 'wordparts': activeData = wordPartsData; break;
                 case 'stories':
                     activeData = storiesData.map(s => ({
                         ...s,
@@ -253,29 +232,14 @@
                         qs: [{ q: s, originalText: s, opts: ["Voice Check"], c: 0, isReading: true }]
                     }));
                     break;
-                case 'coin': 
-                    baseData = shuffle([...initialCoinData]); 
-                    perPage = 2; 
-                    break;
-                case 'time': 
-                    baseData = shuffle(generateTimeData()); 
-                    perPage = 8; 
-                    break;
-                case 'math': 
-                    baseData = shuffle(generateMathData()); 
-                    perPage = 10; 
-                    break;
-                case 'shapes': 
-                    baseData = shuffle(generateShapesData()); 
-                    perPage = 5; 
-                    break;
-                case 'grammar': 
-                    baseData = shuffle(generateGrammarData()); 
-                    perPage = 10; 
-                    break;
+                case 'coin': baseData = shuffle([...initialCoinData]); perPage = 2; break;
+                case 'time': baseData = shuffle(generateTimeData()); perPage = 8; break;
+                case 'math': baseData = shuffle(generateMathData()); perPage = 10; break;
+                case 'shapes': baseData = shuffle(generateShapesData()); perPage = 5; break;
+                case 'grammar': baseData = shuffle(generateGrammarData()); perPage = 10; break;
             }
 
-            if (type !== 'lesson' && type !== 'reading' && type !== 'wordparts' && type !== 'stories') {
+            if (['coin', 'time', 'math', 'shapes', 'grammar'].includes(type)) {
                 activeData = [];
                 for (let i = 0; i < baseData.length; i += perPage) {
                     activeData.push({
@@ -329,47 +293,38 @@
                             <div onclick="startSection('lesson')" class="hub-card lesson-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">📖</div>
                                 <h3 class="text-3xl font-black mb-1">Lesson Mastery</h3>
-                                <p class="font-bold opacity-80">Full PDF Review</p>
                             </div>
                             <div onclick="startSection('stories')" class="hub-card stories-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">📚</div>
                                 <h3 class="text-3xl font-black mb-1">Story Lab</h3>
-                                <p class="font-bold opacity-80">Reading Comprehension</p>
                             </div>
                             <div onclick="startSection('wordparts')" class="hub-card wordparts-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">🧩</div>
                                 <h3 class="text-3xl font-black mb-1">Word Parts</h3>
-                                <p class="font-bold opacity-80">Prefix & Suffix Lab</p>
                             </div>
                             <div onclick="startSection('reading')" class="hub-card reading-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">🎙️</div>
                                 <h3 class="text-3xl font-black mb-1">Reading Lab</h3>
-                                <p class="font-bold opacity-80">Listen & Speak</p>
                             </div>
                             <div onclick="startSection('coin')" class="hub-card coin-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">💰</div>
-                                <h3 class="text-3xl font-black mb-1">Coin Math Lab</h3>
-                                <p class="font-bold opacity-80">Money Counting</p>
+                                <h3 class="text-3xl font-black mb-1">Coin Lab</h3>
                             </div>
                             <div onclick="startSection('time')" class="hub-card time-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">⏰</div>
                                 <h3 class="text-3xl font-black mb-1">Time Lab</h3>
-                                <p class="font-bold opacity-80">Read the Clock</p>
                             </div>
                             <div onclick="startSection('math')" class="hub-card math-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">➕</div>
                                 <h3 class="text-3xl font-black mb-1">Math Lab</h3>
-                                <p class="font-bold opacity-80">Math Problems</p>
                             </div>
                             <div onclick="startSection('shapes')" class="hub-card shapes-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">📐</div>
                                 <h3 class="text-3xl font-black mb-1">Shapes Lab</h3>
-                                <p class="font-bold opacity-80">Geometry</p>
                             </div>
                             <div onclick="startSection('grammar')" class="hub-card grammar-gradient p-8 text-white shadow-xl">
                                 <div class="text-6xl mb-4">🖍️</div>
                                 <h3 class="text-3xl font-black mb-1">Grammar Lab</h3>
-                                <p class="font-bold opacity-80">Noun vs Verb</p>
                             </div>
                         </div>
                     </div>`;
@@ -381,7 +336,6 @@
                 document.getElementById('progress-bar').style.width = `${prog}%`;
                 document.getElementById('page-indicator').innerText = `${currentPage + 1}/${activeData.length}`;
 
-                // Passage uses the wrapper for sticky behavior
                 let passageHtml = data.passage ? `
                     <div class="sticky-passage-wrapper">
                         <div class="passage-box p-6 md:p-8 shadow-xl">
@@ -389,36 +343,21 @@
                         </div>
                     </div>` : '';
                 
-                let questionsHtml = '';
-                if (currentActivityType === 'reading') {
-                    const q = data.qs[0];
-                    const answered = userAnswers[`${currentPage}-0`] !== undefined;
-                    questionsHtml = `
-                        <div class="card p-10 text-center">
-                            <div class="text-5xl font-black mb-10 text-purple-600 dark:text-purple-300">"${q.q}"</div>
-                            <div class="flex flex-col items-center gap-6">
-                                <button id="mic-btn" onclick="toggleMic()" ${answered ? 'disabled' : ''} class="w-32 h-32 rounded-full bg-purple-500 text-white flex items-center justify-center text-5xl shadow-xl transition-all active:scale-90 ${answered ? 'opacity-30' : ''}">🎤</button>
-                                <button id="speak-btn" onclick="speakSentence('${q.originalText}')" class="px-8 py-4 bg-blue-500 text-white rounded-full font-black text-xl flex items-center gap-2">🔊 Listen</button>
-                                ${answered ? '<div class="text-5xl animate-bounce">✅⭐</div>' : ''}
-                            </div>
-                        </div>`;
-                } else {
-                    questionsHtml = data.qs.map((q, qIdx) => {
-                        const key = `${currentPage}-${qIdx}`;
-                        const ans = userAnswers[key];
-                        const answered = ans !== undefined;
-                        return `
-                        <div class="card p-8 mb-6">
-                            <div class="font-black mb-6 text-xl q-text">${q.qText ? q.qText : q.q}</div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                ${q.opts.map((opt, oIdx) => {
-                                    let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "";
-                                    return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn w-full py-4 px-2 font-bold transition-all ${cls}">${opt}</button>`;
-                                }).join('')}
-                            </div>
-                        </div>`;
-                    }).join('');
-                }
+                let questionsHtml = data.qs.map((q, qIdx) => {
+                    const key = `${currentPage}-${qIdx}`;
+                    const ans = userAnswers[key];
+                    const answered = ans !== undefined;
+                    return `
+                    <div class="card p-8 mb-6">
+                        <div class="font-black mb-6 text-xl q-text">${q.qText ? q.qText : q.q}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${q.opts.map((opt, oIdx) => {
+                                let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "";
+                                return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn w-full py-4 px-2 font-bold transition-all ${cls}">${opt}</button>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                }).join('');
 
                 main.innerHTML = `
                     <div class="mb-14 text-center">
@@ -432,47 +371,19 @@
             }
         }
 
-        // Helpers for UI state
-        function toggleMic() {
-            if (!recognition) return;
-            isListening ? recognition.stop() : recognition.start();
-        }
-
-        function speakSentence(txt) {
-            const msg = new SpeechSynthesisUtterance(txt);
-            window.speechSynthesis.speak(msg);
-        }
+        function toggleMic() { recognition && (isListening ? recognition.stop() : recognition.start()); }
+        function speakSentence(txt) { window.speechSynthesis.speak(new SpeechSynthesisUtterance(txt)); }
 
         function evaluateSpeech(heard) {
             const target = activeData[currentPage].qs[0].originalText.toLowerCase().replace(/[.,!?;:]/g, "");
-            const heardWords = heard.toLowerCase().split(" ");
-            const targetWords = target.split(" ");
+            const words = heard.toLowerCase().split(" ");
             let matches = 0;
-            targetWords.forEach(w => { if(heardWords.includes(w)) matches++; });
-            if (matches / targetWords.length >= 0.6) {
-                handleAnswer(0, 0);
-            }
+            target.split(" ").forEach(w => { if(words.includes(w)) matches++; });
+            if (matches / target.split(" ").length >= 0.6) handleAnswer(0, 0);
         }
 
-        function handleBack() { 
-            if (currentPage > 0) {
-                currentPage--; 
-                render(); 
-                window.scrollTo(0, 0);
-            } else {
-                goHome();
-            }
-        }
-
-        function nextPage() { 
-            if (currentPage < activeData.length - 1) {
-                currentPage++; 
-                render(); 
-                window.scrollTo(0, 0);
-            } else {
-                finish();
-            }
-        }
+        function handleBack() { currentPage > 0 ? (currentPage--, render(), window.scrollTo(0, 0)) : goHome(); }
+        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render(), window.scrollTo(0, 0)) : finish(); }
 
         function finish() {
             currentView = 'results';
