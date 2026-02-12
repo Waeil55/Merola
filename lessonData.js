@@ -1,4 +1,3 @@
-
 const lessonData = [
     {
         title: "Lesson 1: Antonyms",
@@ -7,7 +6,35 @@ const lessonData = [
             { q: "Opposite of <u>hot</u>", opts: ["warm", "cold", "sunny", "burn"], c: 1 },
             { q: "Opposite of <u>big</u>", opts: ["large", "huge", "small", "tall"], c: 2 },
             { q: "Opposite of <u>happy</u>", opts: ["glad", "sad", "silly", "fun"], c: 1 },
-            { q: "Opposite of <u>fast</u>", opts: ["quick", "slow", "run", "race"], c: 1 }
+            { q: "Opposite of <u>fast</u>", opts: ["quick", "slow", "run", "race"], c: 1 },
+            { q: "Opposite of <u>up</u>", opts: ["high", "top", "down", "over"], c: 2 },
+            { q: "Opposite of <u>in</u>", opts: ["out", "into", "inside", "on"], c: 0 },
+            { q: "Opposite of <u>left</u>", opts: ["wrong", "right", "back", "side"], c: 1 },
+            { q: "Opposite of <u>dark</u>", opts: ["black", "night", "light", "dim"], c: 2 },
+            { q: "Opposite of <u>push</u>", opts: ["shove", "pull", "kick", "move"], c: 1 },
+            { q: "Opposite of <u>open</u>", opts: ["shut", "door", "wide", "start"], c: 0 },
+            { q: "Opposite of <u>empty</u>", opts: ["full", "glass", "gone", "nothing"], c: 0 },
+            { q: "Opposite of <u>heavy</u>", opts: ["light", "weight", "hard", "soft"], c: 0 },
+            { q: "Opposite of <u>wet</u>", opts: ["water", "dry", "rain", "damp"], c: 1 },
+            { q: "Opposite of <u>clean</u>", opts: ["neat", "dirty", "wash", "new"], c: 1 },
+            { q: "Opposite of <u>soft</u>", opts: ["hard", "pillow", "gentle", "smooth"], c: 0 },
+            { q: "Opposite of <u>win</u>", opts: ["lose", "game", "first", "play"], c: 0 },
+            { q: "Opposite of <u>young</u>", opts: ["baby", "old", "new", "kid"], c: 1 },
+            { q: "Opposite of <u>short</u>", opts: ["small", "long", "tiny", "little"], c: 1 },
+            { q: "Opposite of <u>above</u>", opts: ["over", "below", "high", "near"], c: 1 },
+            { q: "Opposite of <u>early</u>", opts: ["late", "morning", "soon", "fast"], c: 0 },
+            { q: "Opposite of <u>quiet</u>", opts: ["silent", "noisy", "calm", "still"], c: 1 },
+            { q: "Opposite of <u>true</u>", opts: ["real", "false", "right", "yes"], c: 1 },
+            { q: "Opposite of <u>give</u>", opts: ["take", "hand", "send", "present"], c: 0 },
+            { q: "Opposite of <u>laugh</u>", opts: ["smile", "cry", "giggle", "joke"], c: 1 },
+            { q: "Opposite of <u>brave</u>", opts: ["strong", "scared", "bold", "hero"], c: 1 },
+            { q: "Opposite of <u>thick</u>", opts: ["wide", "thin", "heavy", "fat"], c: 1 },
+            { q: "Opposite of <u>front</u>", opts: ["side", "back", "top", "first"], c: 1 },
+            { q: "Opposite of <u>sharp</u>", opts: ["pointy", "dull", "knife", "edge"], c: 1 },
+            { q: "Opposite of <u>easy</u>", opts: ["simple", "hard", "fun", "quick"], c: 1 },
+            { q: "Opposite of <u>near</u>", opts: ["far", "close", "next", "here"], c: 0 },
+            { q: "Opposite of <u>start</u>", opts: ["begin", "finish", "go", "ready"], c: 1 },
+            { q: "Opposite of <u>boy</u>", opts: ["man", "girl", "child", "friend"], c: 1 }
         ]
     },
     {
@@ -17,17 +44,73 @@ const lessonData = [
             { q: "Synonym of <u>small</u>", opts: ["big", "tiny", "large", "huge"], c: 1 },
             { q: "Synonym of <u>fast</u>", opts: ["slow", "quick", "lazy", "crawl"], c: 1 },
             { q: "Synonym of <u>glad</u>", opts: ["sad", "mad", "happy", "grumpy"], c: 2 },
-            { q: "Synonym of <u>scared</u>", opts: ["brave", "afraid", "happy", "bold"], c: 1 }
+            { q: "Synonym of <u>scared</u>", opts: ["brave", "afraid", "happy", "bold"], c: 1 },
+            { q: "Synonym of <u>angry</u>", opts: ["mad", "calm", "cool", "nice"], c: 0 },
+            { q: "Synonym of <u>neat</u>", opts: ["tidy", "messy", "dirty", "lost"], c: 0 },
+            { q: "Synonym of <u>gift</u>", opts: ["box", "present", "toy", "card"], c: 1 },
+            { q: "Synonym of <u>yell</u>", opts: ["whisper", "shout", "talk", "sing"], c: 1 },
+            { q: "Synonym of <u>simple</u>", opts: ["hard", "easy", "rough", "tough"], c: 1 },
+            { q: "Synonym of <u>silent</u>", opts: ["loud", "quiet", "noisy", "sound"], c: 1 },
+            { q: "Synonym of <u>cold</u>", opts: ["hot", "chilly", "warm", "sunny"], c: 1 },
+            { q: "Synonym of <u>start</u>", opts: ["stop", "begin", "end", "finish"], c: 1 },
+            { q: "Synonym of <u>smart</u>", opts: ["dumb", "clever", "silly", "slow"], c: 1 },
+            { q: "Synonym of <u>large</u>", opts: ["tiny", "huge", "small", "thin"], c: 1 },
+            { q: "Synonym of <u>rock</u>", opts: ["sand", "stone", "water", "tree"], c: 1 },
+            { q: "Synonym of <u>center</u>", opts: ["middle", "edge", "side", "back"], c: 0 },
+            { q: "Synonym of <u>friend</u>", opts: ["enemy", "buddy", "stranger", "foe"], c: 1 },
+            { q: "Synonym of <u>ill</u>", opts: ["well", "sick", "healthy", "strong"], c: 1 },
+            { q: "Synonym of <u>tasty</u>", opts: ["bad", "yummy", "gross", "bitter"], c: 1 },
+            { q: "Synonym of <u>leap</u>", opts: ["run", "jump", "walk", "sit"], c: 1 },
+            { q: "Synonym of <u>correct</u>", opts: ["wrong", "right", "bad", "false"], c: 1 },
+            { q: "Synonym of <u>help</u>", opts: ["hinder", "aid", "hurt", "stop"], c: 1 },
+            { q: "Synonym of <u>sleepy</u>", opts: ["awake", "tired", "busy", "energetic"], c: 1 },
+            { q: "Synonym of <u>broad</u>", opts: ["narrow", "wide", "thin", "short"], c: 1 },
+            { q: "Synonym of <u>rich</u>", opts: ["poor", "wealthy", "needy", "low"], c: 1 },
+            { q: "Synonym of <u>choose</u>", opts: ["take", "select", "lose", "keep"], c: 1 },
+            { q: "Synonym of <u>ocean</u>", opts: ["lake", "sea", "river", "pond"], c: 1 },
+            { q: "Synonym of <u>couch</u>", opts: ["sofa", "chair", "bed", "table"], c: 0 },
+            { q: "Synonym of <u>trash</u>", opts: ["food", "garbage", "clean", "stuff"], c: 1 },
+            { q: "Synonym of <u>above</u>", opts: ["below", "over", "under", "beside"], c: 1 },
+            { q: "Synonym of <u>road</u>", opts: ["grass", "street", "house", "field"], c: 1 },
+            { q: "Synonym of <u>child</u>", opts: ["adult", "kid", "man", "woman"], c: 1 }
         ]
     },
     {
         title: "Lesson 3: Homographs",
         instr: "One word, two meanings!",
         qs: [
-            { q: "I have a ___ of gum. / Help me ___ my bag.", opts: ["pack", "stick", "roll", "box"], c: 0 },
+            { q: "I have a ___ of gum. / Help me ___ my bag.", opts: ["pack", "stick", "roll", "box"], c: 1 },
             { q: "Turn on the ___ to cool down. / I am a big ___ of that team.", opts: ["air", "fan", "wind", "player"], c: 1 },
             { q: "Look at your ___ to see the time. / I like to ___ movies.", opts: ["clock", "watch", "show", "screen"], c: 1 },
-            { q: "The bird has a sharp ___. / Please pay the ___.", opts: ["beak", "bill", "wing", "check"], c: 1 }
+            { q: "The bird has a sharp ___. / Please pay the ___.", opts: ["beak", "bill", "wing", "check"], c: 1 },
+            { q: "The tree has thick ___. / The dog will ___ at the mailman.", opts: ["bark", "leaf", "root", "wood"], c: 0 },
+            { q: "A flying ___ lives in a cave. / Hit the ball with a baseball ___.", opts: ["bird", "bat", "plane", "bug"], c: 1 },
+            { q: "I wore a red ___ in my hair. / Please ___ down to the queen.", opts: ["tie", "bow", "hat", "ribbon"], c: 1 },
+            { q: "The ___ of the wave was high. / Wash your hands in the ___.", opts: ["water", "sink", "boat", "towel"], c: 1 },
+            { q: "I have a gold ___ on my finger. / Did the telephone ___?", opts: ["bell", "ring", "band", "call"], c: 1 },
+            { q: "The ocean ___ hit the sand. / Please ___ goodbye to me.", opts: ["wave", "tide", "hand", "water"], c: 0 },
+            { q: "A turtle can hide in its ___. / Put the sea ___ next to your ear.", opts: ["house", "shell", "skin", "back"], c: 1 },
+            { q: "I will write with my ___ hand. / You got the answer ___.", opts: ["left", "right", "good", "best"], c: 1 },
+            { q: "I will ___ the letter today. / The ___ of the ship is strong.", opts: ["post", "mail", "send", "box"], c: 1 },
+            { q: "A duck has a flat ___. / Please pay the ___.", opts: ["bill", "beak", "mouth", "nose"], c: 0 },
+            { q: "The ___ is green in the park. / The ___ is open from 9 to 5.", opts: ["grass", "bank", "river", "store"], c: 1 },
+            { q: "I found a ___ on the beach. / ___ the nuts for the cake.", opts: ["shell", "rock", "crack", "sand"], c: 2 },
+            { q: "The light is too ___. / You are a ___ student.", opts: ["bright", "shiny", "smart", "white"], c: 0 },
+            { q: "Put a ___ on the letter. / The horses ___ their feet.", opts: ["seal", "stamp", "mark", "sticker"], c: 1 },
+            { q: "The ___ are in the sky. / I love to ___ movies.", opts: ["sun", "star", "moon", "cloud"], c: 1 },
+            { q: "A ___ of matches. / They wear a ___ing outfit.", opts: ["box", "match", "pair", "set"], c: 1 },
+            { q: "I can ___ the music. / The ___ is a baby deer.", opts: ["hear", "sound", "play", "fawn"], c: 3 },
+            { q: "The rose is a pretty ___. / The water began to ___.", opts: ["spring", "flower", "well", "bloom"], c: 1 },
+            { q: "The ___ is where birds live. / ___ your toys in the box.", opts: ["tree", "nest", "place", "rest"], c: 1 },
+            { q: "Use a ___ to measure. / The king is a fair ___.", opts: ["stick", "ruler", "line", "man"], c: 1 },
+            { q: "I will ___ the door. / We are very ___ friends.", opts: ["shut", "close", "near", "open"], c: 1 },
+            { q: "A ___ of water. / Do not ___ your ice cream.", opts: ["drop", "cup", "melt", "spill"], c: 0 },
+            { q: "The ___ of the book is long. / Do not ___ the flower.", opts: ["page", "story", "pick", "read"], c: 2 },
+            { q: "A cold ___ blew in. / ___ the string around.", opts: ["wind", "breeze", "air", "turn"], c: 0 },
+            { q: "The ___ of the pencil is sharp. / He is the ___ of the team.", opts: ["tip", "point", "lead", "end"], c: 2 },
+            { q: "I will ___ for my food. / A ___ is a small bird.", opts: ["pay", "bill", "check", "duck"], c: 1 },
+            { q: "The ___ is a heavy metal. / I will ___ the group.", opts: ["iron", "lead", "gold", "silver"], c: 1 },
+            { q: "I will ___ the present. / The ___ is here now.", opts: ["gift", "present", "now", "box"], c: 1 }
         ]
     },
     {
@@ -37,7 +120,35 @@ const lessonData = [
             { q: "sun + flower =", opts: ["sunshine", "flowerpot", "sunflower", "garden"], c: 2 },
             { q: "rain + bow =", opts: ["rainbow", "raincoat", "raindrop", "snowbow"], c: 0 },
             { q: "butter + fly =", opts: ["buttercup", "butterfly", "flybutter", "dragonfly"], c: 1 },
-            { q: "back + pack =", opts: ["backpack", "package", "backside", "backyard"], c: 0 }
+            { q: "back + pack =", opts: ["backpack", "package", "backside", "backyard"], c: 0 },
+            { q: "star + fish =", opts: ["starfish", "fishstar", "starry", "fishing"], c: 0 },
+            { q: "cow + boy =", opts: ["cowgirl", "cowboy", "cattle", "horseman"], c: 1 },
+            { q: "cup + cake =", opts: ["cupcake", "pancake", "bake", "sweet"], c: 0 },
+            { q: "mail + box =", opts: ["mailbox", "mailman", "post", "letter"], c: 0 },
+            { q: "snow + man =", opts: ["snowball", "snowman", "snowy", "winter"], c: 1 },
+            { q: "bed + room =", opts: ["bedroom", "bedspread", "sleep", "house"], c: 0 },
+            { q: "basket + ball =", opts: ["football", "basketball", "hoop", "game"], c: 1 },
+            { q: "tooth + brush =", opts: ["toothpaste", "toothbrush", "teeth", "clean"], c: 1 },
+            { q: "pan + cake =", opts: ["cupcake", "pancake", "breakfast", "bread"], c: 1 },
+            { q: "fire + fly =", opts: ["fireman", "firefly", "bug", "light"], c: 1 },
+            { q: "jelly + fish =", opts: ["starfish", "jellyfish", "ocean", "swim"], c: 1 },
+            { q: "day + dream =", opts: ["nightmare", "daydream", "sleep", "think"], c: 1 },
+            { q: "pop + corn =", opts: ["popcorn", "soda", "kernel", "snack"], c: 0 },
+            { q: "earth + quake =", opts: ["earthquake", "shaking", "ground", "dirt"], c: 0 },
+            { q: "key + board =", opts: ["piano", "keyboard", "computer", "typing"], c: 1 },
+            { q: "hand + shake =", opts: ["handshake", "greeting", "wave", "hello"], c: 0 },
+            { q: "light + house =", opts: ["lighthouse", "lamp", "tower", "ocean"], c: 0 },
+            { q: "note + book =", opts: ["paper", "notebook", "writing", "school"], c: 1 },
+            { q: "sand + castle =", opts: ["sandcastle", "beach", "tower", "sand"], c: 0 },
+            { q: "skate + board =", opts: ["roller", "skateboard", "wheels", "ride"], c: 1 },
+            { q: "sun + burn =", opts: ["sunlight", "sunburn", "hot", "beach"], c: 1 },
+            { q: "table + cloth =", opts: ["napkin", "tablecloth", "fabric", "dinner"], c: 1 },
+            { q: "under + water =", opts: ["underwater", "ocean", "swim", "wet"], c: 0 },
+            { q: "wheel + chair =", opts: ["bicycle", "wheelchair", "ride", "seat"], c: 1 },
+            { q: "dragon + fly =", opts: ["butterfly", "dragonfly", "bug", "wing"], c: 1 },
+            { q: "door + bell =", opts: ["doorbell", "knock", "ring", "house"], c: 0 },
+            { q: "ear + ring =", opts: ["earring", "jewelry", "earlobe", "gold"], c: 0 },
+            { q: "foot + ball =", opts: ["soccer", "football", "sport", "game"], c: 1 }
         ]
     },
     {
@@ -47,7 +158,35 @@ const lessonData = [
             { q: "One dog, many ___", opts: ["doges", "dogs", "dogging", "dogly"], c: 1 },
             { q: "One cat, many ___", opts: ["cats", "cates", "catty", "catted"], c: 0 },
             { q: "One box, many ___", opts: ["boxs", "boxes", "boxing", "boxly"], c: 1 },
-            { q: "One dish, many ___", opts: ["dishs", "dishes", "dished", "dishing"], c: 1 }
+            { q: "One dish, many ___", opts: ["dishs", "dishes", "dished", "dishing"], c: 1 },
+            { q: "One book, many ___", opts: ["bookes", "books", "booking", "bookly"], c: 1 },
+            { q: "One pencil, many ___", opts: ["penciles", "pencils", "pencil", "pencilling"], c: 1 },
+            { q: "One fox, many ___", opts: ["foxes", "foxs", "foxy", "foxing"], c: 0 },
+            { q: "One bus, many ___", opts: ["buses", "buss", "busing", "busly"], c: 0 },
+            { q: "One lunch, many ___", opts: ["lunchs", "lunches", "lunching", "lunched"], c: 1 },
+            { q: "One brush, many ___", opts: ["brushs", "brushes", "brushing", "brushly"], c: 1 },
+            { q: "One church, many ___", opts: ["churchs", "churches", "churchy", "churched"], c: 1 },
+            { q: "One glass, many ___", opts: ["glasss", "glasses", "glassy", "glassing"], c: 1 },
+            { q: "One kiss, many ___", opts: ["kisss", "kisses", "kissing", "kissed"], c: 1 },
+            { q: "One potato, many ___", opts: ["potatos", "potatoes", "potatoed", "potatoly"], c: 1 },
+            { q: "One tomato, many ___", opts: ["tomatos", "tomatoes", "tomatoing", "tomatosly"], c: 1 },
+            { q: "One hero, many ___", opts: ["heros", "heroes", "heroic", "heroing"], c: 1 },
+            { q: "One baby, many ___", opts: ["babys", "babies", "babying", "babied"], c: 1 },
+            { q: "One city, many ___", opts: ["citys", "cities", "citying", "citied"], c: 1 },
+            { q: "One lady, many ___", opts: ["ladys", "ladies", "ladying", "ladied"], c: 1 },
+            { q: "One fly, many ___", opts: ["flys", "flies", "flying", "flied"], c: 1 },
+            { q: "One puppy, many ___", opts: ["puppys", "puppies", "pupping", "pupped"], c: 1 },
+            { q: "One leaf, many ___", opts: ["leafs", "leaves", "leafes", "leafy"], c: 1 },
+            { q: "One knife, many ___", opts: ["knifes", "knives", "knifing", "knifed"], c: 1 },
+            { q: "One wolf, many ___", opts: ["wolfs", "wolves", "wolfing", "wolfed"], c: 1 },
+            { q: "One life, many ___", opts: ["lifes", "lives", "living", "lived"], c: 1 },
+            { q: "One shelf, many ___", opts: ["shelfs", "shelves", "shelving", "shelfed"], c: 1 },
+            { q: "One tree, many ___", opts: ["trees", "treees", "treeing", "treely"], c: 0 },
+            { q: "One cup, many ___", opts: ["cups", "cupes", "cupping", "cuply"], c: 0 },
+            { q: "One egg, many ___", opts: ["eggs", "egges", "egging", "eggy"], c: 0 },
+            { q: "One ball, many ___", opts: ["balls", "balles", "balling", "bally"], c: 0 },
+            { q: "One shoe, many ___", opts: ["shoes", "shoees", "shoeing", "shoely"], c: 0 },
+            { q: "One toy, many ___", opts: ["toys", "toyes", "toying", "toyed"], c: 0 }
         ]
     },
     {
@@ -57,7 +196,35 @@ const lessonData = [
             { q: "The boy ___ to school.", opts: ["apple", "runs", "happy", "green"], c: 1 },
             { q: "I ___ a book every night.", opts: ["read", "blue", "pencil", "sleepy"], c: 0 },
             { q: "We ___ in the pool.", opts: ["swim", "water", "wet", "fish"], c: 0 },
-            { q: "Birds ___ in the sky.", opts: ["fly", "cloud", "wings", "high"], c: 0 }
+            { q: "Birds ___ in the sky.", opts: ["fly", "cloud", "wings", "high"], c: 0 },
+            { q: "She ___ a beautiful song.", opts: ["sings", "music", "loud", "happy"], c: 0 },
+            { q: "The frog ___ into the pond.", opts: ["jumps", "green", "water", "wet"], c: 0 },
+            { q: "He ___ his milk.", opts: ["drinks", "glass", "white", "cold"], c: 0 },
+            { q: "My dad ___ the car.", opts: ["drives", "road", "fast", "red"], c: 0 },
+            { q: "We ___ our lunch at noon.", opts: ["eat", "food", "yummy", "bread"], c: 0 },
+            { q: "The baby ___ all night.", opts: ["sleeps", "bed", "tired", "quiet"], c: 0 },
+            { q: "The cat ___ the mouse.", opts: ["chased", "tail", "fast", "furry"], c: 0 },
+            { q: "I ___ with my pencil.", opts: ["write", "paper", "yellow", "eraser"], c: 0 },
+            { q: "She ___ a pretty picture.", opts: ["draws", "crayons", "art", "blue"], c: 0 },
+            { q: "They ___ in the park.", opts: ["play", "slide", "fun", "grass"], c: 0 },
+            { q: "The wind ___ through the trees.", opts: ["blows", "cold", "leaf", "air"], c: 0 },
+            { q: "He ___ the ball to me.", opts: ["throws", "catch", "round", "play"], c: 0 },
+            { q: "I ___ to my teacher.", opts: ["listen", "ear", "school", "quiet"], c: 0 },
+            { q: "She ___ for the bus.", opts: ["waits", "stop", "yellow", "late"], c: 0 },
+            { q: "We ___ up the stairs.", opts: ["climb", "high", "step", "house"], c: 0 },
+            { q: "The sun ___ in the morning.", opts: ["shines", "hot", "yellow", "sky"], c: 0 },
+            { q: "He ___ a funny joke.", opts: ["tells", "laugh", "happy", "silly"], c: 0 },
+            { q: "I ___ my room.", opts: ["clean", "neat", "bed", "closet"], c: 0 },
+            { q: "The dog ___ loudly.", opts: ["barks", "tail", "furry", "brown"], c: 0 },
+            { q: "We ___ on the floor.", opts: ["sit", "chair", "rug", "down"], c: 0 },
+            { q: "The horse ___ fast.", opts: ["gallops", "ride", "farm", "brown"], c: 0 },
+            { q: "She ___ her hair.", opts: ["brushes", "mirror", "pretty", "long"], c: 0 },
+            { q: "He ___ a tall tower.", opts: ["builds", "blocks", "high", "play"], c: 0 },
+            { q: "I ___ my new shoes.", opts: ["wear", "feet", "socks", "blue"], c: 0 },
+            { q: "The fish ___ in the sea.", opts: ["swim", "water", "scales", "wet"], c: 0 },
+            { q: "They ___ to the store.", opts: ["walk", "road", "shoes", "near"], c: 0 },
+            { q: "He ___ at the funny clown.", opts: ["laughs", "smile", "silly", "joke"], c: 0 },
+            { q: "The rain ___ on the roof.", opts: ["falls", "water", "wet", "cloud"], c: 0 }
         ]
     },
     {
@@ -67,7 +234,35 @@ const lessonData = [
             { q: "The ___ apple was yummy.", opts: ["run", "red", "eat", "fast"], c: 1 },
             { q: "The puppy is very ___.", opts: ["jump", "cute", "bark", "tail"], c: 1 },
             { q: "It was a ___ day.", opts: ["sun", "sunny", "sky", "blue"], c: 1 },
-            { q: "I have a ___ ball.", opts: ["round", "spin", "bounce", "play"], c: 0 }
+            { q: "I have a ___ ball.", opts: ["round", "spin", "bounce", "play"], c: 0 },
+            { q: "The elephant is ___.", opts: ["tiny", "huge", "small", "thin"], c: 1 },
+            { q: "The lemon is ___.", opts: ["sweet", "sour", "blue", "salty"], c: 1 },
+            { q: "The kitten has ___ fur.", opts: ["soft", "bark", "run", "meow"], c: 0 },
+            { q: "The car went down the ___ road.", opts: ["fast", "long", "drive", "wheel"], c: 1 },
+            { q: "I wore a ___ shirt.", opts: ["blue", "wear", "pants", "closet"], c: 0 },
+            { q: "The giant was very ___.", opts: ["tall", "short", "tiny", "little"], c: 0 },
+            { q: "The soup was very ___.", opts: ["cold", "hot", "ice", "frozen"], c: 1 },
+            { q: "The bunny is ___.", opts: ["loud", "quiet", "noisy", "scream"], c: 1 },
+            { q: "The rock is ___.", opts: ["hard", "soft", "fluffy", "squishy"], c: 0 },
+            { q: "The ice cream is ___.", opts: ["hot", "cold", "warm", "spicy"], c: 1 },
+            { q: "She has ___ hair.", opts: ["long", "walk", "sing", "head"], c: 0 },
+            { q: "The monster was ___.", opts: ["scary", "nice", "kind", "funny"], c: 0 },
+            { q: "The candy is ___.", opts: ["sweet", "sour", "bitter", "salty"], c: 0 },
+            { q: "The bed is ___.", opts: ["hard", "comfy", "wood", "floor"], c: 1 },
+            { q: "The clown was ___.", opts: ["sad", "funny", "mad", "angry"], c: 1 },
+            { q: "The sky is ___.", opts: ["green", "blue", "red", "purple"], c: 1 },
+            { q: "The turtle is ___.", opts: ["fast", "slow", "quick", "speedy"], c: 1 },
+            { q: "The sun is ___.", opts: ["bright", "dark", "dim", "black"], c: 0 },
+            { q: "The pillow is ___.", opts: ["hard", "soft", "heavy", "rough"], c: 1 },
+            { q: "The diamond is ___.", opts: ["shiny", "dull", "dirty", "old"], c: 0 },
+            { q: "The mouse is ___.", opts: ["big", "small", "huge", "tall"], c: 1 },
+            { q: "The rain makes things ___.", opts: ["dry", "wet", "hot", "dusty"], c: 1 },
+            { q: "The cake was ___.", opts: ["yummy", "bad", "bitter", "sour"], c: 0 },
+            { q: "He is a ___ boy.", opts: ["kind", "run", "jump", "play"], c: 0 },
+            { q: "The stars are ___.", opts: ["pretty", "dark", "ground", "near"], c: 0 },
+            { q: "The music was ___.", opts: ["loud", "see", "smell", "blue"], c: 0 },
+            { q: "The box is ___.", opts: ["empty", "full", "heavy", "all of these"], c: 3 },
+            { q: "The grass is ___.", opts: ["pink", "green", "blue", "red"], c: 1 }
         ]
     },
     {
@@ -77,7 +272,35 @@ const lessonData = [
             { q: "Which is a special name?", opts: ["boy", "girl", "Merola", "friend"], c: 2 },
             { q: "Which is a special place?", opts: ["school", "Egypt", "park", "store"], c: 1 },
             { q: "Which is a day of the week?", opts: ["today", "Monday", "morning", "night"], c: 1 },
-            { q: "Which is a month?", opts: ["winter", "July", "summer", "week"], c: 1 }
+            { q: "Which is a month?", opts: ["winter", "July", "summer", "week"], c: 1 },
+            { q: "Which is a name for a cat?", opts: ["kitten", "Whiskers", "animal", "pet"], c: 1 },
+            { q: "Which is a city?", opts: ["town", "London", "village", "street"], c: 1 },
+            { q: "Which is a country?", opts: ["land", "Canada", "place", "state"], c: 1 },
+            { q: "Which is a holiday?", opts: ["party", "Christmas", "day", "gift"], c: 1 },
+            { q: "Which is a special planet?", opts: ["star", "Mars", "moon", "sun"], c: 1 },
+            { q: "Which is a name for a teacher?", opts: ["woman", "Mrs. Smith", "person", "lady"], c: 1 },
+            { q: "Which is a day?", opts: ["tomorrow", "Friday", "yesterday", "soon"], c: 1 },
+            { q: "Which is a month?", opts: ["October", "autumn", "fall", "season"], c: 0 },
+            { q: "Which is a name for a dog?", opts: ["puppy", "Fido", "canine", "friend"], c: 1 },
+            { q: "Which is a special mountain?", opts: ["hill", "Mount Everest", "rock", "stone"], c: 1 },
+            { q: "Which is a ocean?", opts: ["water", "Pacific Ocean", "river", "lake"], c: 1 },
+            { q: "Which is a person's name?", opts: ["man", "David", "boy", "sir"], c: 1 },
+            { q: "Which is a street name?", opts: ["road", "Main Street", "path", "lane"], c: 1 },
+            { q: "Which is a state?", opts: ["country", "Texas", "land", "area"], c: 1 },
+            { q: "Which is a month?", opts: ["January", "winter", "cold", "snow"], c: 0 },
+            { q: "Which is a day?", opts: ["Sunday", "weekend", "time", "hour"], c: 0 },
+            { q: "Which is a name for a queen?", opts: ["lady", "Queen Elizabeth", "woman", "leader"], c: 1 },
+            { q: "Which is a lake?", opts: ["water", "Lake Michigan", "pond", "stream"], c: 1 },
+            { q: "Which is a name for a boy?", opts: ["friend", "Sam", "brother", "son"], c: 1 },
+            { q: "Which is a name for a girl?", opts: ["sister", "Lily", "daughter", "child"], c: 1 },
+            { q: "Which is a special building?", opts: ["house", "White House", "store", "office"], c: 1 },
+            { q: "Which is a school name?", opts: ["building", "Lincoln School", "place", "class"], c: 1 },
+            { q: "Which is a holiday?", opts: ["Easter", "bunny", "egg", "spring"], c: 0 },
+            { q: "Which is a month?", opts: ["May", "spring", "flower", "warm"], c: 0 },
+            { q: "Which is a day?", opts: ["Wednesday", "middle", "week", "work"], c: 0 },
+            { q: "Which is a restaurant?", opts: ["food", "Burger King", "place", "eat"], c: 1 },
+            { q: "Which is a name for a car?", opts: ["vehicle", "Toyota", "ride", "wheels"], c: 1 },
+            { q: "Which is a name for a book?", opts: ["story", "Cinderella", "pages", "read"], c: 1 }
         ]
     },
     {
@@ -87,7 +310,35 @@ const lessonData = [
             { q: "do + not =", opts: ["don't", "dont", "do'not", "doit"], c: 0 },
             { q: "is + not =", opts: ["isnt", "isn't", "isnot", "is't"], c: 1 },
             { q: "I + am =", opts: ["Iam", "I'm", "Im", "I'am"], c: 1 },
-            { q: "can + not =", opts: ["cant", "can't", "cannot", "can'tnot"], c: 1 }
+            { q: "can + not =", opts: ["cant", "can't", "cannot", "can'tnot"], c: 1 },
+            { q: "it + is =", opts: ["itis", "it's", "its", "it'is"], c: 1 },
+            { q: "he + is =", opts: ["heis", "he's", "hes", "he'is"], c: 1 },
+            { q: "she + is =", opts: ["sheis", "she's", "shes", "she'is"], c: 1 },
+            { q: "we + are =", opts: ["weare", "we're", "were", "we'ar"], c: 1 },
+            { q: "they + are =", opts: ["theyare", "they're", "there", "they'r"], c: 1 },
+            { q: "you + are =", opts: ["youare", "you're", "your", "you'r"], c: 1 },
+            { q: "was + not =", opts: ["wasnt", "was'nt", "wasnot", "was'n"], c: 1 },
+            { q: "were + not =", opts: ["werent", "were'nt", "werenot", "were'n"], c: 1 },
+            { q: "have + not =", opts: ["havent", "haven't", "havenot", "hav'not"], c: 1 },
+            { q: "has + not =", opts: ["hasnt", "has'nt", "hasnot", "has'n"], c: 1 },
+            { q: "will + not =", opts: ["willnt", "won't", "wont", "will'not"], c: 1 },
+            { q: "did + not =", opts: ["didnt", "didn't", "didnot", "did'n"], c: 1 },
+            { q: "could + not =", opts: ["couldnt", "couldn't", "couldnot", "could'nt"], c: 1 },
+            { q: "would + not =", opts: ["wouldnt", "wouldn't", "wouldnot", "would'nt"], c: 1 },
+            { q: "should + not =", opts: ["shouldnt", "shouldn't", "shouldnot", "should'nt"], c: 1 },
+            { q: "I + will =", opts: ["Iwill", "I'll", "Ill", "I'wl"], c: 1 },
+            { q: "you + will =", opts: ["youwill", "you'll", "youll", "you'l"], c: 1 },
+            { q: "he + will =", opts: ["hewill", "he'll", "hell", "he'l"], c: 1 },
+            { q: "she + will =", opts: ["shewill", "she'll", "shell", "she'l"], c: 1 },
+            { q: "we + will =", opts: ["wewill", "we'll", "well", "we'l"], c: 1 },
+            { q: "they + will =", opts: ["theywill", "they'll", "theyll", "they'l"], c: 1 },
+            { q: "I + have =", opts: ["Ihave", "I've", "Ive", "I'v"], c: 1 },
+            { q: "you + have =", opts: ["youhave", "you've", "youve", "you'v"], c: 1 },
+            { q: "we + have =", opts: ["wehave", "we've", "weve", "we'v"], c: 1 },
+            { q: "they + have =", opts: ["theyhave", "they've", "theyve", "they'v"], c: 1 },
+            { q: "let + us =", opts: ["letus", "let's", "lets", "let'is"], c: 1 },
+            { q: "there + is =", opts: ["thereis", "there's", "theres", "there'is"], c: 1 },
+            { q: "that + is =", opts: ["thatis", "that's", "thats", "that'is"], c: 1 }
         ]
     },
     {
@@ -97,487 +348,36 @@ const lessonData = [
             { q: "What rhymes with <u>cat</u>?", opts: ["dog", "bat", "bird", "fish"], c: 1 },
             { q: "What rhymes with <u>tree</u>?", opts: ["bee", "leaf", "green", "wood"], c: 0 },
             { q: "What rhymes with <u>sun</u>?", opts: ["hot", "fun", "day", "star"], c: 1 },
-            { q: "What rhymes with <u>cake</u>?", opts: ["pie", "bake", "sweet", "eat"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 11: Long Vowels (Silent e)",
-        instr: "Choose the word with the long vowel sound.",
-        qs: [
-            { q: "Which word has a long <u>a</u>?", opts: ["cap", "cake", "cat", "can"], c: 1 },
-            { q: "Which word has a long <u>i</u>?", opts: ["kite", "kit", "kid", "kick"], c: 0 },
-            { q: "Which word has a long <u>o</u>?", opts: ["hop", "hope", "hot", "hog"], c: 1 },
-            { q: "Which word has a long <u>u</u>?", opts: ["cub", "tube", "cup", "cut"], c: 1 },
-            { q: "Which word rhymes with <u>bike</u>?", opts: ["sick", "like", "lick", "back"], c: 1 },
-            { q: "I used a ___ to measure.", opts: ["rule", "ruler", "rope", "rate"], c: 1 },
-            { q: "The sun will ___.", opts: ["shin", "shine", "shook", "shot"], c: 1 },
-            { q: "I ate a ___ of pizza.", opts: ["slick", "slice", "slide", "slid"], c: 1 },
-            { q: "Open the ___.", opts: ["gat", "gate", "get", "got"], c: 1 },
-            { q: "The ___ is on the floor.", opts: ["rob", "robe", "rock", "rod"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 12: Vowel Teams (ai, ay, ee, ea)",
-        instr: "Choose the correctly spelled word.",
-        qs: [
-            { q: "The ___ falls from the sky.", opts: ["rane", "rain", "rayn", "ran"], c: 1 },
-            { q: "I like to ___ at the beach.", opts: ["play", "plai", "plae", "pla"], c: 0 },
-            { q: "The ___ is green.", opts: ["lefe", "leaf", "leef", "laef"], c: 1 },
-            { q: "I can ___ with my eyes.", opts: ["se", "sea", "see", "si"], c: 2 },
-            { q: "Wait for the ___.", opts: ["trane", "train", "trayn", "tran"], c: 1 },
-            { q: "The dog wagged its ___.", opts: ["tale", "tail", "tayl", "tal"], c: 1 },
-            { q: "Eat your ___.", opts: ["mete", "meat", "meet", "maet"], c: 1 },
-            { q: "It is a sunny ___.", opts: ["da", "dai", "day", "de"], c: 2 },
-            { q: "The boat is in the ___.", opts: ["se", "sea", "see", "si"], c: 1 },
-            { q: "I like to ___ books.", opts: ["reed", "read", "rede", "raed"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 13: Suffixes (-ful, -less)",
-        instr: "Choose the word with the correct suffix.",
-        qs: [
-            { q: "Full of help", opts: ["helpless", "helpful", "helping", "helper"], c: 1 },
-            { q: "Without hope", opts: ["hopeful", "hopeless", "hoping", "hoped"], c: 1 },
-            { q: "Full of color", opts: ["colorless", "colorful", "coloring", "colored"], c: 1 },
-            { q: "Without fear", opts: ["fearful", "fearless", "fearing", "feared"], c: 1 },
-            { q: "Full of joy", opts: ["joyless", "joyful", "joying", "joyed"], c: 1 },
-            { q: "Without a home", opts: ["homeless", "homeful", "homing", "homed"], c: 0 },
-            { q: "Full of care", opts: ["careless", "careful", "caring", "cared"], c: 1 },
-            { q: "Without use", opts: ["useful", "useless", "using", "used"], c: 1 },
-            { q: "Full of pain", opts: ["painless", "painful", "pained", "paining"], c: 1 },
-            { q: "Without sleep", opts: ["sleepy", "sleepless", "sleeping", "sleepful"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 14: Prefixes (un-, re-)",
-        instr: "Choose the word with the correct prefix.",
-        qs: [
-            { q: "To do again", opts: ["undo", "redo", "doing", "done"], c: 1 },
-            { q: "Not happy", opts: ["rehappy", "unhappy", "happily", "happiness"], c: 1 },
-            { q: "To tie again", opts: ["untie", "retie", "tying", "tied"], c: 1 },
-            { q: "Not kind", opts: ["unkind", "rekind", "kindly", "kindness"], c: 0 },
-            { q: "To write again", opts: ["unwrite", "rewrite", "writing", "wrote"], c: 1 },
-            { q: "Not safe", opts: ["resafe", "unsafe", "safely", "safety"], c: 1 },
-            { q: "To play again", opts: ["unplay", "replay", "playing", "played"], c: 1 },
-            { q: "Not lucky", opts: ["relucky", "unlucky", "luckily", "luckier"], c: 1 },
-            { q: "To read again", opts: ["unread", "reread", "reading", "reads"], c: 1 },
-            { q: "Not fair", opts: ["refair", "unfair", "fairly", "fairer"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 15: Irregular Plurals",
-        instr: "Choose the correct plural form.",
-        qs: [
-            { q: "One child, many ___", opts: ["childs", "children", "childes", "childrens"], c: 1 },
-            { q: "One tooth, many ___", opts: ["tooths", "teeth", "toothes", "teeths"], c: 1 },
-            { q: "One mouse, many ___", opts: ["mouses", "mice", "mices", "mouser"], c: 1 },
-            { q: "One foot, many ___", opts: ["foots", "feet", "feets", "footer"], c: 1 },
-            { q: "One person, many ___", opts: ["persons", "peoples", "people", "persones"], c: 2 },
-            { q: "One goose, many ___", opts: ["gooses", "geese", "geeses", "gooser"], c: 1 },
-            { q: "One man, many ___", opts: ["mans", "men", "mens", "manes"], c: 1 },
-            { q: "One woman, many ___", opts: ["womans", "women", "womens", "womanes"], c: 1 },
-            { q: "One fish, many ___", opts: ["fish", "fishes", "fishy", "fishs"], c: 0 },
-            { q: "One sheep, many ___", opts: ["sheeps", "sheep", "sheepes", "sheepy"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 16: Irregular Past Tense",
-        instr: "Choose the word that shows it already happened.",
-        qs: [
-            { q: "Today I go. Yesterday I ___.", opts: ["goed", "went", "gone", "goes"], c: 1 },
-            { q: "Today I eat. Yesterday I ___.", opts: ["eated", "ate", "eaten", "eats"], c: 1 },
-            { q: "Today I run. Yesterday I ___.", opts: ["runned", "ran", "running", "runs"], c: 1 },
-            { q: "Today I see. Yesterday I ___.", opts: ["seed", "saw", "seen", "sees"], c: 1 },
-            { q: "Today I do. Yesterday I ___.", opts: ["did", "doed", "done", "does"], c: 0 },
-            { q: "Today I am. Yesterday I ___.", opts: ["was", "beed", "were", "is"], c: 0 },
-            { q: "Today I come. Yesterday I ___.", opts: ["comed", "came", "coming", "comes"], c: 1 },
-            { q: "Today I take. Yesterday I ___.", opts: ["taked", "took", "taken", "takes"], c: 1 },
-            { q: "Today I sing. Yesterday I ___.", opts: ["singed", "sang", "sung", "sings"], c: 1 },
-            { q: "Today I write. Yesterday I ___.", opts: ["writed", "wrote", "written", "writes"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 17: Subject-Verb Agreement",
-        instr: "Choose the correct verb for the sentence.",
-        qs: [
-            { q: "The dog ___ loudly.", opts: ["bark", "barks", "barking", "barked"], c: 1 },
-            { q: "We ___ to the park.", opts: ["go", "goes", "going", "gone"], c: 0 },
-            { q: "She ___ her lunch.", opts: ["eat", "eats", "eating", "ate"], c: 1 },
-            { q: "They ___ in the pool.", opts: ["swim", "swims", "swimming", "swam"], c: 0 },
-            { q: "I ___ my homework.", opts: ["do", "does", "doing", "done"], c: 0 },
-            { q: "He ___ very fast.", opts: ["run", "runs", "running", "ran"], c: 1 },
-            { q: "The birds ___ in the tree.", opts: ["sing", "sings", "singing", "sang"], c: 0 },
-            { q: "My mom ___ cookies.", opts: ["bake", "bakes", "baking", "baked"], c: 1 },
-            { q: "Cats ___ milk.", opts: ["like", "likes", "liking", "liked"], c: 0 },
-            { q: "A teacher ___ the class.", opts: ["help", "helps", "helping", "helped"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 18: Capitalization",
-        instr: "Which word should have a capital letter?",
-        qs: [
-            { q: "we went to the zoo.", opts: ["we", "went", "zoo", "the"], c: 0 },
-            { q: "my friend lives in florida.", opts: ["my", "friend", "lives", "florida"], c: 3 },
-            { q: "is your name sam?", opts: ["is", "your", "name", "sam"], c: 3 },
-            { q: "i love christmas.", opts: ["i", "love", "christmas", "both i and christmas"], c: 3 },
-            { q: "last monday was fun.", opts: ["last", "monday", "fun", "was"], c: 1 },
-            { q: "the month is april.", opts: ["the", "month", "april", "is"], c: 2 },
-            { q: "mister jones is nice.", opts: ["mister", "jones", "nice", "both mister and jones"], c: 3 },
-            { q: "i live on main street.", opts: ["i", "main", "street", "all of these"], c: 3 },
-            { q: "have you seen fluffy?", opts: ["have", "seen", "fluffy", "you"], c: 2 },
-            { q: "today is tuesday.", opts: ["today", "is", "tuesday", "both today and tuesday"], c: 3 }
-        ]
-    },
-    {
-        title: "Lesson 19: Punctuation (End Marks)",
-        instr: "Choose the correct ending punctuation.",
-        qs: [
-            { q: "Where are you going", opts: [".", "?", "!", ","], c: 1 },
-            { q: "I like ice cream", opts: [".", "?", "!", ","], c: 0 },
-            { q: "Watch out", opts: [".", "?", "!", ","], c: 2 },
-            { q: "Can I play", opts: [".", "?", "!", ","], c: 1 },
-            { q: "It is a sunny day", opts: [".", "?", "!", ","], c: 0 },
-            { q: "What is your name", opts: [".", "?", "!", ","], c: 1 },
-            { q: "That is amazing", opts: [".", "?", "!", ","], c: 2 },
-            { q: "Stop that", opts: [".", "?", "!", ","], c: 2 },
-            { q: "The cat is sleeping", opts: [".", "?", "!", ","], c: 0 },
-            { q: "How old are you", opts: [".", "?", "!", ","], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 20: Homophones",
-        instr: "Choose the correct word for the sentence.",
-        qs: [
-            { q: "I have ___ apples.", opts: ["to", "two", "too", "tow"], c: 1 },
-            { q: "The ___ is shining.", opts: ["son", "sun", "soon", "sin"], c: 1 },
-            { q: "I can ___ the ocean.", opts: ["see", "sea", "say", "set"], c: 0 },
-            { q: "The ___ is blue.", opts: ["see", "sea", "say", "set"], c: 1 },
-            { q: "I ___ a blue shirt.", opts: ["wear", "where", "were", "ware"], c: 0 },
-            { q: "___ is my bag?", opts: ["wear", "where", "were", "ware"], c: 1 },
-            { q: "I ___ a book.", opts: ["read", "red", "reed", "rid"], c: 0 },
-            { q: "My favorite color is ___.", opts: ["read", "red", "reed", "rid"], c: 1 },
-            { q: "I ___ the game.", opts: ["one", "won", "own", "on"], c: 1 },
-            { q: "I have ___ dog.", opts: ["one", "won", "own", "on"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 21: Context Clues",
-        instr: "Choose the meaning of the underlined word.",
-        qs: [
-            { q: "The <u>gigantic</u> elephant was huge.", opts: ["small", "big", "fast", "scary"], c: 1 },
-            { q: "I was <u>exhausted</u> after the long race.", opts: ["happy", "tired", "sad", "fast"], c: 1 },
-            { q: "The pizza was <u>delicious</u> and tasted great.", opts: ["bad", "yummy", "cold", "hot"], c: 1 },
-            { q: "He was <u>furious</u> when he lost his toy.", opts: ["happy", "angry", "silly", "brave"], c: 1 },
-            { q: "The kitten was <u>tiny</u> and fit in my hand.", opts: ["big", "small", "loud", "fast"], c: 1 },
-            { q: "It was <u>chilly</u> outside so I wore a coat.", opts: ["hot", "cold", "sunny", "wet"], c: 1 },
-            { q: "The story was <u>hilarious</u> and we laughed.", opts: ["sad", "funny", "scary", "long"], c: 1 },
-            { q: "The <u>ancient</u> castle was very old.", opts: ["new", "old", "big", "blue"], c: 1 },
-            { q: "She was <u>joyful</u> on her birthday.", opts: ["sad", "happy", "mad", "tired"], c: 1 },
-            { q: "The water was <u>shallow</u> and not deep.", opts: ["deep", "not deep", "cold", "blue"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 22: Commas in a Series",
-        instr: "Choose the sentence with correct commas.",
-        qs: [
-            { q: "I like apples bananas and grapes.", opts: ["I like apples, bananas, and grapes.", "I like apples bananas, and grapes.", "I like apples, bananas and grapes.", "No commas needed"], c: 0 },
-            { q: "She has a cat dog and bird.", opts: ["She has a cat, dog, and bird.", "She has a cat dog, and bird.", "She has a cat, dog and bird.", "No commas needed"], c: 0 },
-            { q: "We saw lions tigers and bears.", opts: ["We saw lions, tigers, and bears.", "We saw lions tigers, and bears.", "We saw lions, tigers and bears.", "No commas needed"], c: 0 },
-            { q: "Buy milk eggs and bread.", opts: ["Buy milk, eggs, and bread.", "Buy milk eggs, and bread.", "Buy milk, eggs and bread.", "No commas needed"], c: 0 },
-            { q: "He ran jumped and played.", opts: ["He ran, jumped, and played.", "He ran jumped, and played.", "He ran, jumped and played.", "No commas needed"], c: 0 },
-            { q: "I have a pen pencil and eraser.", opts: ["I have a pen, pencil, and eraser.", "I have a pen pencil, and eraser.", "I have a pen, pencil and eraser.", "No commas needed"], c: 0 },
-            { q: "They ate cake cookies and pie.", opts: ["They ate cake, cookies, and pie.", "They ate cake cookies, and pie.", "They ate cake, cookies and pie.", "No commas needed"], c: 0 },
-            { q: "Red blue and green are colors.", opts: ["Red, blue, and green are colors.", "Red blue, and green are colors.", "Red, blue and green are colors.", "No commas needed"], c: 0 },
-            { q: "Sit stay and roll over.", opts: ["Sit, stay, and roll over.", "Sit stay, and roll over.", "Sit, stay and roll over.", "No commas needed"], c: 0 },
-            { q: "One two and three.", opts: ["One, two, and three.", "One two, and three.", "One, two and three.", "No commas needed"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 23: Prepositions",
-        instr: "Choose the word that shows where something is.",
-        qs: [
-            { q: "The cat is ___ the table.", opts: ["under", "run", "happy", "blue"], c: 0 },
-            { q: "The bird is ___ the nest.", opts: ["in", "fly", "green", "sing"], c: 0 },
-            { q: "The ball is ___ the box.", opts: ["on", "jump", "red", "fast"], c: 0 },
-            { q: "The sun is ___ the clouds.", opts: ["behind", "yellow", "hot", "big"], c: 0 },
-            { q: "The dog is ___ the house.", opts: ["inside", "bark", "tail", "cute"], c: 0 },
-            { q: "The book is ___ the shelf.", opts: ["on", "read", "page", "story"], c: 0 },
-            { q: "The car is ___ the garage.", opts: ["in", "drive", "fast", "road"], c: 0 },
-            { q: "The flowers are ___ the vase.", opts: ["in", "pretty", "grow", "smell"], c: 0 },
-            { q: "The plane is ___ the trees.", opts: ["above", "fly", "wing", "sky"], c: 0 },
-            { q: "The chair is ___ the desk.", opts: ["near", "sit", "wood", "legs"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 24: Conjunctions (and, but, or)",
-        instr: "Choose the best word to join the sentences.",
-        qs: [
-            { q: "I like milk ___ cookies.", opts: ["and", "but", "or", "so"], c: 0 },
-            { q: "I want to go, ___ it is raining.", opts: ["and", "but", "or", "so"], c: 1 },
-            { q: "Do you want tea ___ juice?", opts: ["and", "but", "or", "so"], c: 2 },
-            { q: "He is tall ___ strong.", opts: ["and", "but", "or", "so"], c: 0 },
-            { q: "I tried, ___ I failed.", opts: ["and", "but", "or", "so"], c: 1 },
-            { q: "Is it a boy ___ a girl?", opts: ["and", "but", "or", "so"], c: 2 },
-            { q: "She ran fast, ___ she missed the bus.", opts: ["and", "but", "or", "so"], c: 1 },
-            { q: "I have a brother ___ a sister.", opts: ["and", "but", "or", "so"], c: 0 },
-            { q: "Wear a coat, ___ you will be cold.", opts: ["and", "but", "or", "so"], c: 2 },
-            { q: "It was late, ___ I was not tired.", opts: ["and", "but", "or", "so"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 25: ABC Order",
-        instr: "Which word comes first in ABC order?",
-        qs: [
-            { q: "apple, banana, cat", opts: ["apple", "banana", "cat", "none"], c: 0 },
-            { q: "dog, bear, zebra", opts: ["dog", "bear", "zebra", "none"], c: 1 },
-            { q: "sun, moon, star", opts: ["sun", "moon", "star", "none"], c: 1 },
-            { q: "fish, goat, elephant", opts: ["fish", "goat", "elephant", "none"], c: 2 },
-            { q: "kite, jump, lion", opts: ["kite", "jump", "lion", "none"], c: 1 },
-            { q: "queen, pig, rabbit", opts: ["queen", "pig", "rabbit", "none"], c: 1 },
-            { q: "van, wagon, umbrella", opts: ["van", "wagon", "umbrella", "none"], c: 2 },
-            { q: "house, ice, garden", opts: ["house", "ice", "garden", "none"], c: 2 },
-            { q: "nest, orange, map", opts: ["nest", "orange", "map", "none"], c: 2 },
-            { q: "yarn, x-ray, zoo", opts: ["yarn", "x-ray", "zoo", "none"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 26: Pronouns",
-        instr: "Choose the word that replaces the noun.",
-        qs: [
-            { q: "<u>The boy</u> is happy.", opts: ["He", "She", "It", "They"], c: 0 },
-            { q: "<u>The girl</u> is smart.", opts: ["He", "She", "It", "They"], c: 1 },
-            { q: "<u>The dog</u> is brown.", opts: ["He", "She", "It", "They"], c: 2 },
-            { q: "<u>Mom and Dad</u> are home.", opts: ["He", "She", "It", "They"], c: 3 },
-            { q: "<u>The books</u> are on the shelf.", opts: ["He", "She", "It", "They"], c: 3 },
-            { q: "<u>Sam and I</u> are friends.", opts: ["We", "They", "Us", "Me"], c: 0 },
-            { q: "Give the ball to <u>the boy</u>.", opts: ["him", "her", "it", "them"], c: 0 },
-            { q: "Give the ball to <u>the girl</u>.", opts: ["him", "her", "it", "them"], c: 1 },
-            { q: "Look at <u>the cat</u>.", opts: ["him", "her", "it", "them"], c: 2 },
-            { q: "I like <u>the cookies</u>.", opts: ["him", "her", "it", "them"], c: 3 }
-        ]
-    },
-    {
-        title: "Lesson 27: Possessive Nouns",
-        instr: "Choose the word that shows ownership.",
-        qs: [
-            { q: "The toy of the boy", opts: ["boys toy", "boy's toy", "boys' toy", "boy toy"], c: 1 },
-            { q: "The bone of the dog", opts: ["dogs bone", "dog's bone", "dogs' bone", "dog bone"], c: 1 },
-            { q: "The dress of the girl", opts: ["girls dress", "girl's dress", "girls' dress", "girl dress"], c: 1 },
-            { q: "The car of my dad", opts: ["dads car", "dad's car", "dads' car", "dad car"], c: 1 },
-            { q: "The house of the bird", opts: ["birds house", "bird's house", "birds' house", "bird house"], c: 1 },
-            { q: "The tail of the cat", opts: ["cats tail", "cat's tail", "cats' tail", "cat tail"], c: 1 },
-            { q: "The room of the teacher", opts: ["teachers room", "teacher's room", "teachers' room", "teacher room"], c: 1 },
-            { q: "The book of the student", opts: ["students book", "student's book", "students' book", "student book"], c: 1 },
-            { q: "The milk of the kitten", opts: ["kittens milk", "kitten's milk", "kittens' milk", "kitten milk"], c: 1 },
-            { q: "The computer of the man", opts: ["mans computer", "man's computer", "mans' computer", "man computer"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 28: Abbreviations",
-        instr: "Choose the correct short form.",
-        qs: [
-            { q: "Doctor", opts: ["Dr.", "Doc.", "Dtr.", "Dr"], c: 0 },
-            { q: "Mister", opts: ["Mr.", "Ms.", "Mrs.", "Mr"], c: 0 },
-            { q: "Mistress (Married woman)", opts: ["Mr.", "Ms.", "Mrs.", "Mrs"], c: 2 },
-            { q: "Street", opts: ["St.", "Str.", "Strt.", "St"], c: 0 },
-            { q: "Road", opts: ["Rd.", "Ro.", "Rad.", "Rd"], c: 0 },
-            { q: "Monday", opts: ["Mon.", "Mnd.", "M.", "Mon"], c: 0 },
-            { q: "January", opts: ["Jan.", "Jny.", "J.", "Jan"], c: 0 },
-            { q: "Avenue", opts: ["Ave.", "Av.", "Avn.", "Ave"], c: 0 },
-            { q: "Saturday", opts: ["Sat.", "Std.", "S.", "Sat"], c: 0 },
-            { q: "October", opts: ["Oct.", "Ocb.", "O.", "Oct"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 29: Adverbs (-ly)",
-        instr: "Choose the word that describes how an action is done.",
-        qs: [
-            { q: "She sang ___.", opts: ["beautiful", "beautifully", "beauty", "beauties"], c: 1 },
-            { q: "He ran ___.", opts: ["quick", "quickly", "quicker", "quickest"], c: 1 },
-            { q: "The cat walked ___.", opts: ["soft", "softly", "softer", "softest"], c: 1 },
-            { q: "I talked ___.", opts: ["quiet", "quietly", "quieter", "quietest"], c: 1 },
-            { q: "The sun shone ___.", opts: ["bright", "brightly", "brighter", "brightest"], c: 1 },
-            { q: "He spoke ___.", opts: ["loud", "loudly", "louder", "loudest"], c: 1 },
-            { q: "She smiled ___.", opts: ["happy", "happily", "happier", "happiest"], c: 1 },
-            { q: "I wrote ___.", opts: ["careful", "carefully", "carefully", "carefuler"], c: 1 },
-            { q: "The turtle moved ___.", opts: ["slow", "slowly", "slower", "slowest"], c: 1 },
-            { q: "He answered ___.", opts: ["correct", "correctly", "correcter", "correctest"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 30: Fact vs. Opinion",
-        instr: "Is the sentence a fact or an opinion?",
-        qs: [
-            { q: "Dogs have four legs.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 0 },
-            { q: "Dogs are the best pets.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 1 },
-            { q: "The sun is hot.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 0 },
-            { q: "Summer is the best season.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 1 },
-            { q: "Apples are a fruit.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 0 },
-            { q: "Apples taste better than oranges.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 1 },
-            { q: "Ice cream is cold.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 0 },
-            { q: "Chocolate is the yummiest flavor.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 1 },
-            { q: "Birds can fly.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 0 },
-            { q: "Watching movies is fun.", opts: ["Fact", "Opinion", "Neither", "Both"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 31: Subject and Predicate",
-        instr: "Identify the subject (who/what) or predicate (action).",
-        qs: [
-            { q: "In 'The dog barked', what is the subject?", opts: ["The dog", "barked", "The", "dog barked"], c: 0 },
-            { q: "In 'The dog barked', what is the predicate?", opts: ["The dog", "barked", "The", "dog barked"], c: 1 },
-            { q: "In 'She runs fast', what is the subject?", opts: ["She", "runs fast", "fast", "runs"], c: 0 },
-            { q: "In 'She runs fast', what is the predicate?", opts: ["She", "runs fast", "fast", "runs"], c: 1 },
-            { q: "In 'My mom cooks dinner', what is the subject?", opts: ["My mom", "cooks dinner", "dinner", "cooks"], c: 0 },
-            { q: "In 'My mom cooks dinner', what is the predicate?", opts: ["My mom", "cooks dinner", "dinner", "cooks"], c: 1 },
-            { q: "In 'Birds fly in the sky', what is the subject?", opts: ["Birds", "fly in the sky", "sky", "fly"], c: 0 },
-            { q: "In 'Birds fly in the sky', what is the predicate?", opts: ["Birds", "fly in the sky", "sky", "fly"], c: 1 },
-            { q: "In 'The blue car stopped', what is the subject?", opts: ["The blue car", "stopped", "car", "The blue"], c: 0 },
-            { q: "In 'The blue car stopped', what is the predicate?", opts: ["The blue car", "stopped", "car", "The blue"], c: 1 }
-        ]
-    },
-    {
-        title: "Lesson 32: Reflexive Pronouns",
-        instr: "Choose the correct reflexive pronoun.",
-        qs: [
-            { q: "I did it by ___.", opts: ["myself", "himself", "herself", "itself"], c: 0 },
-            { q: "He did it by ___.", opts: ["myself", "himself", "herself", "itself"], c: 1 },
-            { q: "She did it by ___.", opts: ["myself", "himself", "herself", "itself"], c: 2 },
-            { q: "The cat cleaned ___.", opts: ["myself", "himself", "herself", "itself"], c: 3 },
-            { q: "We did it by ___.", opts: ["ourselves", "themselves", "yourselves", "ourself"], c: 0 },
-            { q: "They did it by ___.", opts: ["ourselves", "themselves", "yourselves", "theirself"], c: 1 },
-            { q: "You did it by ___ (one person).", opts: ["yourself", "yourselves", "myself", "himself"], c: 0 },
-            { q: "You did it by ___ (many people).", opts: ["yourself", "yourselves", "myself", "himself"], c: 1 },
-            { q: "I can wash ___.", opts: ["myself", "ourselves", "himself", "herself"], c: 0 },
-            { q: "The bird built the nest ___.", opts: ["itself", "himself", "herself", "myself"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 33: Multiple Meaning Words",
-        instr: "Choose the correct word for the context.",
-        qs: [
-            { q: "The ___ of a tree. / A dog's ___.", opts: ["bark", "leaf", "root", "branch"], c: 0 },
-            { q: "A ___ of cards. / To ___ a suitcase.", opts: ["deck", "pack", "suit", "stack"], c: 1 },
-            { q: "A ___ of water. / To ___ the ball.", opts: ["drop", "splash", "wave", "sink"], c: 2 },
-            { q: "The ___ flies at night. / A baseball ___.", opts: ["ball", "bat", "bird", "glove"], c: 1 },
-            { q: "A ___ of bread. / To ___ around.", opts: ["roll", "slice", "loaf", "piece"], c: 0 },
-            { q: "A ___ of shoes. / To ___ fruit.", opts: ["set", "pair", "box", "pear"], c: 1 },
-            { q: "A ___ shows the way. / A ___ is for drawing circles.", opts: ["map", "compass", "ruler", "sign"], c: 1 },
-            { q: "A ___ in the ground. / A ___ in your shirt.", opts: ["gap", "hole", "pit", "rip"], c: 1 },
-            { q: "The ___ of a mountain. / A ___ of a bird.", opts: ["peak", "beak", "top", "side"], c: 0 },
-            { q: "A ___ on your finger. / To ___ a bell.", opts: ["ring", "band", "gold", "call"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 34: Shades of Meaning",
-        instr: "Choose the strongest word.",
-        qs: [
-            { q: "Which word means very happy?", opts: ["glad", "happy", "thrilled", "nice"], c: 2 },
-            { q: "Which word means very big?", opts: ["big", "large", "huge", "great"], c: 2 },
-            { q: "Which word means very hot?", opts: ["warm", "hot", "scorching", "sunny"], c: 2 },
-            { q: "Which word means very small?", opts: ["small", "tiny", "microscopic", "little"], c: 2 },
-            { q: "Which word means very angry?", opts: ["mad", "angry", "furious", "upset"], c: 2 },
-            { q: "Which word means very cold?", opts: ["cool", "cold", "freezing", "chilly"], c: 2 },
-            { q: "Which word means very fast?", opts: ["quick", "fast", "speedy", "rapid"], c: 3 },
-            { q: "Which word means very loud?", opts: ["noisy", "loud", "deafening", "strong"], c: 2 },
-            { q: "Which word means very pretty?", opts: ["nice", "pretty", "beautiful", "good"], c: 2 },
-            { q: "Which word means very smart?", opts: ["smart", "wise", "brilliant", "okay"], c: 2 }
-        ]
-    },
-    {
-        title: "Lesson 35: Root Words",
-        instr: "Find the root word of the underlined word.",
-        qs: [
-            { q: "The kitten was <u>playing</u>.", opts: ["play", "playing", "player", "played"], c: 0 },
-            { q: "She <u>jumped</u> over the log.", opts: ["jump", "jumped", "jumping", "jumper"], c: 0 },
-            { q: "He is the <u>fastest</u> runner.", opts: ["fast", "fastest", "faster", "fastly"], c: 0 },
-            { q: "The flower is <u>unopened</u>.", opts: ["open", "opened", "unopen", "opening"], c: 0 },
-            { q: "I am <u>rereading</u> the book.", opts: ["read", "reading", "reread", "reads"], c: 0 },
-            { q: "The room was <u>colorless</u>.", opts: ["color", "colorless", "colorful", "colors"], c: 0 },
-            { q: "She is a <u>helpful</u> person.", opts: ["help", "helpful", "helping", "helped"], c: 0 },
-            { q: "The dog <u>barked</u> at the cat.", opts: ["bark", "barked", "barking", "barks"], c: 0 },
-            { q: "He <u>walks</u> to school.", opts: ["walk", "walks", "walking", "walked"], c: 0 },
-            { q: "I am <u>thankful</u>.", opts: ["thank", "thankful", "thanks", "thanking"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 36: Categorizing Words",
-        instr: "Which word does NOT belong?",
-        qs: [
-            { q: "Apple, Banana, Carrot, Orange", opts: ["Apple", "Banana", "Carrot", "Orange"], c: 2 },
-            { q: "Dog, Cat, Bird, Table", opts: ["Dog", "Cat", "Bird", "Table"], c: 3 },
-            { q: "Red, Blue, Green, Square", opts: ["Red", "Blue", "Green", "Square"], c: 3 },
-            { q: "Car, Bus, Train, Tree", opts: ["Car", "Bus", "Train", "Tree"], c: 3 },
-            { q: "Monday, Tuesday, Friday, April", opts: ["Monday", "Tuesday", "Friday", "April"], c: 3 },
-            { q: "Run, Jump, Skip, Happy", opts: ["Run", "Jump", "Skip", "Happy"], c: 3 },
-            { q: "Pencil, Pen, Eraser, Chair", opts: ["Pencil", "Pen", "Eraser", "Chair"], c: 3 },
-            { q: "Milk, Juice, Water, Bread", opts: ["Milk", "Juice", "Water", "Bread"], c: 3 },
-            { q: "One, Two, Three, Big", opts: ["One", "Two", "Three", "Big"], c: 3 },
-            { q: "North, South, East, Up", opts: ["North", "South", "East", "Up"], c: 3 }
-        ]
-    },
-    {
-        title: "Lesson 37: Alphabetizing to the Second Letter",
-        instr: "Which word comes first in ABC order?",
-        qs: [
-            { q: "Apple, Ant, Axe", opts: ["Ant", "Apple", "Axe", "none"], c: 0 },
-            { q: "Ball, Bee, Box", opts: ["Ball", "Bee", "Box", "none"], c: 0 },
-            { q: "Cat, Cup, Cow", opts: ["Cat", "Cow", "Cup", "none"], c: 0 },
-            { q: "Dog, Dig, Duck", opts: ["Dig", "Dog", "Duck", "none"], c: 0 },
-            { q: "Fish, Fan, Fox", opts: ["Fan", "Fish", "Fox", "none"], c: 0 },
-            { q: "Goat, Gum, Get", opts: ["Goat", "Get", "Gum", "none"], c: 1 },
-            { q: "Hat, Hit, Hot", opts: ["Hat", "Hit", "Hot", "none"], c: 0 },
-            { q: "Jump, Jet, Job", opts: ["Jet", "Job", "Jump", "none"], c: 0 },
-            { q: "Kite, Key, Kid", opts: ["Key", "Kid", "Kite", "none"], c: 0 },
-            { q: "Lamp, Lip, Leg", opts: ["Lamp", "Leg", "Lip", "none"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 38: Collective Nouns",
-        instr: "Choose the correct group name.",
-        qs: [
-            { q: "A group of birds is a ___.", opts: ["flock", "herd", "pack", "team"], c: 0 },
-            { q: "A group of cows is a ___.", opts: ["flock", "herd", "pack", "team"], c: 1 },
-            { q: "A group of wolves is a ___.", opts: ["flock", "herd", "pack", "team"], c: 2 },
-            { q: "A group of players is a ___.", opts: ["flock", "herd", "pack", "team"], c: 3 },
-            { q: "A group of bees is a ___.", opts: ["swarm", "herd", "pack", "school"], c: 0 },
-            { q: "A group of fish is a ___.", opts: ["swarm", "herd", "pack", "school"], c: 3 },
-            { q: "A group of lions is a ___.", opts: ["pride", "herd", "pack", "flock"], c: 0 },
-            { q: "A group of ants is a ___.", opts: ["colony", "herd", "pack", "flock"], c: 0 },
-            { q: "A group of kittens is a ___.", opts: ["litter", "herd", "pack", "flock"], c: 0 },
-            { q: "A group of people is a ___.", opts: ["crowd", "herd", "pack", "flock"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 39: Irregular Comparative Adjectives",
-        instr: "Choose the correct word.",
-        qs: [
-            { q: "Good, Better, ___", opts: ["Best", "Goodest", "Betterest", "Bester"], c: 0 },
-            { q: "Bad, Worse, ___", opts: ["Worst", "Baddest", "Worser", "Worsest"], c: 0 },
-            { q: "Little, Less, ___", opts: ["Least", "Littlest", "Lesser", "Lessest"], c: 0 },
-            { q: "Many, More, ___", opts: ["Most", "Manier", "Maniest", "Morest"], c: 0 },
-            { q: "This cake is good, but that one is ___.", opts: ["better", "gooder", "best", "goodest"], c: 0 },
-            { q: "This is the ___ day ever!", opts: ["best", "better", "goodest", "gooder"], c: 0 },
-            { q: "I feel bad, but he feels ___.", opts: ["worse", "badder", "worst", "baddest"], c: 0 },
-            { q: "That was the ___ movie.", opts: ["worst", "worse", "badder", "baddest"], c: 0 },
-            { q: "I have little milk, but she has ___.", opts: ["less", "littler", "least", "littlest"], c: 0 },
-            { q: "He has the ___ money.", opts: ["least", "less", "littler", "littlest"], c: 0 }
-        ]
-    },
-    {
-        title: "Lesson 40: Review Mix",
-        instr: "Test your skills!",
-        qs: [
-            { q: "Opposite of <u>loud</u>", opts: ["noisy", "quiet", "fast", "big"], c: 1 },
-            { q: "Synonym of <u>mad</u>", opts: ["happy", "sad", "angry", "glad"], c: 2 },
-            { q: "The plural of 'leaf' is ___.", opts: ["leafs", "leaves", "leafes", "leafy"], c: 1 },
-            { q: "Past tense of 'eat' is ___.", opts: ["eated", "ate", "eating", "eats"], c: 1 },
-            { q: "A compound word: rain + coat =", opts: ["rainbow", "rainy", "raincoat", "raining"], c: 2 },
-            { q: "Which is a proper noun?", opts: ["school", "Monday", "park", "store"], c: 1 },
-            { q: "Contraction for 'cannot' is ___.", opts: ["cant", "can't", "cannot", "ca'nt"], c: 1 },
-            { q: "What rhymes with 'moon'?", opts: ["sun", "spoon", "star", "night"], c: 1 },
-            { q: "A ___ of fish.", opts: ["flock", "herd", "school", "pack"], c: 2 },
-            { q: "I did it by ___.", opts: ["myself", "himself", "herself", "itself"], c: 0 }
+            { q: "What rhymes with <u>cake</u>?", opts: ["pie", "bake", "sweet", "eat"], c: 1 },
+            { q: "What rhymes with <u>dog</u>?", opts: ["cat", "log", "pet", "fur"], c: 1 },
+            { q: "What rhymes with <u>pig</u>?", opts: ["dig", "cow", "mud", "pen"], c: 0 },
+            { q: "What rhymes with <u>blue</u>?", opts: ["red", "shoe", "sky", "green"], c: 1 },
+            { q: "What rhymes with <u>rain</u>?", opts: ["cloud", "train", "wet", "drop"], c: 1 },
+            { q: "What rhymes with <u>bear</u>?", opts: ["pear", "lion", "forest", "fur"], c: 0 },
+            { q: "What rhymes with <u>boat</u>?", opts: ["sail", "coat", "water", "sea"], c: 1 },
+            { q: "What rhymes with <u>star</u>?", opts: ["car", "moon", "night", "sky"], c: 0 },
+            { q: "What rhymes with <u>mouse</u>?", opts: ["cat", "house", "cheese", "hole"], c: 1 },
+            { q: "What rhymes with <u>king</u>?", opts: ["ring", "crown", "queen", "gold"], c: 0 },
+            { q: "What rhymes with <u>face</u>?", opts: ["race", "eye", "nose", "head"], c: 0 },
+            { q: "What rhymes with <u>bell</u>?", opts: ["shell", "ring", "loud", "sound"], c: 0 },
+            { q: "What rhymes with <u>book</u>?", opts: ["look", "read", "page", "story"], c: 0 },
+            { q: "What rhymes with <u>day</u>?", opts: ["play", "sun", "night", "week"], c: 0 },
+            { q: "What rhymes with <u>light</u>?", opts: ["night", "sun", "lamp", "dark"], c: 0 },
+            { q: "What rhymes with <u>ball</u>?", opts: ["tall", "round", "play", "game"], c: 0 },
+            { q: "What rhymes with <u>fly</u>?", opts: ["sky", "bug", "wing", "bird"], c: 0 },
+            { q: "What rhymes with <u>bed</u>?", opts: ["red", "sleep", "rest", "night"], c: 0 },
+            { q: "What rhymes with <u>fish</u>?", opts: ["dish", "water", "swim", "sea"], c: 0 },
+            { q: "What rhymes with <u>frog</u>?", opts: ["hop", "log", "pond", "green"], c: 1 },
+            { q: "What rhymes with <u>goat</u>?", opts: ["coat", "farm", "horn", "grass"], c: 0 },
+            { q: "What rhymes with <u>hand</u>?", opts: ["sand", "fingers", "wave", "clap"], c: 0 },
+            { q: "What rhymes with <u>ice</u>?", opts: ["mice", "cold", "water", "frozen"], c: 0 },
+            { q: "What rhymes with <u>jar</u>?", opts: ["car", "lid", "jam", "glass"], c: 0 },
+            { q: "What rhymes with <u>kite</u>?", opts: ["bite", "fly", "string", "wind"], c: 0 },
+            { q: "What rhymes with <u>map</u>?", opts: ["cap", "road", "land", "way"], c: 0 },
+            { q: "What rhymes with <u>nest</u>?", opts: ["best", "bird", "egg", "tree"], c: 0 },
+            { q: "What rhymes with <u>old</u>?", opts: ["gold", "age", "young", "new"], c: 0 },
+            { q: "What rhymes with <u>pan</u>?", opts: ["can", "cook", "hot", "kitchen"], c: 0 }
         ]
     }
 ];
+
