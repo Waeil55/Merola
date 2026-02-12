@@ -296,16 +296,18 @@
             window.scrollTo(0, 0);
         }
 
+        // Flattens grouped questions into one array where each item is one single question "page"
         function flattenData(source) {
             if (!source || !Array.isArray(source)) return [];
             let flat = [];
-            source.forEach(page => {
-                if (page && page.qs) {
-                    page.qs.forEach(q => {
+            source.forEach(group => {
+                if (group && group.qs && Array.isArray(group.qs)) {
+                    group.qs.forEach(q => {
+                        // Create a unique page for this individual question
                         flat.push({ 
-                            title: page.title, 
-                            instr: page.instr, 
-                            passage: page.passage || null, 
+                            title: group.title, 
+                            instr: group.instr, 
+                            passage: group.passage || null, 
                             qs: [q] 
                         });
                     });
@@ -328,27 +330,40 @@
                 dataToShuffle = shuffle([...sentsSource]).map((s) => ({ title: `Reading Mastery`, instr: "Try to speak first, then you can listen!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
-                    // Logic to ensure the ENTIRE lessonData array is flattened and imported
+                    // This flattens ALL 400+ questions from lessonData.js into individual views
                     case 'lesson': 
                         if (typeof lessonData !== 'undefined' && Array.isArray(lessonData)) {
                             dataToShuffle = flattenData(lessonData);
-                        } else {
-                            console.error("lessonData not found or not an array");
                         }
                         break;
-                    case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
-                    case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
-                    case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
-                    case 'time': dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); break;
-                    case 'math': dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); break;
-                    case 'shapes': dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify the shape!" }]); break;
-                    case 'grammar': dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Noun or Verb?" }]); break;
+                    case 'stories': 
+                        dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); 
+                        break;
+                    case 'wordparts': 
+                        dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); 
+                        break;
+                    case 'coin': 
+                        dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); 
+                        break;
+                    case 'time': 
+                        dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); 
+                        break;
+                    case 'math': 
+                        dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); 
+                        break;
+                    case 'shapes': 
+                        dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify the shape!" }]); 
+                        break;
+                    case 'grammar': 
+                        dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Noun or Verb?" }]); 
+                        break;
                 }
             }
             
             // Randomize question order from all imported content
             activeData = shuffle([...dataToShuffle]);
             
+            // Optional cap for writing only
             if (type === 'writing' && activeData.length > 30) {
                 activeData = activeData.slice(0, 30);
             }
@@ -462,7 +477,7 @@
                 const data = activeData[currentPage], progress = ((currentPage + 1) / activeData.length) * 100;
                 document.getElementById('progress-bar').style.width = progress + "%";
 
-                // NEXT BUTTON LOGIC: Disable until all questions on current page are answered
+                // NEXT BUTTON VALIDATION: Disable until the single question on the page is answered
                 const nextBtn = document.getElementById('next-btn');
                 if (nextBtn) {
                     const isPageAnswered = data.qs.every((_, qIdx) => userAnswers[`${currentPage}-${qIdx}`] !== undefined);
@@ -513,7 +528,7 @@
                     main.innerHTML = `<div class="mb-10 text-center px-2"><h2 class="text-2xl sm:text-4xl font-black text-purple-700 uppercase tracking-tight font-['Comic_Neue']">${data.title}</h2><div class="inline-block px-4 py-1 bg-purple-100 text-purple-600 rounded-full font-bold text-xs sm:text-sm mt-1 instr-text">💡 ${data.instr}</div></div><div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-14 items-start' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${qsHtml}</div></div>`;
                 }
             } else if (currentView === 'results') {
-                main.innerHTML = `<div class="text-center py-14 max-w-2xl mx-auto px-4"><div class="text-8xl sm:text-9xl mb-8 animate-bounce">👑</div><h2 class="text-4xl sm:text-6xl font-black mb-4 text-purple-600 uppercase font-['Comic_Neue']">Victory!</h2><p class="text-xl sm:text-3xl font-bold text-gray-500 mb-10">You earned ${globalScore} stars!</p><button onclick="goHome()" class="px-12 py-5 sm:px-16 sm:py-8 bg-purple-600 text-white rounded-[3rem] font-black text-xl sm:text-3xl shadow-2xl hover:scale-110 active:scale-95 transition-all w-full sm:w-auto uppercase">Play Again 🏠</button></div>`;
+                main.innerHTML = `<div class="text-center py-14 max-w-2xl mx-auto px-4"><div class="text-8xl sm:text-9xl mb-8 animate-bounce">👑</div><h2 class="text-4xl sm:text-6xl font-black mb-4 text-purple-600 uppercase font-['Comic_Neue']">Victory!</h2><p class="text-xl sm:text-3xl font-bold text-gray-500 mb-10">You finished all questions and earned ${globalScore} stars!</p><button onclick="goHome()" class="px-12 py-5 sm:px-16 sm:py-8 bg-purple-600 text-white rounded-[3rem] font-black text-xl sm:text-3xl shadow-2xl hover:scale-110 active:scale-95 transition-all w-full sm:w-auto uppercase">Play Again 🏠</button></div>`;
             }
         }
 
