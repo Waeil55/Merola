@@ -1,0 +1,16 @@
+{
+  "name": "Merola's Super Fun Lab",
+  "short_name": "MerolaLab",
+  "start_url": "merola.html",
+  "display": "standalone",
+  "background_color": "#F8F4FF",
+  "theme_color": "#673AB7",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/Waeil55/Merola/main/1.PNG",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
+
