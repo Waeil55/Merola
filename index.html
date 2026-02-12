@@ -6,10 +6,15 @@
     <title>🐶🤪 Merola's Super-Duper Fun Lab!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Data & Generator Imports -->
     <script src="readingData.js"></script>
+    <script src="lessonData.js"></script>
+    <script src="quizGenerators.js"></script>
+
     <style>
         :root {
-            --bg-color: #F8F4FF; /* Soft Lavender */
+            --bg-color: #F8F4FF;
             --card-bg: #ffffff;
             --text-color: #2D3436;
             --title-color: #9C27B0;
@@ -17,7 +22,7 @@
             --border-color: #B39DDB;
             --primary-action: #6C5CE7;
             --user-font-size: 22px;
-            --header-bg: #673AB7; /* Darker Purple for Visibility */
+            --header-bg: #673AB7;
             --footer-bg: #F3E5F5;
             --passage-bg: #E1F5FE;
         }
@@ -45,125 +50,26 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size:24px"><text y="24">🍭</text></svg>'), auto;
         }
 
-        @keyframes wiggle {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(-2deg); }
-            75% { transform: rotate(2deg); }
-            100% { transform: rotate(0deg); }
-        }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes wiggle { 0% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-
-        .listening {
-            animation: pulse-red 1.5s infinite;
-            background-color: #ef4444 !important;
-            color: white !important;
-        }
-
-        .glass-header {
-            background: var(--header-bg);
-            border-bottom: 6px dashed rgba(255,255,255,0.3);
-            border-radius: 0 0 30px 30px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 4px solid var(--border-color);
-            border-radius: 40px;
-            box-shadow: 10px 10px 0px var(--border-color);
-            transition: transform 0.2s, background-color 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px) rotate(1deg);
-        }
-
-        .q-text {
-            font-size: var(--user-font-size) !important;
-            color: var(--text-color) !important;
-            font-family: 'Comic Neue', cursive;
-            font-weight: 900;
-        }
-
-        .option-btn {
-            font-size: calc(var(--user-font-size) * 0.9) !important;
-            border: 3px solid var(--border-color);
-            border-radius: 25px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            box-shadow: 0 6px 0 var(--border-color);
-            margin-bottom: 8px;
-        }
-
-        .passage-text {
-            font-size: var(--user-font-size) !important;
-            line-height: 1.6 !important;
-        }
-
-        .instruction-text {
-            font-size: calc(var(--user-font-size) * 0.85) !important;
-            line-height: 1.4 !important;
-        }
-
-        .option-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 var(--border-color);
-        }
-
-        .passage-box {
-            background: var(--passage-bg) !important;
-            border: 4px dotted var(--primary-action) !important;
-            border-radius: 30px !important;
-            position: relative;
-            color: var(--text-color);
-        }
-
-        .passage-box::before {
-            content: "📖 Read This! 📖";
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            background: var(--primary-action);
-            color: white;
-            padding: 2px 15px;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-
-        .correct {
-            background: #4CAF50 !important;
-            border-color: #2E7D32 !important;
-            color: white !important;
-            animation: pop 0.3s infinite;
-        }
-
-        .wrong {
-            background: #F44336 !important;
-            border-color: #B71C1C !important;
-            color: white !important;
-        }
-
-        .hub-card {
-            border-radius: 40px;
-            border: 5px solid rgba(255,255,255,0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .hub-card:hover {
-            transform: scale(1.08) rotate(-2deg);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-        }
-
+        .listening { animation: pulse-red 1.5s infinite; background-color: #ef4444 !important; color: white !important; }
+        .glass-header { background: var(--header-bg); border-bottom: 6px dashed rgba(255,255,255,0.3); border-radius: 0 0 30px 30px; }
+        .card { background-color: var(--card-bg); border: 4px solid var(--border-color); border-radius: 40px; box-shadow: 10px 10px 0px var(--border-color); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px) rotate(1deg); }
+        .q-text { font-size: var(--user-font-size) !important; color: var(--text-color) !important; font-family: 'Comic Neue', cursive; font-weight: 900; }
+        .option-btn { font-size: calc(var(--user-font-size) * 0.9) !important; border: 3px solid var(--border-color); border-radius: 25px; background: var(--card-bg); color: var(--text-color); box-shadow: 0 6px 0 var(--border-color); margin-bottom: 8px; }
+        .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--border-color); }
+        .passage-text { font-size: var(--user-font-size) !important; line-height: 1.6 !important; }
+        .instruction-text { font-size: calc(var(--user-font-size) * 0.85) !important; line-height: 1.4 !important; }
+        .passage-box { background: var(--passage-bg) !important; border: 4px dotted var(--primary-action) !important; border-radius: 30px !important; position: relative; color: var(--text-color); }
+        .passage-box::before { content: "📖 Read This! 📖"; position: absolute; top: -15px; left: 20px; background: var(--primary-action); color: white; padding: 2px 15px; border-radius: 10px; font-size: 14px; }
+        .correct { background: #4CAF50 !important; border-color: #2E7D32 !important; color: white !important; animation: pop 0.3s infinite; }
+        .wrong { background: #F44336 !important; border-color: #B71C1C !important; color: white !important; }
+        .hub-card { border-radius: 40px; border: 5px solid rgba(255,255,255,0.4); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .hub-card:hover { transform: scale(1.08) rotate(-2deg); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
+        
         .lesson-gradient { background: linear-gradient(135deg, #9C27B0, #E91E63); }
         .coin-gradient { background: linear-gradient(135deg, #009688, #00796B); }
         .time-gradient { background: linear-gradient(135deg, #2196F3, #1976D2); }
@@ -172,26 +78,10 @@
         .grammar-gradient { background: linear-gradient(135deg, #03A9F4, #0288D1); }
         .reading-gradient { background: linear-gradient(135deg, #FF5252, #FF1744); }
 
-        .coin-img {
-            display: inline-block;
-            vertical-align: middle;
-            filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1));
-            animation: wiggle 2s infinite ease-in-out;
-            margin: 0 2px;
-        }
-
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: var(--title-color); border-radius: 10px; border: 3px solid var(--bg-color); }
-
+        .coin-img { display: inline-block; vertical-align: middle; filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1)); animation: wiggle 2s infinite ease-in-out; margin: 0 2px; }
         .dark .card { background-color: var(--card-bg); }
         .dark .option-btn { background-color: #3d4649; }
-        .dark .option-btn:disabled { opacity: 0.5; }
-
-        #quiz-footer {
-            background: var(--footer-bg);
-            border-top: 4px solid var(--border-color);
-        }
+        #quiz-footer { background: var(--footer-bg); border-top: 4px solid var(--border-color); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -215,7 +105,7 @@
             </div>
 
             <div class="flex items-center gap-1">
-                <div class="flex items-center bg-white/20 backdrop-blur rounded-full p-0.5 border border-white/30 flex">
+                <div class="flex items-center bg-white/20 backdrop-blur rounded-full p-0.5 border border-white/30">
                     <button onclick="adjustFont(-2)" class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center font-black hover:bg-white/30 text-white text-xs">🔍-</button>
                     <button onclick="adjustFont(2)" class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center font-black hover:bg-white/30 ml-0.5 text-white text-xs">🔍+</button>
                 </div>
@@ -251,6 +141,7 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-8 py-4 rounded-full text-white font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-[60] text-xl border-4 border-white"></div>
 
     <script>
+        // Shared Utilities
         const COIN_URLS = {
             c1: "https://raw.githubusercontent.com/Waeil55/roma/main/1.PNG",
             c5: "https://raw.githubusercontent.com/Waeil55/roma/main/5.PNG",
@@ -264,291 +155,6 @@
             return `<img src="${COIN_URLS[key]}" class="coin-img align-middle inline-block mx-1 object-contain max-w-[20vw]" style="height: ${sizes[key]}" alt="${key}">`;
         };
 
-        function getClockSVG(h, m) {
-            const hDeg = (h % 12 + m / 60) * 30;
-            const mDeg = m * 6;
-            return `
-            <svg class="clock-svg w-32 h-32 mx-auto" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#FFF" stroke="#673AB7" stroke-width="4"/>
-                <circle cx="50" cy="50" r="2" fill="#673AB7"/>
-                ${[12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n, i) => {
-                    const ang = (i * 30) * Math.PI / 180;
-                    return `<text x="${50 + 35 * Math.sin(ang)}" y="${54 - 35 * Math.cos(ang)}" font-size="9" text-anchor="middle" fill="#673AB7" font-family="Comic Neue" font-weight="900">${n}</text>`;
-                }).join('')}
-                <line x1="50" y1="50" x2="50" y2="28" stroke="#2D3436" stroke-width="4" stroke-linecap="round" transform="rotate(${hDeg} 50 50)"/>
-                <line x1="50" y1="50" x2="50" y2="18" stroke="#9C27B0" stroke-width="3" stroke-linecap="round" transform="rotate(${mDeg} 50 50)"/>
-            </svg>`;
-        }
-
-        function getShapeSVG(type) {
-            const shapes = {
-                circle: '<circle cx="50" cy="50" r="40" fill="#FF7675" stroke="#D63031" stroke-width="3"/>',
-                square: '<rect x="15" y="15" width="70" height="70" fill="#74B9FF" stroke="#0984E3" stroke-width="3"/>',
-                triangle: '<polygon points="50,15 90,85 10,85" fill="#55EFC4" stroke="#00B894" stroke-width="3"/>',
-                rectangle: '<rect x="10" y="25" width="80" height="50" fill="#FDCB6E" stroke="#E17055" stroke-width="3"/>',
-                star: '<polygon points="50,5 63,35 95,35 70,55 80,85 50,65 20,85 30,55 5,35 37,35" fill="#A29BFE" stroke="#6C5CE7" stroke-width="3"/>',
-                sphere: '<circle cx="50" cy="50" r="40" fill="url(#sphereGrad)"/><defs><radialGradient id="sphereGrad" cx="30%" cy="30%" r="50%"><stop offset="0%" stop-color="#81ECEC"/><stop offset="100%" stop-color="#00CEC9"/></radialGradient></defs>',
-                cube: '<path d="M20 30 l30 -10 l30 10 v40 l-30 10 l-30 -10 z" fill="#FAB1A0" stroke="#E17055" stroke-width="3"/><path d="M20 30 l30 10 l30 -10 M50 40 v40" fill="none" stroke="#E17055" stroke-width="3"/>',
-                cone: '<ellipse cx="50" cy="80" rx="30" ry="10" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="3"/><path d="M20 80 L50 20 L80 80" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="3"/>',
-                cylinder: '<ellipse cx="50" cy="25" rx="30" ry="10" fill="#81ECEC" stroke="#00CEC9" stroke-width="3"/><path d="M20 25 v50 a30 10 0 0 0 60 0 v-50" fill="#81ECEC" stroke="#00CEC9" stroke-width="3"/><ellipse cx="50" cy="75" rx="30" ry="10" fill="none" stroke="#00CEC9" stroke-width="3" stroke-dasharray="2 2"/>',
-                pyramid: '<polygon points="50,15 85,85 15,85" fill="#D63031" stroke="#2D3436" stroke-width="3"/><line x1="50" y1="15" x2="50" y2="85" stroke="#2D3436" stroke-width="2"/>'
-            };
-            return `<svg class="shape-svg w-32 h-32 mx-auto" viewBox="0 0 100 100">${shapes[type] || ''}</svg>`;
-        }
-
-        const lessonData = [
-            {
-                title: "Page 1: Antonyms",
-                instr: "Choose the word that means the opposite of the underlined word.",
-                qs: [
-                    { q: "1. a <u>problem</u>", opts: ["solution", "worry", "math", "sentence"], c: 0 },
-                    { q: "2. was <u>loose</u>", opts: ["tight", "large", "big", "win"], c: 0 },
-                    { q: "3. a <u>question</u>", opts: ["word", "poem", "answer", "talk"], c: 2 },
-                    { q: "4. was <u>fact</u>", opts: ["true", "real", "scary", "fiction"], c: 3 },
-                    { q: "5. was <u>straight</u>", opts: ["bent", "tall", "narrow", "long"], c: 0 },
-                    { q: "6. to <u>create</u>", opts: ["make", "build", "destroy", "draw"], c: 2 },
-                    { q: "7. was <u>shiny</u>", opts: ["dull", "bright", "pretty", "ugly"], c: 0 },
-                    { q: "8. to <u>listen</u>", opts: ["hear", "ignore", "touch", "eat"], c: 1 }
-                ]
-            },
-            {
-                title: "Page 2: Homographs",
-                instr: "Choose the word that correctly completes BOTH sentences.",
-                qs: [
-                    { q: "1. She counted all the ___ in her purse.<br>He will ___ clothes before practice.", opts: ["coins", "change", "buy", "money"], c: 1 },
-                    { q: "2. I will ___ a movie before bed.<br>Use your ___ to tell the time.", opts: ["watch", "clock", "see", "rent"], c: 0 },
-                    { q: "3. If it gets too hot, turn on the ___.<br>I am a big ___ of the basketball team.", opts: ["fan", "air", "player", "water"], c: 0 },
-                    { q: "4. Don't forget to ___ your bag.<br>Buy a ___ of gum at the store.", opts: ["stick", "pack", "bring", "use"], c: 1 },
-                    { q: "5. She ___ school every day at 3:00.<br>In the fall, rake the ___.", opts: ["grass", "leaves", "visits", "flowers"], c: 1 },
-                    { q: "6. We took a ___ to the fair.<br>You can ___ your dog to do tricks.", opts: ["car", "teach", "train", "bus"], c: 2 },
-                    { q: "7. Learn about ___ in science class.<br>Floss the ___ between your teeth.", opts: ["plants", "letter", "water", "space"], c: 3 },
-                    { q: "8. Don't ___ in front of others.<br>___ the paper into four squares.", opts: ["tear", "rip", "cut", "hit"], c: 2 }
-                ]
-            },
-            {
-                title: "Page 3: Prefixes Mastery",
-                instr: "Choose the correct word based on the prefix meaning.",
-                qs: [
-                    { q: "1. Which word means <b>not</b> fair?", opts: ["Fairness", "Unfair", "Missfair", "Disfair"], c: 1 },
-                    { q: "2. Which word means to wind <b>again</b>?", opts: ["Rewind", "Rewinding", "Unwind", "Miswind"], c: 0 },
-                    { q: "3. Which word means to heat <b>before</b>?", opts: ["Heating", "Preheat", "Unheat", "Misheat"], c: 1 },
-                    { q: "4. Which word means to make <b>again</b>?", opts: ["Remake", "Remaking", "Unmake", "Dismake"], c: 0 },
-                    { q: "5. Which word means to <b>stop appearing</b>?", opts: ["Appearing", "Disappear", "Misappear", "Reappear"], c: 1 },
-                    { q: "6. Which word means to spell <b>wrong</b>?", opts: ["Spellings", "Misspell", "Unspell", "Prespell"], c: 1 },
-                    { q: "7. Which word means to <b>not</b> agree?", opts: ["Agreements", "Disagree", "Unagree", "Misagree"], c: 1 },
-                    { q: "8. Which word means <b>not</b> even?", opts: ["Evenly", "Uneven", "Reeven", "Diseven"], c: 1 }
-                ]
-            },
-            {
-                title: "Page 4: Suffixes Mastery",
-                instr: "Choose the correct word based on the suffix meaning.",
-                qs: [
-                    { q: "1. Which word means <b>without</b> worth?", opts: ["Worthful", "Worthless", "Worthness", "Worthly"], c: 1 },
-                    { q: "2. Which word means the <b>state</b> of being weak?", opts: ["Weakly", "Weakness", "Weakful", "Weakless"], c: 1 },
-                    { q: "3. Which word means <b>full of</b> help?", opts: ["Helpless", "Helpful", "Helpness", "Helply"], c: 1 },
-                    { q: "4. Which word means <b>one who</b> teaches?", opts: ["Teaching", "Teacher", "Teachless", "Teachful"], c: 1 },
-                    { q: "5. Which word means <b>without</b> a home?", opts: ["Homely", "Homeless", "Homeness", "Homeful"], c: 1 },
-                    { q: "6. Which word means <b>full of</b> color?", opts: ["Colorly", "Colorful", "Colorless", "Colorness"], c: 1 },
-                    { q: "7. Which word means <b>in a quick way</b>?", opts: ["Quickless", "Quickly", "Quickful", "Quicker"], c: 1 },
-                    { q: "8. Which word means <b>one who</b> leads?", opts: ["Leading", "Leader", "Leadless", "Leadful"], c: 1 }
-                ]
-            },
-            {
-                title: "Page 5: Phonics Auditory",
-                instr: "Identify words with specific beginning or ending sounds.",
-                qs: [
-                    { q: "1. Same <b>beginning sound</b> as <u>duck</u>:", opts: ["drop", "door", "jump"], c: 1 },
-                    { q: "2. Same <b>beginning sound</b> as <u>shoe</u>:", opts: ["slip", "shop", "school"], c: 1 },
-                    { q: "3. Same <b>ending sound</b> as <u>bed</u>:", opts: ["ready", "door", "lead"], c: 2 },
-                    { q: "4. Same <b>ending sound</b> as <u>back</u>:", opts: ["check", "lunch", "camp"], c: 0 }
-                ]
-            },
-            {
-                title: "Page 6: Phonics & Mixed Practice",
-                instr: "Choose the best word based on sounds or context.",
-                qs: [
-                    { q: "5. Same middle sound as <b>chart</b>:", opts: ["past", "brain", "tray", "farm"], c: 3 },
-                    { q: "6. Same middle sound as <b>feet</b>:", opts: ["met", "them", "treat", "there"], c: 2 },
-                    { q: "7. Synonym of <u>fast</u>:", opts: ["slow", "race", "quick", "run"], c: 2 },
-                    { q: "8. Antonym of <u>outside</u>:", opts: ["under", "playing", "next", "inside"], c: 3 },
-                    { q: "9. Please ___ papers / never been to that ___.", opts: ["put", "place", "school", "lay"], c: 1 },
-                    { q: "10. turn ___ / answers ___ on test.", opts: ["left", "correct", "right", "around"], c: 2 }
-                ]
-            },
-            {
-                title: "Pages 7-8: Section 2 - Penguins",
-                passage: "Most penguins live in a land of snow and ice. They have feathers, wings, and a beak... But they cannot fly because their body is too heavy. They use their flat, stiff wings as flippers to help them swim swiftly. They eat shrimplike animals called krill.",
-                qs: [
-                    { q: "1.", qText: "Which sentence DOES NOT tell how they move?", opts: ["waddle land", "slide on bellies", "make nest of pebbles", "webbed feet"], c: 2 },
-                    { q: "2.", qText: "Meaning of <b>swiftly</b>:", opts: ["carefully", "quickly", "slowly", "safely"], c: 1 },
-                    { q: "3.", qText: "<b>Krill</b> means:", opts: ["eggs", "fish", "shrimplike animals", "babies"], c: 2 },
-                    { q: "4.", qText: "Fact about penguins:", opts: ["bad swimmers", "exactly like other birds", "wings help swim", "only mothers"], c: 2 }
-                ]
-            },
-            {
-                title: "Pages 9-10: Wright Brothers",
-                passage: "Orville and Wilbur Wright owned a bicycle shop. In 1899, they began to experiment with flight using kites and gliders. In 1903, they took the first motor-powered flight for 12 seconds.",
-                qs: [
-                    { q: "8.", qText: "Main idea:", opts: ["Testing bad", "Flyer first", "Early pilots", "Bike shop"], c: 2 },
-                    { q: "9.", qText: "<b>Experiment</b>:", opts: ["try new ideas", "test kites", "stay in air", "fly airplane"], c: 0 },
-                    { q: "12.", qText: "Opposite of started:", opts: ["began", "finished", "first", "continued"], c: 1 },
-                    { q: "13.", qText: "Opinion:", opts: ["Tested kites", "Flight in 1903", "Very smart", "Flyer first"], c: 2 }
-                ]
-            },
-            {
-                title: "Pages 11-12: Section 3 - My Shadow",
-                passage: "I have a little shadow that goes in and out with me. He is very like me from the heels up to the head... The funniest thing about him is the way he likes to grow.",
-                qs: [
-                    { q: "1.", qText: "Poem focus:", opts: ["school", "animals", "shadow relationship", "lost"], c: 2 },
-                    { q: "2.", qText: "Feeling:", opts: ["afraid", "bored", "amused", "quiet"], c: 2 },
-                    { q: "3.", qText: "Difference:", opts: ["grow/shrink", "jump", "find dew", "play"], c: 0 }
-                ]
-            },
-            {
-                title: "Pages 13-14: Uncle Wilber",
-                passage: "Uncle Wilber is strange. He sent Oscar the goldfish. Friday Wilber came to take Oscar home. He left a heavy box that hisses and says 'Be Careful'.",
-                qs: [
-                    { q: "8.", qText: "What happened Friday?", opts: ["got fish", "got letter", "picked up Oscar", "vacation"], c: 2 },
-                    { q: "10.", qText: "Describe Wilber:", opts: ["weird", "rude", "greedy", "selfish"], c: 0 }
-                ]
-            },
-            {
-                title: "Page 16: Synonyms Mastery",
-                instr: "Choose the word that means about the same.",
-                qs: [
-                    { q: "1. was <u>old</u>", opts: ["new", "ancient", "young", "dirty"], c: 1 },
-                    { q: "2. was <u>quiet</u>", opts: ["loud", "silent", "noisy", "yelling"], c: 1 },
-                    { q: "3. was <u>thin</u>", opts: ["narrow", "wide", "short", "tall"], c: 0 },
-                    { q: "4. was <u>unusual</u>", opts: ["regular", "normal", "strange", "same"], c: 2 },
-                    { q: "5. was <u>shiny</u>", opts: ["bright", "dull", "new", "pretty"], c: 0 }
-                ]
-            },
-            {
-                title: "Page 17: Context Clues Mastery",
-                instr: "Read the context and fill in the numbered blanks.",
-                passage: "My family is going on a (1) trip. We will (2) to the beach in our car. Some people like to (3) soda and eat candy. You should (4) brush your teeth (5) morning. We are going to learn (6) animals. I do not have (7) time to finish my book.",
-                qs: [
-                    { q: "1.", opts: ["large", "clean", "special", "hard"], c: 2 },
-                    { q: "2.", opts: ["swim", "travel", "together", "bring"], c: 1 },
-                    { q: "3.", opts: ["drink", "carry", "start", "bring"], c: 0 },
-                    { q: "4.", opts: ["never", "always", "sometimes", "rarely"], c: 1 },
-                    { q: "5.", opts: ["every", "none", "only", "not"], c: 0 },
-                    { q: "6.", opts: ["about", "from", "with", "around"], c: 0 },
-                    { q: "7.", opts: ["enough", "many", "few", "none"], c: 0 }
-                ]
-            }
-        ];
-
-        const initialCoinData = [
-            { q: `${getCoin('c1')} + ${getCoin('c1')} + ${getCoin('c1')}`, opts: ["2 cents", "3 cents", "5 cents", "10 cents"], c: 1 },
-            { q: `${getCoin('c5')} + ${getCoin('c5')}`, opts: ["5 cents", "10 cents", "25 cents", "2 cents"], c: 1 },
-            { q: `${getCoin('c10')} + ${getCoin('c10')}`, opts: ["10 cents", "20 cents", "25 cents", "15 cents"], c: 1 },
-            { q: `${getCoin('c25')} + ${getCoin('c10')}`, opts: ["30 cents", "35 cents", "40 cents", "25 cents"], c: 1 },
-            { q: `${getCoin('c25')} + ${getCoin('c25')} + ${getCoin('c25')} + ${getCoin('c25')}`, opts: ["50 cents", "75 cents", "$1.00", "$2.00"], c: 2 },
-            { q: `${getCoin('c10')} + ${getCoin('c5')} + ${getCoin('c1')}`, opts: ["15 cents", "16 cents", "20 cents", "11 cents"], c: 1 },
-            { q: `${getCoin('c25')} + ${getCoin('c25')} + ${getCoin('c25')}`, opts: ["50 cents", "75 cents", "$1.00", "25 cents"], c: 1 },
-            { q: `${getCoin('c10')} + ${getCoin('c10')} + ${getCoin('c10')} + ${getCoin('c10')}`, opts: ["30 cents", "40 cents", "50 cents", "20 cents"], c: 1 }
-        ];
-
-        function generateTimeData() {
-            const times = [];
-            for (let i = 0; i < 100; i++) {
-                const h = Math.floor(Math.random() * 12) + 1;
-                const m = Math.floor(Math.random() * 12) * 5;
-                const correctStr = `${h}:${m.toString().padStart(2, '0')}`;
-                const opts = new Set([correctStr]);
-                while (opts.size < 4) {
-                    const dh = Math.floor(Math.random() * 12) + 1;
-                    const dm = Math.floor(Math.random() * 12) * 5;
-                    opts.add(`${dh}:${dm.toString().padStart(2, '0')}`);
-                }
-                const sortedOpts = Array.from(opts).sort();
-                times.push({ q: `What time is it now?<br>${getClockSVG(h, m)}`, opts: sortedOpts, c: sortedOpts.indexOf(correctStr) });
-            }
-            return times;
-        }
-
-        function generateMathData() {
-            const math = [];
-            for (let i = 0; i < 150; i++) {
-                const op = Math.random() > 0.5 ? '+' : '-';
-                let a, b, res;
-                if (op === '+') { a = Math.floor(Math.random() * 101); b = Math.floor(Math.random() * (101 - a)); res = a + b; }
-                else { a = Math.floor(Math.random() * 101); b = Math.floor(Math.random() * (a + 1)); res = a - b; }
-                const correct = res.toString();
-                const opts = new Set([correct]);
-                while (opts.size < 4) opts.add((res + Math.floor(Math.random() * 20) - 10).toString());
-                const sortedOpts = Array.from(opts).sort((x, y) => parseInt(x) - parseInt(y));
-                math.push({ q: `Calculate: ${a} ${op} ${b} = ?`, opts: sortedOpts, c: sortedOpts.indexOf(correct) });
-            }
-            return math;
-        }
-
-        function generateShapesData() {
-            const list = [];
-            const names = ["circle", "square", "triangle", "rectangle", "star", "sphere", "cube", "cone", "cylinder", "pyramid"];
-            const allShapeOptions = ["Circle", "Square", "Triangle", "Rectangle", "Star", "Sphere", "Cube", "Cone", "Cylinder", "Pyramid"];
-            for (let i = 0; i < 120; i++) {
-                const type = names[Math.floor(Math.random() * names.length)];
-                const correct = type.charAt(0).toUpperCase() + type.slice(1);
-                let wrongOptions = allShapeOptions.filter(opt => opt !== correct);
-                wrongOptions = shuffle([...wrongOptions]).slice(0, 3);
-                const finalOptions = shuffle([correct, ...wrongOptions]).sort();
-                list.push({ q: `What shape is this?<br>${getShapeSVG(type)}`, opts: finalOptions, c: finalOptions.indexOf(correct) });
-            }
-            return list;
-        }
-
-        function generateGrammarData() {
-            const nouns = ["Dog", "Apple", "Teacher", "School", "Book", "Park", "Cat", "Ball", "Table", "Chair", "Car", "Tree"];
-            const verbs = ["Run", "Jump", "Eat", "Sleep", "Sing", "Dance", "Write", "Read", "Swim", "Play", "Laugh", "Walk"];
-            const list = [];
-            for (let i = 0; i < 120; i++) {
-                const isNoun = Math.random() > 0.5;
-                const word = isNoun ? nouns[Math.floor(Math.random() * nouns.length)] : verbs[Math.floor(Math.random() * verbs.length)];
-                list.push({ q: `Is the word "<b>${word}</b>" a Noun or a Verb?`, opts: ["Noun", "Verb"], c: isNoun ? 0 : 1 });
-            }
-            return list;
-        }
-
-        let currentView = 'home';
-        let activeData = [];
-        let currentPage = 0;
-        let userAnswers = {};
-        let fontSize = 22;
-        let isDarkMode = false;
-        let globalScore = 0;
-
-        // VOICE RECOGNITION GLOBALS
-        let recognition = null;
-        let isListening = false;
-        let currentActivityType = '';
-
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-
-            recognition.onstart = () => {
-                isListening = true;
-                const micBtn = document.getElementById('mic-btn');
-                if (micBtn) micBtn.classList.add('listening');
-            };
-
-            recognition.onend = () => {
-                isListening = false;
-                const micBtn = document.getElementById('mic-btn');
-                if (micBtn) micBtn.classList.remove('listening');
-            };
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-                evaluateSpeech(transcript);
-            };
-        }
-
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -557,6 +163,31 @@
             return array;
         }
 
+        // Global State
+        let currentView = 'home';
+        let activeData = [];
+        let currentPage = 0;
+        let userAnswers = {};
+        let fontSize = 22;
+        let isDarkMode = false;
+        let globalScore = 0;
+        let recognition = null;
+        let isListening = false;
+        let currentActivityType = '';
+
+        // Init Voice
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            recognition.onstart = () => { isListening = true; const b = document.getElementById('mic-btn'); if(b) b.classList.add('listening'); };
+            recognition.onend = () => { isListening = false; const b = document.getElementById('mic-btn'); if(b) b.classList.remove('listening'); };
+            recognition.onresult = (e) => evaluateSpeech(e.results[0][0].transcript);
+        }
+
+        // App Core Functions
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
@@ -578,246 +209,60 @@
             currentActivityType = type;
             let baseData = [];
             let perPage = 5;
-            if (type === 'lesson') { activeData = lessonData; }
-            else if (type === 'coin') { baseData = shuffle([...initialCoinData]); perPage = 2; }
-            else if (type === 'time') { baseData = shuffle(generateTimeData()); perPage = 8; }
-            else if (type === 'math') { baseData = shuffle(generateMathData()); perPage = 10; }
-            else if (type === 'shapes') { baseData = shuffle(generateShapesData()); perPage = 5; }
-            else if (type === 'grammar') { baseData = shuffle(generateGrammarData()); perPage = 10; }
-            else if (type === 'reading') {
-                perPage = 1; // One sentence per card for focus
-                const rawSentences = (typeof readingSentences !== 'undefined') ? readingSentences : ["The sun is hot.", "I like to play.", "A cat is small."];
-                const shuffledSentences = shuffle([...rawSentences]);
-                activeData = [];
-                for (let i = 0; i < shuffledSentences.length; i++) {
-                    activeData.push({
+
+            switch(type) {
+                case 'lesson': 
+                    activeData = lessonData; 
+                    break;
+                case 'reading':
+                    perPage = 1;
+                    const rawSents = (typeof readingSentences !== 'undefined') ? readingSentences : ["I can read."];
+                    activeData = shuffle([...rawSents]).map((s, i) => ({
                         title: `Reading Mastery #${i+1}`,
                         instr: "Read the sentence out loud!",
-                        qs: [{ 
-                            q: shuffledSentences[i], 
-                            originalText: shuffledSentences[i], 
-                            opts: ["Voice Check"], 
-                            c: 0,
-                            isReading: true
-                        }]
-                    });
-                }
+                        qs: [{ q: s, originalText: s, opts: ["Voice Check"], c: 0, isReading: true }]
+                    }));
+                    break;
+                case 'coin': 
+                    baseData = shuffle([...initialCoinData]); 
+                    perPage = 2; 
+                    break;
+                case 'time': 
+                    baseData = shuffle(generateTimeData()); 
+                    perPage = 8; 
+                    break;
+                case 'math': 
+                    baseData = shuffle(generateMathData()); 
+                    perPage = 10; 
+                    break;
+                case 'shapes': 
+                    baseData = shuffle(generateShapesData()); 
+                    perPage = 5; 
+                    break;
+                case 'grammar': 
+                    baseData = shuffle(generateGrammarData()); 
+                    perPage = 10; 
+                    break;
             }
 
             if (type !== 'lesson' && type !== 'reading') {
                 activeData = [];
                 for (let i = 0; i < baseData.length; i += perPage) {
                     activeData.push({
-                        title: `The ${type.toUpperCase()} Quest - Map ${activeData.length + 1}`,
-                        instr: "Solve these puzzles to win stickers! 🏆",
+                        title: `The ${type.toUpperCase()} Quest`,
+                        instr: "Solve these puzzles! 🏆",
                         qs: baseData.slice(i, i + perPage)
                     });
                 }
             }
+
             currentPage = 0;
             userAnswers = {};
             currentView = 'quiz';
             render();
-            window.scrollTo(0, 0);
         }
 
-        function toggleMic() {
-            if (!recognition) {
-                alert("Speech recognition is not supported in this browser.");
-                return;
-            }
-            if (isListening) {
-                recognition.stop();
-            } else {
-                recognition.start();
-                // Unlock the speak button as soon as they try the mic
-                const speakBtn = document.getElementById('speak-btn');
-                if (speakBtn) {
-                    speakBtn.disabled = false;
-                    speakBtn.classList.remove('opacity-50');
-                }
-            }
-        }
-
-        function speakSentence() {
-            const data = activeData[currentPage].qs[0];
-            const msg = new SpeechSynthesisUtterance();
-            msg.text = data.originalText;
-            window.speechSynthesis.speak(msg);
-        }
-
-        function evaluateSpeech(heard) {
-            const target = activeData[currentPage].qs[0].originalText.toLowerCase().replace(/[.,!?;:]/g, "");
-            const cleanedHeard = heard.toLowerCase().replace(/[.,!?;:]/g, "");
-            
-            // Fuzzy matching: check if heard contains at least 60% of target words
-            const targetWords = target.split(" ");
-            const heardWords = cleanedHeard.split(" ");
-            let matches = 0;
-            targetWords.forEach(w => { if(heardWords.includes(w)) matches++; });
-
-            if (matches / targetWords.length >= 0.6) {
-                handleAnswer(0, 0);
-                playGreatJob();
-            } else {
-                const toast = document.getElementById('toast');
-                toast.innerText = "Try reading again! 🗣️";
-                toast.style.backgroundColor = "#FF9800";
-                toast.style.opacity = "1";
-                setTimeout(() => toast.style.opacity = "0", 1500);
-            }
-        }
-
-        function playGreatJob() {
-            const msg = new SpeechSynthesisUtterance();
-            msg.text = "Great job!";
-            msg.pitch = 1.5;
-            msg.rate = 1;
-            window.speechSynthesis.speak(msg);
-        }
-
-        function handleBack() {
-            if (currentPage > 0) { currentPage--; render(); window.scrollTo(0, 0); }
-            else goHome();
-        }
-
-        function nextPage() {
-            if (currentPage < activeData.length - 1) { currentPage++; render(); window.scrollTo(0, 0); }
-            else finish();
-        }
-
-        function render() {
-            const main = document.getElementById('main-view');
-            const footer = document.getElementById('quiz-footer');
-            const progress = document.getElementById('progress-container');
-            const scoreBox = document.getElementById('smart-score-box');
-            const pageIndicator = document.getElementById('page-indicator');
-
-            document.getElementById('score-val').innerText = `${globalScore}`;
-
-            if (currentView === 'home') {
-                footer.classList.add('hidden');
-                progress.classList.add('hidden');
-                scoreBox.classList.remove('hidden');
-                
-                main.innerHTML = `
-                    <div class="text-center py-6">
-                        <div class="inline-block bg-white dark:bg-gray-800 p-6 rounded-3xl border-4 border-purple-400 rotate-2 mb-10 shadow-lg">
-                             <h2 class="text-3xl lg:text-5xl font-black text-purple-600 dark:text-purple-300">PICK YOUR ADVENTURE! 🏰</h2>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div onclick="startSection('lesson')" class="hub-card lesson-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">📖</div>
-                                <h3 class="text-3xl font-black mb-1">Lesson Mastery</h3>
-                                <p class="font-bold opacity-80">Full PDF Review</p>
-                            </div>
-                            <div onclick="startSection('reading')" class="hub-card reading-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">🎙️</div>
-                                <h3 class="text-3xl font-black mb-1">Reading Lab</h3>
-                                <p class="font-bold opacity-80">Listen & Speak</p>
-                            </div>
-                            <div onclick="startSection('coin')" class="hub-card coin-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">💰</div>
-                                <h3 class="text-3xl font-black mb-1">Coin Math Lab</h3>
-                                <p class="font-bold opacity-80">Money Counting</p>
-                            </div>
-                            <div onclick="startSection('time')" class="hub-card time-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">⏰</div>
-                                <h3 class="text-3xl font-black mb-1">Time Lab</h3>
-                                <p class="font-bold opacity-80">Read the Clock</p>
-                            </div>
-                            <div onclick="startSection('math')" class="hub-card math-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">➕</div>
-                                <h3 class="text-3xl font-black mb-1">Math Lab</h3>
-                                <p class="font-bold opacity-80">150+ Problems</p>
-                            </div>
-                            <div onclick="startSection('shapes')" class="hub-card shapes-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">📐</div>
-                                <h3 class="text-3xl font-black mb-1">Shapes Lab</h3>
-                                <p class="font-bold opacity-80">2D & 3D Geometry</p>
-                            </div>
-                            <div onclick="startSection('grammar')" class="hub-card grammar-gradient p-8 text-white shadow-xl cursor-pointer">
-                                <div class="text-6xl mb-4">🖍️</div>
-                                <h3 class="text-3xl font-black mb-1">Grammar Lab</h3>
-                                <p class="font-bold opacity-80">Noun vs Verb</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (currentView === 'quiz') {
-                footer.classList.remove('hidden');
-                progress.classList.remove('hidden');
-                scoreBox.classList.remove('hidden');
-
-                const data = activeData[currentPage];
-                const progVal = ((currentPage + 1) / activeData.length) * 100;
-                document.getElementById('progress-bar').style.width = `${progVal}%`;
-                pageIndicator.innerText = `${currentPage + 1}/${activeData.length}`;
-
-                let passageHtml = data.passage ? `
-                    <div class="sticky-passage mb-10">
-                        <div class="passage-box p-8 shadow-xl">
-                            <p class="font-bold passage-text">${data.passage}</p>
-                        </div>
-                        <div class="text-center mt-4"><span class="text-4xl">🕵️‍♂️</span></div>
-                    </div>` : '';
-
-                let questionsHtml = '';
-                const isOneBoxPage = ["Pages 7-8", "Pages 9-10", "Pages 11-12", "Pages 13-14", "Page 17"].some(p => data.title.includes(p));
-
-                if (currentActivityType === 'reading') {
-                    const q = data.qs[0];
-                    const answered = userAnswers[`${currentPage}-0`] !== undefined;
-                    questionsHtml = `
-                        <div class="card p-10 mb-10 text-center">
-                            <div class="text-5xl font-black mb-10 text-purple-600 dark:text-purple-300">"${q.q}"</div>
-                            <div class="flex flex-col items-center gap-6">
-                                <button id="mic-btn" onclick="toggleMic()" ${answered ? 'disabled' : ''} class="w-32 h-32 rounded-full bg-purple-500 text-white flex items-center justify-center text-5xl shadow-xl transition-all active:scale-90 ${answered ? 'opacity-30' : ''}">
-                                    🎤
-                                </button>
-                                <div class="flex gap-4">
-                                    <button id="speak-btn" onclick="speakSentence()" disabled class="px-8 py-4 bg-blue-500 text-white rounded-full font-black text-xl opacity-50 transition-all flex items-center gap-2">
-                                        🔊 Listen
-                                    </button>
-                                    ${answered ? '<div class="text-5xl animate-bounce">✅⭐</div>' : ''}
-                                </div>
-                                <p class="font-bold text-gray-500">${answered ? 'Great reading!' : 'Click the mic and read out loud!'}</p>
-                            </div>
-                        </div>`;
-                } else if (isOneBoxPage) {
-                    questionsHtml = `<div class="card p-8 mb-10 overflow-hidden relative border-4 border-purple-300"><div class="space-y-8">${data.qs.map((q, qIdx) => {
-                        const key = `${currentPage}-${qIdx}`;
-                        const answered = userAnswers[key] !== undefined;
-                        const fullText = q.qText ? `${q.q} ${q.qText}` : q.q;
-                        return `<div class="border-b-2 border-dashed border-gray-200 dark:border-gray-700 pb-6 last:border-0"><div class="font-black text-purple-600 dark:text-purple-300 mb-4 text-xl q-text">${fullText}</div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">${q.opts.map((opt, oIdx) => {
-                            let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === userAnswers[key] ? "wrong" : "opacity-30")) : "";
-                            return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn w-full py-3 px-2 text-center font-bold text-sm transition-all shadow-sm ${cls}">${opt}</button>`;
-                        }).join('')}</div></div>`;
-                    }).join('')}</div></div>`;
-                } else {
-                    data.qs.forEach((q, qIdx) => {
-                        const key = `${currentPage}-${qIdx}`;
-                        const answered = userAnswers[key] !== undefined;
-                        const isCoinQuestion = data.title.includes("COIN") || data.title.includes("Coin");
-                        const coinClass = isCoinQuestion ? "flex flex-wrap items-center justify-start gap-2" : "";
-                        questionsHtml += `<div class="card p-10 mb-10 overflow-hidden relative"><div class="font-black mb-8 q-text text-2xl ${coinClass}">${q.q}</div><div class="grid grid-cols-1 ${q.opts.length > 2 ? 'sm:grid-cols-2' : ''} gap-6">${q.opts.map((opt, oIdx) => {
-                            let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === userAnswers[key] ? "wrong" : "opacity-30")) : "";
-                            let icon = answered ? (oIdx === q.c ? "✅" : (oIdx === userAnswers[key] ? "❌" : "")) : "";
-                            return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn w-full p-5 text-left font-black transition-all flex justify-between items-center ${cls}"><span>${opt}</span><span>${icon}</span></button>`;
-                        }).join('')}</div></div>`;
-                    });
-                }
-
-                main.innerHTML = `
-                    <div class="mb-14 text-center">
-                        <h2 class="font-black text-5xl mb-4 text-purple-600 dark:text-purple-300">${data.title}</h2>
-                        <div class="inline-block bg-purple-200 dark:bg-purple-900 px-6 py-2 rounded-full border-2 border-purple-400 font-bold text-purple-700 dark:text-purple-200 instruction-text">💡 ${data.instr}</div>
-                    </div>
-                    <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-16' : 'max-w-4xl mx-auto'}">${passageHtml}<div class="space-y-6">${questionsHtml}</div></div>`;
-            }
-        }
-
-        window.handleAnswer = (qIdx, oIdx) => {
+        function handleAnswer(qIdx, oIdx) {
             const key = `${currentPage}-${qIdx}`;
             if (userAnswers[key] !== undefined) return;
             userAnswers[key] = oIdx;
@@ -825,44 +270,158 @@
             if (isCorrect) globalScore++;
             
             const toast = document.getElementById('toast');
-            if (isCorrect) {
-                const scoreBox = document.getElementById('smart-score-box');
-                scoreBox.classList.add('scale-125');
-                setTimeout(() => scoreBox.classList.remove('scale-125'), 200);
-            }
-
-            const coolMessages = isCorrect ? ["BOOM! CORRECT! 💥", "YOU'RE A WIZARD! 🧙‍♂️", "SUPER GENIUS! 🧠", "YAY! HOORAY! 🎉"] : ["OOPSIE! 🍌", "NOT QUITE! 🧐", "TRY AGAIN, HERO! 🦸‍♂️"];
-            toast.innerText = coolMessages[Math.floor(Math.random()*coolMessages.length)];
+            const messages = isCorrect ? ["BOOM! 💥", "WIZARD! 🧙‍♂️", "GENIUS! 🧠", "HOORAY! 🎉"] : ["OOPSIE! 🍌", "TRY AGAIN! 🧐"];
+            toast.innerText = messages[Math.floor(Math.random()*messages.length)];
             toast.style.backgroundColor = isCorrect ? "#4CAF50" : "#F44336";
             toast.style.opacity = "1";
-            toast.style.transform = "translateX(-50%) translateY(-20px) scale(1.2)";
-            setTimeout(() => { toast.style.opacity = "0"; toast.style.transform = "translateX(-50%) translateY(0) scale(1)"; }, 1200);
+            setTimeout(() => toast.style.opacity = "0", 1200);
             render();
-        };
+        }
+
+        function render() {
+            const main = document.getElementById('main-view');
+            const footer = document.getElementById('quiz-footer');
+            const progress = document.getElementById('progress-container');
+            const scoreVal = document.getElementById('score-val');
+
+            scoreVal.innerText = globalScore;
+
+            if (currentView === 'home') {
+                footer.classList.add('hidden');
+                progress.classList.add('hidden');
+                main.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="inline-block bg-white dark:bg-gray-800 p-6 rounded-3xl border-4 border-purple-400 rotate-2 mb-10 shadow-lg">
+                             <h2 class="text-3xl lg:text-5xl font-black text-purple-600 dark:text-purple-300">PICK YOUR ADVENTURE! 🏰</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div onclick="startSection('lesson')" class="hub-card lesson-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">📖</div>
+                                <h3 class="text-3xl font-black mb-1">Lesson Mastery</h3>
+                                <p class="font-bold opacity-80">Full PDF Review</p>
+                            </div>
+                            <div onclick="startSection('reading')" class="hub-card reading-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">🎙️</div>
+                                <h3 class="text-3xl font-black mb-1">Reading Lab</h3>
+                                <p class="font-bold opacity-80">Listen & Speak</p>
+                            </div>
+                            <div onclick="startSection('coin')" class="hub-card coin-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">💰</div>
+                                <h3 class="text-3xl font-black mb-1">Coin Math Lab</h3>
+                                <p class="font-bold opacity-80">Money Counting</p>
+                            </div>
+                            <div onclick="startSection('time')" class="hub-card time-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">⏰</div>
+                                <h3 class="text-3xl font-black mb-1">Time Lab</h3>
+                                <p class="font-bold opacity-80">Read the Clock</p>
+                            </div>
+                            <div onclick="startSection('math')" class="hub-card math-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">➕</div>
+                                <h3 class="text-3xl font-black mb-1">Math Lab</h3>
+                                <p class="font-bold opacity-80">Math Problems</p>
+                            </div>
+                            <div onclick="startSection('shapes')" class="hub-card shapes-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">📐</div>
+                                <h3 class="text-3xl font-black mb-1">Shapes Lab</h3>
+                                <p class="font-bold opacity-80">Geometry</p>
+                            </div>
+                            <div onclick="startSection('grammar')" class="hub-card grammar-gradient p-8 text-white shadow-xl">
+                                <div class="text-6xl mb-4">🖍️</div>
+                                <h3 class="text-3xl font-black mb-1">Grammar Lab</h3>
+                                <p class="font-bold opacity-80">Noun vs Verb</p>
+                            </div>
+                        </div>
+                    </div>`;
+            } else if (currentView === 'quiz') {
+                footer.classList.remove('hidden');
+                progress.classList.remove('hidden');
+                const data = activeData[currentPage];
+                const prog = ((currentPage + 1) / activeData.length) * 100;
+                document.getElementById('progress-bar').style.width = `${prog}%`;
+                document.getElementById('page-indicator').innerText = `${currentPage + 1}/${activeData.length}`;
+
+                let passageHtml = data.passage ? `<div class="sticky-passage mb-10"><div class="passage-box p-8 shadow-xl"><p class="font-bold passage-text">${data.passage}</p></div></div>` : '';
+                
+                let questionsHtml = '';
+                if (currentActivityType === 'reading') {
+                    const q = data.qs[0];
+                    const answered = userAnswers[`${currentPage}-0`] !== undefined;
+                    questionsHtml = `
+                        <div class="card p-10 text-center">
+                            <div class="text-5xl font-black mb-10 text-purple-600 dark:text-purple-300">"${q.q}"</div>
+                            <div class="flex flex-col items-center gap-6">
+                                <button id="mic-btn" onclick="toggleMic()" ${answered ? 'disabled' : ''} class="w-32 h-32 rounded-full bg-purple-500 text-white flex items-center justify-center text-5xl shadow-xl transition-all active:scale-90 ${answered ? 'opacity-30' : ''}">🎤</button>
+                                <button id="speak-btn" onclick="speakSentence('${q.originalText}')" class="px-8 py-4 bg-blue-500 text-white rounded-full font-black text-xl flex items-center gap-2">🔊 Listen</button>
+                                ${answered ? '<div class="text-5xl animate-bounce">✅⭐</div>' : ''}
+                            </div>
+                        </div>`;
+                } else {
+                    questionsHtml = data.qs.map((q, qIdx) => {
+                        const key = `${currentPage}-${qIdx}`;
+                        const ans = userAnswers[key];
+                        const answered = ans !== undefined;
+                        return `
+                        <div class="card p-8 mb-6">
+                            <div class="font-black mb-6 text-xl q-text">${q.qText ? q.q + " " + q.qText : q.q}</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                ${q.opts.map((opt, oIdx) => {
+                                    let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "";
+                                    return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn w-full py-4 px-2 font-bold transition-all ${cls}">${opt}</button>`;
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+
+                main.innerHTML = `
+                    <div class="mb-14 text-center">
+                        <h2 class="font-black text-4xl mb-4 text-purple-600 dark:text-purple-300">${data.title}</h2>
+                        <div class="inline-block bg-purple-200 dark:bg-purple-900 px-6 py-2 rounded-full font-bold text-purple-700 dark:text-purple-200">💡 ${data.instr}</div>
+                    </div>
+                    <div class="${data.passage ? 'lg:grid lg:grid-cols-2 lg:gap-16' : 'max-w-4xl mx-auto'}">${passageHtml}<div>${questionsHtml}</div></div>`;
+            }
+        }
+
+        // Helpers for UI state
+        function toggleMic() {
+            if (!recognition) return;
+            isListening ? recognition.stop() : recognition.start();
+        }
+
+        function speakSentence(txt) {
+            const msg = new SpeechSynthesisUtterance(txt);
+            window.speechSynthesis.speak(msg);
+        }
+
+        function evaluateSpeech(heard) {
+            const target = activeData[currentPage].qs[0].originalText.toLowerCase().replace(/[.,!?;:]/g, "");
+            const heardWords = heard.toLowerCase().split(" ");
+            const targetWords = target.split(" ");
+            let matches = 0;
+            targetWords.forEach(w => { if(heardWords.includes(w)) matches++; });
+            if (matches / targetWords.length >= 0.6) {
+                handleAnswer(0, 0);
+            }
+        }
+
+        function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); }
+        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render()) : finish(); }
 
         function finish() {
             currentView = 'results';
             document.getElementById('quiz-footer').classList.add('hidden');
             document.getElementById('progress-container').classList.add('hidden');
-            let total = 0, correct = 0;
-            activeData.forEach((p, pi) => p.qs.forEach((q, qi) => { total++; if (userAnswers[`${pi}-${qi}`] === q.c) correct++; }));
-            const scorePercent = Math.round((correct/total)*100);
-            const res = scorePercent >= 90 ? { emoji: "👑", msg: "YOU ARE THE KING!", color: "text-purple-500" } : { emoji: "🌟", msg: "SUPERSTAR!", color: "text-blue-500" };
-
             document.getElementById('main-view').innerHTML = `
-                <div class="max-w-3xl mx-auto text-center py-12 px-8 bg-white dark:bg-gray-800 rounded-[4rem] shadow-2xl mt-8 border-8 border-purple-200">
-                    <div class="text-9xl mb-8 animate-bounce">${res.emoji}</div>
-                    <h2 class="text-5xl font-black mb-4 ${res.color}">${res.msg}</h2>
-                    <div class="text-8xl font-black text-purple-600 mb-12">${scorePercent}%</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <button onclick="goHome()" class="py-6 bg-purple-600 text-white rounded-[2.5rem] font-black text-2xl shadow-lg">PLAY AGAIN! 🎮</button>
-                        <button onclick="location.reload()" class="py-6 bg-pink-600 text-white rounded-[2.5rem] font-black text-2xl shadow-lg">NEW QUEST! 🗺️</button>
-                    </div>
+                <div class="max-w-3xl mx-auto text-center py-12 px-8 bg-white dark:bg-gray-800 rounded-[4rem] shadow-2xl border-8 border-purple-200">
+                    <div class="text-9xl mb-8 animate-bounce">👑</div>
+                    <h2 class="text-5xl font-black mb-4 text-purple-600">MISSION COMPLETE!</h2>
+                    <div class="text-8xl font-black text-purple-600 mb-12">${globalScore} ⭐</div>
+                    <button onclick="goHome()" class="py-6 px-12 bg-purple-600 text-white rounded-[2.5rem] font-black text-2xl shadow-lg active:scale-95 transition-all">BACK TO BASE! 🏠</button>
                 </div>`;
-            window.scrollTo(0, 0);
         }
 
-        render();
+        window.onload = render;
     </script>
 </body> 
 </html>
+
