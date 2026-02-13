@@ -17,7 +17,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700;900&display=swap" rel="stylesheet">
-    <!-- Lucide Icons for Native Look -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- Data Imports (External Files) -->
@@ -63,6 +63,10 @@
             overflow-x: hidden;
             -webkit-user-select: none;
             user-select: none;
+            /* Ensures footer stays at bottom */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .q-text { 
@@ -112,7 +116,7 @@
             border-radius: 25px !important; 
         }
 
-        /* Hub Cards - Small Box, Large Icon */
+        /* Hub Cards - Small Boxes, Large Icons */
         .hub-card { 
             aspect-ratio: 1 / 1;
             border-radius: 22px; 
@@ -163,13 +167,15 @@
         .correct { background: #4CAF50 !important; color: white !important; border-color: #2E7D32 !important; box-shadow: 0 4px 0 #2E7D32 !important; }
         .wrong { background: #F44336 !important; color: white !important; border-color: #B71C1C !important; box-shadow: 0 4px 0 #B71C1C !important; }
 
-        /* Header Fix: Handle Safe Areas for iPhone Status Bars */
+        /* Header Fix: Handle Safe Areas and Ensure Icons are Visible */
         .glass-header { 
             background: linear-gradient(135deg, #673AB7 0%, #5E35B1 100%); 
             border-bottom: 3px solid #512DA8;
             border-radius: 0 0 25px 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            padding-top: calc(0.5rem + env(safe-area-inset-top));
+            /* Increased top padding for notch devices */
+            padding-top: max(1.2rem, env(safe-area-inset-top)); 
+            padding-bottom: 0.5rem;
         }
 
         .app-footer {
@@ -177,7 +183,7 @@
             border-top: 2px solid #D1C4E9;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
             transition: background 0.3s ease, border-color 0.3s ease;
-            padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
         }
 
         .dark .app-footer {
@@ -192,9 +198,9 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen">
 
-    <header class="glass-header sticky top-0 z-50 px-4 py-1.5 flex flex-col gap-1 text-white">
+    <header class="glass-header sticky top-0 z-50 px-4 text-white">
         <div class="flex justify-between items-center max-w-5xl mx-auto w-full">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-lg animate-bounce border border-white/20">
@@ -213,7 +219,7 @@
                 </div>
 
                 <button onclick="toggleTheme()" class="w-7 h-7 sm:w-9 sm:h-9 bg-white/10 rounded-lg flex items-center justify-center text-xs border border-white/20">
-                    <i data-lucide="sparkles" class="w-4 h-4" id="theme-icon-svg"></i>
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
                 </button>
 
                 <div class="bg-yellow-400 text-purple-900 px-2 sm:px-3 py-0.5 rounded-full font-black border border-white shadow-sm">
@@ -233,21 +239,23 @@
         </div>
     </header>
 
-    <main class="flex-grow max-w-5xl mx-auto px-4 py-3 sm:py-5 w-full mb-10">
+    <main class="flex-grow max-w-5xl mx-auto px-4 py-3 sm:py-5 w-full">
         <div id="main-view"></div>
     </main>
 
-    <!-- Native Style Footer -->
-    <footer id="quiz-footer" class="hidden fixed bottom-0 left-0 right-0 py-2 px-4 sm:px-6 z-40 app-footer backdrop-blur-lg">
+    <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 py-1.5 px-4 sm:px-6 z-40 app-footer backdrop-blur-lg">
         <div class="max-w-xl mx-auto flex gap-3 sm:gap-4">
-            <button onclick="handleBack()" class="flex-1 py-2 bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-900 rounded-xl font-black text-xs sm:text-sm text-gray-600 dark:text-gray-100 active:translate-y-0.5 transition-all uppercase">Back</button>
-            <button id="next-btn" onclick="nextPage()" class="flex-1 py-2 bg-[#673AB7] text-white border-b-2 border-[#4527A0] rounded-xl font-black text-xs sm:text-sm shadow-md active:translate-y-0.5 transition-all uppercase">Next 🚀</button>
+            <button onclick="handleBack()" class="flex-1 py-1.5 bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-900 rounded-xl font-black text-xs sm:text-sm text-gray-600 dark:text-gray-100 active:translate-y-0.5 transition-all uppercase">Back</button>
+            <button id="next-btn" onclick="nextPage()" class="flex-1 py-1.5 bg-[#673AB7] text-white border-b-2 border-[#4527A0] rounded-xl font-black text-xs sm:text-sm shadow-md active:translate-y-0.5 transition-all uppercase">Next 🚀</button>
         </div>
     </footer>
 
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-white font-black shadow-xl opacity-0 pointer-events-none z-[60] text-sm border-2 border-white transition-opacity duration-300"></div>
 
     <script>
+        // Logic to correctly import everything from the js files.
+        // Internal lessonData shadowing removed to allow lessonData.js to load 400 questions.
+
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
@@ -311,7 +319,10 @@
                 dataToShuffle = shuffle([...sentsSource]).map(s => ({ title: `Reading Mastery`, instr: "Try to speak!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
-                    case 'lesson': dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); break;
+                    case 'lesson': 
+                        // Importing ALL questions from external lessonData.js correctly
+                        dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
+                        break;
                     case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
                     case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
                     case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
@@ -443,7 +454,7 @@
                         <div class="card p-5 sm:p-8 mb-4 flex flex-col items-center border-dashed"><div class="q-text mb-6 text-gray-800 leading-tight">"${q.q}"</div>
                             <div class="flex flex-col items-center gap-4">
                                 <div class="relative flex items-center justify-center">${isListening ? '<div class="listening-ring"></div>' : ''}
-                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
+                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl sm:text-3xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
                                 </div>
                                 <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="flex items-center gap-2 px-5 py-2 bg-blue-500 text-white rounded-xl font-black text-sm shadow-md transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-0.5'}"><i data-lucide="volume-2" class="w-4 h-4"></i> Listen</button>
                                 ${answered ? '<div class="text-3xl animate-bounce mt-2 text-green-500 font-black">CORRECT!</div>' : ''}
