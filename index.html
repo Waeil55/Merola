@@ -238,8 +238,6 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full text-white font-black shadow-2xl opacity-0 pointer-events-none z-[60] text-base border-4 border-white transition-opacity duration-300"></div>
 
     <script>
-        // No local lessonData here anymore. It loads from lessonData.js imported in <head>.
-
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
@@ -277,6 +275,7 @@
             window.scrollTo(0, 0);
         }
 
+        // Correctly flattens grouped question data into an array of individual question pages
         function flattenData(source) {
             if (!source || !Array.isArray(source)) return [];
             let flat = [];
@@ -309,7 +308,7 @@
             } else {
                 switch(type) {
                     case 'lesson': 
-                        // Pulls ALL questions from the externally loaded lessonData array
+                        // Pulls the FULL lessonData array from the external file
                         dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
                         break;
                     case 'stories': 
@@ -337,6 +336,8 @@
             }
             
             activeData = shuffle([...dataToShuffle]);
+            if (type === 'writing' && activeData.length > 30) activeData = activeData.slice(0, 30);
+
             currentPage = 0; userAnswers = {}; currentView = 'quiz';
             render();
             window.scrollTo(0, 0);
