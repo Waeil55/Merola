@@ -141,7 +141,6 @@
             width: 100%; 
         }
 
-        /* Desktop & Landscape layout for story and questions */
         @media (min-width: 1024px), (orientation: landscape) and (max-height: 600px) {
             .quiz-container {
                 display: flex;
@@ -343,6 +342,43 @@
             allTimeBest: parseInt(localStorage.getItem('merola_alltime_best') || 0)
         };
 
+        // Audio Context for App Sounds
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, now); // C5
+                oscillator.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1); // C6
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                oscillator.start(now);
+                oscillator.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(220, now); // A3
+                oscillator.frequency.linearRampToValueAtTime(110, now + 0.2); // A2
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                oscillator.start(now);
+                oscillator.stop(now + 0.4);
+            } else if (type === 'click') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, now);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                oscillator.start(now);
+                oscillator.stop(now + 0.05);
+            }
+        }
+
         function updateStatDisplay() {
             document.getElementById('streak-count').innerText = stats.streak + " DAYS";
             document.getElementById('daily-total').innerText = stats.dailyTotal + " TODAY";
@@ -376,6 +412,7 @@
                 globalScore = 0;
                 saveStats();
                 showToast("Stars reset! 🌟", "#6C5CE7");
+                playSound('click');
             }
         }
 
@@ -387,18 +424,21 @@
                 if (type === 'alltime') stats.allTimeBest = 0;
                 saveStats();
                 showToast("Reset! 🧹", "#6C5CE7");
+                playSound('click');
             }
         }
 
         function adjustFont(val) {
             fontSize = Math.max(16, Math.min(42, fontSize + val));
             document.documentElement.style.setProperty('--user-font-size', fontSize + 'px');
+            playSound('click');
         }
 
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
             lucide.createIcons();
+            playSound('click');
         }
 
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
@@ -420,6 +460,7 @@
             document.getElementById('top-pills').classList.remove('hidden');
             render();
             window.scrollTo(0, 0);
+            playSound('click');
         }
 
         function flattenData(source) {
@@ -461,21 +502,29 @@
             document.getElementById('top-pills').classList.add('hidden');
             render();
             window.scrollTo(0, 0);
+            playSound('click');
         }
 
-        function toggleMic() { if (!recognition) return; micUsedOnThisPage = true; isListening ? recognition.stop() : recognition.start(); }
+        function toggleMic() { if (!recognition) return; micUsedOnThisPage = true; isListening ? recognition.stop() : recognition.start(); playSound('click'); }
         function speak(text) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.rate = 0.8; window.speechSynthesis.speak(msg); }
         function checkReading(heard) {
             const target = activeData[currentPage].qs[0].original.toLowerCase().replace(/[.,!?;:]/g, "");
             const words = heard.toLowerCase().split(" ");
             let match = 0; target.split(" ").forEach(w => { if(words.includes(w)) match++; });
-            if (match / target.split(" ").length >= 0.6) handleAnswer(0, 0, true);
-            else showToast("Try again! 🎤", "#F44336");
+            if (match / target.split(" ").length >= 0.6) {
+                handleAnswer(0, 0, true);
+            } else {
+                showToast("Try again! 🎤", "#F44336");
+                playSound('wrong');
+            }
         }
         function checkSpelling(qIdx) {
-            const input = document.getElementById(`spell-input-${qIdx}`);
-            if (input.value.trim().toLowerCase() === activeData[currentPage].qs[qIdx].target.toLowerCase()) handleAnswer(qIdx, 0, true);
-            else showToast("Check spelling!", "#F44336");
+            if (document.getElementById(`spell-input-${qIdx}`).value.trim().toLowerCase() === activeData[currentPage].qs[qIdx].target.toLowerCase()) {
+                handleAnswer(qIdx, 0, true);
+            } else {
+                showToast("Check spelling!", "#F44336");
+                playSound('wrong');
+            }
         }
         function handleAnswer(qIdx, oIdx, isCorrect = null) {
             const key = `${currentPage}-${qIdx}`;
@@ -487,9 +536,13 @@
                 stats.dailyTotal++; 
                 if (globalScore > stats.allTimeBest) stats.allTimeBest = globalScore; 
                 saveStats(); 
-                showToast("BINGO! ⭐", "#4CAF50"); 
+                showToast("BINGO! ⭐", "#4CAF50");
+                playSound('correct');
             }
-            else showToast("OOPS! 🍌", "#F44336");
+            else {
+                showToast("OOPS! 🍌", "#F44336");
+                playSound('wrong');
+            }
             render();
         }
         function showToast(msg, color) { const t = document.getElementById('toast'); t.innerText = msg; t.style.backgroundColor = color; t.style.opacity = "1"; setTimeout(() => t.style.opacity = "0", 1500); }
@@ -568,11 +621,10 @@
             lucide.createIcons();
         }
 
-        function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); }
-        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render()) : finish(); }
-        function finish() { currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden'); render(); }
+        function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); playSound('click'); }
+        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render()) : finish(); playSound('click'); }
+        function finish() { currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden'); render(); playSound('correct'); }
         window.onload = () => { checkStreak(); render(); };
     </script>
 </body>
 </html>
-
