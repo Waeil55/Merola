@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Merola's Lab">
     
+    <!-- App Icons -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Waeil55/Merola/main/IMG_3813.png">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Waeil55/Merola/main/IMG_3813.png">
     <meta name="theme-color" content="#673AB7">
@@ -63,7 +64,6 @@
             overflow-x: hidden;
             -webkit-user-select: none;
             user-select: none;
-            /* Ensures footer stays at bottom */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -116,7 +116,6 @@
             border-radius: 25px !important; 
         }
 
-        /* Hub Cards - Small Boxes, Large Icons */
         .hub-card { 
             aspect-ratio: 1 / 1;
             border-radius: 22px; 
@@ -167,13 +166,11 @@
         .correct { background: #4CAF50 !important; color: white !important; border-color: #2E7D32 !important; box-shadow: 0 4px 0 #2E7D32 !important; }
         .wrong { background: #F44336 !important; color: white !important; border-color: #B71C1C !important; box-shadow: 0 4px 0 #B71C1C !important; }
 
-        /* Header Fix: Handle Safe Areas and Ensure Icons are Visible */
         .glass-header { 
             background: linear-gradient(135deg, #673AB7 0%, #5E35B1 100%); 
             border-bottom: 3px solid #512DA8;
             border-radius: 0 0 25px 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            /* Increased top padding for notch devices */
             padding-top: max(1.2rem, env(safe-area-inset-top)); 
             padding-bottom: 0.5rem;
         }
@@ -203,8 +200,9 @@
     <header class="glass-header sticky top-0 z-50 px-4 text-white">
         <div class="flex justify-between items-center max-w-5xl mx-auto w-full">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-lg animate-bounce border border-white/20">
-                    <i data-lucide="beaker" class="w-5 h-5"></i>
+                <!-- App Image Icon as Logo -->
+                <div class="w-9 h-9 sm:w-11 sm:h-11 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-white/20 shadow-inner">
+                    <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/IMG_3813.png" class="w-full h-full object-cover" alt="Merola Icon">
                 </div>
                 <div>
                     <h1 class="text-sm sm:text-base font-black font-['Comic_Neue'] tracking-tight leading-none uppercase">Merola's Lab</h1>
@@ -253,9 +251,6 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-white font-black shadow-xl opacity-0 pointer-events-none z-[60] text-sm border-2 border-white transition-opacity duration-300"></div>
 
     <script>
-        // Logic to correctly import everything from the js files.
-        // Internal lessonData shadowing removed to allow lessonData.js to load 400 questions.
-
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
@@ -320,7 +315,6 @@
             } else {
                 switch(type) {
                     case 'lesson': 
-                        // Importing ALL questions from external lessonData.js correctly
                         dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
                         break;
                     case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
@@ -454,7 +448,7 @@
                         <div class="card p-5 sm:p-8 mb-4 flex flex-col items-center border-dashed"><div class="q-text mb-6 text-gray-800 leading-tight">"${q.q}"</div>
                             <div class="flex flex-col items-center gap-4">
                                 <div class="relative flex items-center justify-center">${isListening ? '<div class="listening-ring"></div>' : ''}
-                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl sm:text-3xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
+                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
                                 </div>
                                 <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="flex items-center gap-2 px-5 py-2 bg-blue-500 text-white rounded-xl font-black text-sm shadow-md transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-0.5'}"><i data-lucide="volume-2" class="w-4 h-4"></i> Listen</button>
                                 ${answered ? '<div class="text-3xl animate-bounce mt-2 text-green-500 font-black">CORRECT!</div>' : ''}
