@@ -214,13 +214,10 @@
         .dark #back-btn { background-color: #2D3436; color: #FFFFFF; }
 
         .stat-pill {
-            background: rgba(0,0,0,0.1);
-            border-radius: 20px;
-            padding: 4px 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
+        .stat-pill:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -247,7 +244,7 @@
                     <i data-lucide="sparkles" class="w-5 h-5"></i>
                 </button>
 
-                <div class="bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                <div onclick="resetDaily()" class="bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer active:scale-95">
                     <span class="text-yellow-300 text-lg">⭐</span>
                     <span id="score-val" class="font-black">0</span>
                 </div>
@@ -267,14 +264,17 @@
 
     <main class="flex-grow max-w-5xl mx-auto px-6 py-4 w-full">
         <div id="top-pills" class="flex justify-between gap-4 mb-8">
-            <div class="flex-1 h-16 bg-pink-soft rounded-[25px] flex items-center justify-center shadow-sm">
-                <i data-lucide="medal" class="text-pink-500 w-6 h-6"></i>
+            <div onclick="confirmReset('streak')" class="stat-pill flex-1 h-16 bg-pink-soft rounded-[25px] flex flex-col items-center justify-center shadow-sm">
+                <i data-lucide="medal" class="text-pink-500 w-5 h-5"></i>
+                <span id="streak-count" class="text-xs font-black text-pink-600">0</span>
             </div>
-            <div class="flex-1 h-16 bg-blue-soft rounded-[25px] flex items-center justify-center shadow-sm">
-                <i data-lucide="star" class="text-blue-500 w-6 h-6"></i>
+            <div onclick="confirmReset('daily')" class="stat-pill flex-1 h-16 bg-blue-soft rounded-[25px] flex flex-col items-center justify-center shadow-sm">
+                <i data-lucide="star" class="text-blue-500 w-5 h-5"></i>
+                <span id="daily-total" class="text-xs font-black text-blue-600">0</span>
             </div>
-            <div class="flex-1 h-16 bg-yellow-soft rounded-[25px] flex items-center justify-center shadow-sm">
-                <i data-lucide="crown" class="text-yellow-600 w-6 h-6"></i>
+            <div onclick="confirmReset('alltime')" class="stat-pill flex-1 h-16 bg-yellow-soft rounded-[25px] flex flex-col items-center justify-center shadow-sm">
+                <i data-lucide="crown" class="text-yellow-600 w-5 h-5"></i>
+                <span id="alltime-best" class="text-xs font-black text-yellow-700">0</span>
             </div>
         </div>
 
@@ -294,6 +294,67 @@
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
+
+        // Score Tracking State
+        const stats = {
+            streak: parseInt(localStorage.getItem('merola_streak') || 0),
+            lastDate: localStorage.getItem('merola_last_date'),
+            dailyTotal: parseInt(localStorage.getItem('merola_daily_total') || 0),
+            allTimeBest: parseInt(localStorage.getItem('merola_alltime_best') || 0)
+        };
+
+        function updateStatDisplay() {
+            document.getElementById('streak-count').innerText = stats.streak + " DAYS";
+            document.getElementById('daily-total').innerText = stats.dailyTotal + " TODAY";
+            document.getElementById('alltime-best').innerText = "BEST: " + stats.allTimeBest;
+            document.getElementById('score-val').innerText = globalScore;
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            if (stats.lastDate) {
+                const last = new Date(stats.lastDate);
+                const diff = (new Date(today) - last) / (1000 * 60 * 60 * 24);
+                
+                if (diff === 1) {
+                    stats.streak++;
+                } else if (diff > 1) {
+                    stats.streak = 1;
+                }
+            } else {
+                stats.streak = 1;
+            }
+            
+            if (stats.lastDate !== today) {
+                stats.dailyTotal = 0; // Reset daily score count for visual display on new day
+            }
+            
+            stats.lastDate = today;
+            saveStats();
+        }
+
+        function saveStats() {
+            localStorage.setItem('merola_streak', stats.streak);
+            localStorage.setItem('merola_last_date', stats.lastDate);
+            localStorage.setItem('merola_daily_total', stats.dailyTotal);
+            localStorage.setItem('merola_alltime_best', stats.allTimeBest);
+            updateStatDisplay();
+        }
+
+        function confirmReset(type) {
+            const msgs = {
+                streak: "Reset Merola's day streak?",
+                daily: "Reset today's star count?",
+                alltime: "Reset all-time record?"
+            };
+            if (confirm(msgs[type])) {
+                if (type === 'streak') stats.streak = 0;
+                if (type === 'daily') { stats.dailyTotal = 0; globalScore = 0; }
+                if (type === 'alltime') stats.allTimeBest = 0;
+                saveStats();
+                showToast("Reset successful! 🧹", "#6C5CE7");
+            }
+        }
 
         function adjustFont(val) {
             fontSize = Math.max(16, Math.min(42, fontSize + val));
@@ -333,12 +394,7 @@
             source.forEach(group => {
                 if (group && group.qs && Array.isArray(group.qs)) {
                     group.qs.forEach(questionObj => {
-                        flat.push({ 
-                            title: group.title, 
-                            instr: group.instr, 
-                            passage: group.passage || null, 
-                            qs: [questionObj] 
-                        });
+                        flat.push({ title: group.title, instr: group.instr, passage: group.passage || null, qs: [questionObj] });
                     });
                 }
             });
@@ -358,9 +414,7 @@
                 dataToShuffle = shuffle([...sentsSource]).map(s => ({ title: `Reading Mastery`, instr: "Try to speak!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
-                    case 'lesson': 
-                        dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
-                        break;
+                    case 'lesson': dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); break;
                     case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
                     case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
                     case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
@@ -413,7 +467,16 @@
             const q = activeData[currentPage].qs[qIdx];
             const finalCorrect = isCorrect !== null ? isCorrect : (oIdx === q.c);
             userAnswers[key] = oIdx;
-            if (finalCorrect) { globalScore++; showToast("BINGO! ⭐", "#4CAF50"); } else { showToast("OOPS! 🍌", "#F44336"); }
+            
+            if (finalCorrect) { 
+                globalScore++; 
+                stats.dailyTotal++;
+                if (globalScore > stats.allTimeBest) stats.allTimeBest = globalScore;
+                saveStats();
+                showToast("BINGO! ⭐", "#4CAF50"); 
+            } else { 
+                showToast("OOPS! 🍌", "#F44336"); 
+            }
             render();
         }
 
@@ -431,15 +494,12 @@
 
         function render() {
             const main = document.getElementById('main-view');
-            document.getElementById('score-val').innerText = globalScore;
+            updateStatDisplay();
 
             if (currentView === 'home') {
                 main.innerHTML = `<div class="space-y-4">
                     <section>
-                        <div class="section-header">
-                            <i data-lucide="book-open" class="section-icon w-5 h-5"></i>
-                            <h2 class="section-title">Magic English</h2>
-                        </div>
+                        <div class="section-header"><i data-lucide="book-open" class="section-icon w-5 h-5"></i><h2 class="section-title">Magic English</h2></div>
                         <div class="grid grid-cols-3 gap-4">
                             ${renderHubItem('reading', 'Reading', 'mic', 'bg-card-reading')}
                             ${renderHubItem('writing', 'Spelling', 'pen-tool', 'bg-card-spelling')}
@@ -448,23 +508,15 @@
                             ${renderHubItem('grammar', 'Grammar', 'edit-3', 'bg-card-grammar')}
                         </div>
                     </section>
-                    
                     <section>
-                        <div class="section-header">
-                            <i data-lucide="target" class="section-icon w-5 h-5"></i>
-                            <h2 class="section-title">Daily Mission</h2>
-                        </div>
+                        <div class="section-header"><i data-lucide="target" class="section-icon w-5 h-5"></i><h2 class="section-title">Daily Mission</h2></div>
                         <div onclick="startSection('lesson')" class="daily-mission-card">
                             <i data-lucide="graduation-cap" class="w-14 h-14 mx-auto mb-4 text-white"></i>
                             <h3 class="font-black text-xl uppercase tracking-widest">Lesson Mastery</h3>
                         </div>
                     </section>
-
                     <section>
-                        <div class="section-header">
-                            <i data-lucide="calculator" class="section-icon w-5 h-5"></i>
-                            <h2 class="section-title">Math Quests</h2>
-                        </div>
+                        <div class="section-header"><i data-lucide="calculator" class="section-icon w-5 h-5"></i><h2 class="section-title">Math Quests</h2></div>
                         <div class="grid grid-cols-3 gap-4">
                             ${renderHubItem('math', 'Math Lab', 'plus', 'bg-card-math')}
                             ${renderHubItem('time', 'Time Lab', 'clock', 'bg-card-time')}
@@ -478,7 +530,6 @@
                 document.getElementById('progress-container').classList.remove('hidden');
                 const data = activeData[currentPage], progress = ((currentPage + 1) / activeData.length) * 100;
                 document.getElementById('progress-bar').style.width = progress + "%";
-
                 const nextBtn = document.getElementById('next-btn');
                 if (nextBtn) {
                     const isPageAnswered = data.qs.every((_, qIdx) => userAnswers[`${currentPage}-${qIdx}`] !== undefined);
@@ -488,28 +539,23 @@
 
                 if (currentActivityType === 'reading') {
                     const q = data.qs[0], answered = userAnswers[`${currentPage}-0`] !== undefined;
-                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto">
-                        <div class="instr-text">💡 ${data.instr}</div>
-                        <div class="card p-8 mb-4 flex flex-col items-center">
-                            <div class="q-text mb-8 leading-tight">"${q.q}"</div>
+                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><div class="instr-text">💡 ${data.instr}</div>
+                        <div class="card p-8 mb-4 flex flex-col items-center"><div class="q-text mb-8 leading-tight">"${q.q}"</div>
                             <button onclick="toggleMic()" class="w-20 h-20 rounded-full ${isListening ? 'bg-red-500' : 'bg-[#7B68EE]'} text-white flex items-center justify-center text-2xl shadow-xl transition-all ${answered ? 'opacity-30' : ''}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-10 h-10"></i></button>
                             <button onclick="speak('${q.original}')" class="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-600 rounded-2xl font-black"><i data-lucide="volume-2" class="w-5 h-5"></i> Listen</button>
                         </div></div>`;
                 } else {
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const ans = userAnswers[`${currentPage}-${qIdx}`], answered = ans !== undefined;
-                        return `<div class="card p-6 mb-6">
-                            <div class="q-text mb-6 font-black">${q.qText || q.q}</div>
+                        return `<div class="card p-6 mb-6"><div class="q-text mb-6 font-black">${q.qText || q.q}</div>
                             <div class="grid grid-cols-1 gap-3">
                                 ${q.opts.map((opt, oIdx) => {
                                     let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
                                     return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn py-4 font-black transition-all ${cls}">${opt}</button>`;
                                 }).join('')}
-                            </div>
-                        </div>`;
+                            </div></div>`;
                     }).join('');
-                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div>
-                    <div class="max-w-4xl mx-auto">${data.passage ? `<div class="passage-box p-6 mb-6 passage-text">${data.passage}</div>` : ''}${qsHtml}</div>`;
+                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div><div class="max-w-4xl mx-auto">${data.passage ? `<div class="passage-box p-6 mb-6 passage-text">${data.passage}</div>` : ''}${qsHtml}</div>`;
                 }
             }
             lucide.createIcons();
@@ -521,7 +567,11 @@
             currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden');
             main.innerHTML = `<div class="text-center py-20"><h2 class="text-5xl font-black mb-4">WINNER!</h2><button onclick="goHome()" class="px-12 py-4 bg-[#7B68EE] text-white rounded-3xl font-black text-xl shadow-xl uppercase">Home</button></div>`;
         }
-        window.onload = render;
+
+        window.onload = () => {
+            checkStreak();
+            render();
+        };
     </script>
 </body>
 </html>
