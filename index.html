@@ -141,8 +141,8 @@
             width: 100%; 
         }
 
-        /* Desktop specific layout for story and questions */
-        @media (min-width: 1024px) {
+        /* Desktop & Landscape layout for story and questions */
+        @media (min-width: 1024px), (orientation: landscape) and (max-height: 600px) {
             .quiz-container {
                 display: flex;
                 gap: 2rem;
@@ -151,8 +151,8 @@
             .passage-box {
                 flex: 1;
                 position: sticky;
-                top: 120px;
-                max-height: 70vh;
+                top: 80px;
+                max-height: 60vh;
             }
             .questions-container {
                 flex: 1.2;
@@ -545,7 +545,7 @@
                         return `<div class="card p-6 mb-6 w-full"><div class="q-text mb-6 font-black">${q.qText || q.q}</div>
                             <div class="options-grid">
                                 ${q.opts.map((opt, oIdx) => {
-                                    let cls = ans ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
+                                    let cls = ans ? (oIdx === q.c ? "correct" : (oIdx === cur ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
                                     return `<button onclick="handleAnswer(${i}, ${oIdx})" ${ans ? 'disabled' : ''} class="option-btn py-5 px-4 font-black transition-all ${cls}">${opt}</button>`;
                                 }).join('')}
                             </div></div>`;
@@ -575,3 +575,5 @@
     </script>
 </body>
 </html>
+
+
