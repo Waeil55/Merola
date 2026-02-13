@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <title>Merola</title>
+    <title>Merola's Lab</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -140,6 +140,30 @@
             scrollbar-color: #7B68EE transparent;
             width: 100%; 
         }
+
+        /* Desktop specific layout for story and questions */
+        @media (min-width: 1024px) {
+            .quiz-container {
+                display: flex;
+                gap: 2rem;
+                align-items: flex-start;
+            }
+            .passage-box {
+                flex: 1;
+                position: sticky;
+                top: 120px;
+                max-height: 70vh;
+            }
+            .questions-container {
+                flex: 1.2;
+            }
+            .options-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+        }
+
         .passage-box::-webkit-scrollbar { width: 6px; }
         .passage-box::-webkit-scrollbar-thumb { background: #7B68EE; border-radius: 10px; }
 
@@ -246,7 +270,7 @@
                     <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/M.PNG" class="w-full h-full object-cover" alt="Merola Icon">
                 </div>
                 <div>
-                    <h1 class="text-xl font-black font-['Comic_Neue'] tracking-wide leading-none uppercase">Merola</h1>
+                    <h1 class="text-xl font-black font-['Comic_Neue'] tracking-wide leading-none uppercase">Merola's Lab</h1>
                     <p class="text-[10px] uppercase font-bold text-yellow-300 leading-none mt-1">Grade 2 Discovery!</p>
                 </div>
             </div>
@@ -499,6 +523,7 @@
                 document.getElementById('progress-bar').style.width = ((currentPage + 1) / activeData.length) * 100 + "%";
                 const nextBtn = document.getElementById('next-btn');
                 if (nextBtn) { const ans = data.qs.every((_, i) => userAnswers[`${currentPage}-${i}`] !== undefined); nextBtn.disabled = !ans; nextBtn.style.opacity = ans ? "1" : "0.3"; }
+                
                 if (currentActivityType === 'reading') {
                     const q = data.qs[0], ans = userAnswers[`${currentPage}-0`] !== undefined;
                     main.innerHTML = `<div class="text-center w-full"><div class="instr-text">💡 ${data.instr}</div>
@@ -518,14 +543,24 @@
                     let qsHtml = data.qs.map((q, i) => {
                         const cur = userAnswers[`${currentPage}-${i}`], ans = cur !== undefined;
                         return `<div class="card p-6 mb-6 w-full"><div class="q-text mb-6 font-black">${q.qText || q.q}</div>
-                            <div class="grid grid-cols-1 gap-4">
+                            <div class="options-grid">
                                 ${q.opts.map((opt, oIdx) => {
-                                    let cls = ans ? (oIdx === q.c ? "correct" : (oIdx === cur ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
+                                    let cls = ans ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
                                     return `<button onclick="handleAnswer(${i}, ${oIdx})" ${ans ? 'disabled' : ''} class="option-btn py-5 px-4 font-black transition-all ${cls}">${opt}</button>`;
                                 }).join('')}
                             </div></div>`;
                     }).join('');
-                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div><div class="w-full">${data.passage ? `<div class="passage-box p-6 mb-6 transform transition-all w-full"><div class="flex items-center gap-2 mb-2 text-[#7B68EE] font-black"><i data-lucide="book" class="w-5 h-5"></i> STORY TIME</div><div class="passage-text text-gray-700 dark:text-gray-200">${data.passage}</div></div>` : ''}${qsHtml}</div>`;
+
+                    main.innerHTML = `
+                        <div class="instr-text text-center">💡 ${data.instr}</div>
+                        <div class="quiz-container">
+                            ${data.passage ? `
+                                <div class="passage-box p-6 transform transition-all">
+                                    <div class="flex items-center gap-2 mb-2 text-[#7B68EE] font-black"><i data-lucide="book" class="w-5 h-5"></i> STORY TIME</div>
+                                    <div class="passage-text text-gray-700 dark:text-gray-200">${data.passage}</div>
+                                </div>` : ''}
+                            <div class="questions-container">${qsHtml}</div>
+                        </div>`;
                 }
             } else if (currentView === 'results') {
                 main.innerHTML = `<div class="text-center py-20"><h2 class="text-5xl font-black mb-4">WINNER!</h2><button onclick="goHome()" class="px-12 py-4 bg-[#7B68EE] text-white rounded-3xl font-black text-xl shadow-xl uppercase">Home</button></div>`;
