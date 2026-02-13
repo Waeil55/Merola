@@ -213,6 +213,13 @@
 
         .dark #back-btn { background-color: #2D3436; color: #FFFFFF; }
 
+        .spelling-input {
+            width: 100%; border: 3px solid var(--border-color); border-radius: 18px; padding: 12px;
+            font-family: 'Comic Neue', cursive; font-weight: 700; outline: none; background: #fdfdfd; text-align: center;
+            color: #2D3436; 
+        }
+        .dark .spelling-input { background: #E1BEE7; color: #2D3436; }
+
         .stat-pill {
             cursor: pointer;
             transition: transform 0.2s;
@@ -295,7 +302,6 @@
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
 
-        // Score Tracking State
         const stats = {
             streak: parseInt(localStorage.getItem('merola_streak') || 0),
             lastDate: localStorage.getItem('merola_last_date'),
@@ -315,20 +321,10 @@
             if (stats.lastDate) {
                 const last = new Date(stats.lastDate);
                 const diff = (new Date(today) - last) / (1000 * 60 * 60 * 24);
-                
-                if (diff === 1) {
-                    stats.streak++;
-                } else if (diff > 1) {
-                    stats.streak = 1;
-                }
-            } else {
-                stats.streak = 1;
-            }
-            
-            if (stats.lastDate !== today) {
-                stats.dailyTotal = 0; // Reset daily score count for visual display on new day
-            }
-            
+                if (diff === 1) stats.streak++;
+                else if (diff > 1) stats.streak = 1;
+            } else { stats.streak = 1; }
+            if (stats.lastDate !== today) stats.dailyTotal = 0;
             stats.lastDate = today;
             saveStats();
         }
@@ -342,11 +338,7 @@
         }
 
         function confirmReset(type) {
-            const msgs = {
-                streak: "Reset Merola's day streak?",
-                daily: "Reset today's star count?",
-                alltime: "Reset all-time record?"
-            };
+            const msgs = { streak: "Reset Merola's day streak?", daily: "Reset today's star count?", alltime: "Reset all-time record?" };
             if (confirm(msgs[type])) {
                 if (type === 'streak') stats.streak = 0;
                 if (type === 'daily') { stats.dailyTotal = 0; globalScore = 0; }
@@ -408,7 +400,11 @@
 
             if (type === 'writing') {
                 const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple"];
-                dataToShuffle = shuffle([...wordsSource]).map(w => ({ title: `Spelling Word`, instr: "Type the word!", qs: [{ target: w, isWriting: true }] }));
+                dataToShuffle = shuffle([...wordsSource]).map(w => ({ 
+                    title: `Spelling Word`, 
+                    instr: "Type the word!", 
+                    qs: [{ target: w, isWriting: true }] 
+                }));
             } else if (type === 'reading') {
                 const sentsSource = (typeof readingSentences !== 'undefined') ? readingSentences : ["Hello"];
                 dataToShuffle = shuffle([...sentsSource]).map(s => ({ title: `Reading Mastery`, instr: "Try to speak!", qs: [{ q: s, original: s, isReading: true }] }));
@@ -469,8 +465,7 @@
             userAnswers[key] = oIdx;
             
             if (finalCorrect) { 
-                globalScore++; 
-                stats.dailyTotal++;
+                globalScore++; stats.dailyTotal++;
                 if (globalScore > stats.allTimeBest) stats.allTimeBest = globalScore;
                 saveStats();
                 showToast("BINGO! ⭐", "#4CAF50"); 
@@ -544,6 +539,16 @@
                             <button onclick="toggleMic()" class="w-20 h-20 rounded-full ${isListening ? 'bg-red-500' : 'bg-[#7B68EE]'} text-white flex items-center justify-center text-2xl shadow-xl transition-all ${answered ? 'opacity-30' : ''}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-10 h-10"></i></button>
                             <button onclick="speak('${q.original}')" class="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-600 rounded-2xl font-black"><i data-lucide="volume-2" class="w-5 h-5"></i> Listen</button>
                         </div></div>`;
+                } else if (data.qs[0].isWriting) {
+                    let qsHtml = data.qs.map((q, qIdx) => {
+                        const answered = userAnswers[`${currentPage}-${qIdx}`] !== undefined;
+                        return `<div class="card p-8 mb-4 flex flex-col items-center">
+                            <button onclick="speak('${q.target}')" class="w-16 h-16 rounded-full bg-orange-500 text-white shadow-md flex items-center justify-center mb-6 hover:scale-105 transition-all"><i data-lucide="volume-2" class="w-8 h-8"></i></button>
+                            <input type="text" id="spell-input-${qIdx}" class="spelling-input text-xl mb-4 ${answered ? 'bg-green-100 border-green-500 text-green-700' : ''}" placeholder="Type here..." ${answered ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${qIdx})">
+                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-8 py-2 bg-green-500 text-white rounded-xl font-black shadow-sm uppercase">Check</button>` : '<div class="text-base font-black text-green-600">✨ CORRECT ✨</div>'}
+                        </div>`;
+                    }).join('');
+                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><div class="instr-text">💡 ${data.instr}</div>${qsHtml}</div>`;
                 } else {
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const ans = userAnswers[`${currentPage}-${qIdx}`], answered = ans !== undefined;
@@ -567,11 +572,7 @@
             currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden');
             main.innerHTML = `<div class="text-center py-20"><h2 class="text-5xl font-black mb-4">WINNER!</h2><button onclick="goHome()" class="px-12 py-4 bg-[#7B68EE] text-white rounded-3xl font-black text-xl shadow-xl uppercase">Home</button></div>`;
         }
-
-        window.onload = () => {
-            checkStreak();
-            render();
-        };
+        window.onload = () => { checkStreak(); render(); };
     </script>
 </body>
 </html>
