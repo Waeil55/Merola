@@ -98,6 +98,7 @@
             box-shadow: 0 5px 0 var(--border-color); 
             border: 2px solid var(--border-color); 
             color: var(--text-color); 
+            width: 100%; 
         }
         .option-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--border-color); }
 
@@ -120,22 +121,24 @@
             border: 4px solid var(--border-color); 
             border-radius: 35px; 
             box-shadow: 6px 6px 0px var(--border-color); 
+            width: 100%; 
+            max-width: none !important;
         }
         
-        /* Updated Beautiful & Sticky Passage Box */
         .passage-box { 
             background-color: var(--passage-bg) !important; 
             border: 4px solid #7B68EE !important; 
             border-radius: 25px !important; 
             box-shadow: 0 8px 20px rgba(123, 104, 238, 0.15);
             position: sticky;
-            top: 100px; /* Adjust based on header height */
+            top: 100px; 
             z-index: 30;
             max-height: 35vh;
             overflow-y: auto;
             margin-bottom: 2rem;
             scrollbar-width: thin;
             scrollbar-color: #7B68EE transparent;
+            width: 100%; 
         }
         .passage-box::-webkit-scrollbar { width: 6px; }
         .passage-box::-webkit-scrollbar-thumb { background: #7B68EE; border-radius: 10px; }
@@ -230,6 +233,8 @@
             transition: transform 0.2s;
         }
         .stat-pill:active { transform: scale(0.95); }
+
+        main { padding-left: 10px !important; padding-right: 10px !important; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -290,7 +295,7 @@
             </div>
         </div>
 
-        <div id="main-view"></div>
+        <div id="main-view" class="w-full"></div>
     </main>
 
     <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 z-40 app-footer backdrop-blur-lg px-6">
@@ -307,7 +312,6 @@
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
 
-        // Score Tracking State
         const stats = {
             streak: parseInt(localStorage.getItem('merola_streak') || 0),
             lastDate: localStorage.getItem('merola_last_date'),
@@ -327,20 +331,10 @@
             if (stats.lastDate) {
                 const last = new Date(stats.lastDate);
                 const diff = (new Date(today) - last) / (1000 * 60 * 60 * 24);
-                
-                if (diff === 1) {
-                    stats.streak++;
-                } else if (diff > 1) {
-                    stats.streak = 1;
-                }
-            } else {
-                stats.streak = 1;
-            }
-            
-            if (stats.lastDate !== today) {
-                stats.dailyTotal = 0; 
-            }
-            
+                if (diff === 1) stats.streak++;
+                else if (diff > 1) stats.streak = 1;
+            } else stats.streak = 1;
+            if (stats.lastDate !== today) stats.dailyTotal = 0; 
             stats.lastDate = today;
             saveStats();
         }
@@ -353,18 +347,22 @@
             updateStatDisplay();
         }
 
+        function resetDaily() {
+            if (confirm("Reset Merola's current session stars?")) {
+                globalScore = 0;
+                saveStats();
+                showToast("Stars reset! 🌟", "#6C5CE7");
+            }
+        }
+
         function confirmReset(type) {
-            const msgs = {
-                streak: "Reset Merola's day streak?",
-                daily: "Reset today's star count?",
-                alltime: "Reset all-time record?"
-            };
+            const msgs = { streak: "Reset streak?", daily: "Reset today's stars?", alltime: "Reset record?" };
             if (confirm(msgs[type])) {
                 if (type === 'streak') stats.streak = 0;
                 if (type === 'daily') { stats.dailyTotal = 0; globalScore = 0; }
                 if (type === 'alltime') stats.allTimeBest = 0;
                 saveStats();
-                showToast("Reset successful! 🧹", "#6C5CE7");
+                showToast("Reset! 🧹", "#6C5CE7");
             }
         }
 
@@ -405,8 +403,8 @@
             let flat = [];
             source.forEach(group => {
                 if (group && group.qs && Array.isArray(group.qs)) {
-                    group.qs.forEach(questionObj => {
-                        flat.push({ title: group.title, instr: group.instr, passage: group.passage || null, qs: [questionObj] });
+                    group.qs.forEach(qObj => {
+                        flat.push({ title: group.title, instr: group.instr, passage: group.passage || null, qs: [qObj] });
                     });
                 }
             });
@@ -414,29 +412,26 @@
         }
 
         function startSection(type) {
-            currentActivityType = type;
-            micUsedOnThisPage = false;
+            currentActivityType = type; micUsedOnThisPage = false;
             let dataToShuffle = [];
-
             if (type === 'writing') {
-                const wordsSource = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple"];
-                dataToShuffle = shuffle([...wordsSource]).map(w => ({ title: `Spelling Word`, instr: "Type the word!", qs: [{ target: w, isWriting: true }] }));
+                const words = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple"];
+                dataToShuffle = shuffle([...words]).map(w => ({ title: `Spelling`, instr: "Type it!", qs: [{ target: w, isWriting: true }] }));
             } else if (type === 'reading') {
-                const sentsSource = (typeof readingSentences !== 'undefined') ? readingSentences : ["Hello"];
-                dataToShuffle = shuffle([...sentsSource]).map(s => ({ title: `Reading Mastery`, instr: "Try to speak!", qs: [{ q: s, original: s, isReading: true }] }));
+                const sents = (typeof readingSentences !== 'undefined') ? readingSentences : ["Hello"];
+                dataToShuffle = shuffle([...sents]).map(s => ({ title: `Reading`, instr: "Speak!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
                     case 'lesson': dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); break;
                     case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
                     case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
-                    case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
-                    case 'time': dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); break;
-                    case 'math': dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); break;
-                    case 'shapes': dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify shape!" }]); break;
-                    case 'grammar': dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Choose correctly!" }]); break;
+                    case 'coin': dataToShuffle = flattenData([{ qs: (typeof initialCoinData !== 'undefined' ? initialCoinData : []), title: "Coins", instr: "Count!" }]); break;
+                    case 'time': dataToShuffle = flattenData([{ qs: (typeof generateTimeData === 'function' ? generateTimeData() : []), title: "Time", instr: "Read!" }]); break;
+                    case 'math': dataToShuffle = flattenData([{ qs: (typeof generateMathData === 'function' ? generateMathData() : []), title: "Math", instr: "Solve!" }]); break;
+                    case 'shapes': dataToShuffle = flattenData([{ qs: (typeof generateShapesData === 'function' ? generateShapesData() : []), title: "Shapes", instr: "Name!" }]); break;
+                    case 'grammar': dataToShuffle = flattenData([{ qs: (typeof generateGrammarData === 'function' ? generateGrammarData() : []), title: "Grammar", instr: "Pick!" }]); break;
                 }
             }
-            
             activeData = shuffle([...dataToShuffle]);
             currentPage = 0; userAnswers = {}; currentView = 'quiz';
             document.getElementById('top-pills').classList.add('hidden');
@@ -444,146 +439,104 @@
             window.scrollTo(0, 0);
         }
 
-        function toggleMic() {
-            if (!recognition) return;
-            micUsedOnThisPage = true; 
-            if (isListening) recognition.stop(); else recognition.start();
-        }
-
-        function speak(text) {
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.rate = 0.8;
-            window.speechSynthesis.speak(msg);
-        }
-
+        function toggleMic() { if (!recognition) return; micUsedOnThisPage = true; isListening ? recognition.stop() : recognition.start(); }
+        function speak(text) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.rate = 0.8; window.speechSynthesis.speak(msg); }
         function checkReading(heard) {
             const target = activeData[currentPage].qs[0].original.toLowerCase().replace(/[.,!?;:]/g, "");
             const words = heard.toLowerCase().split(" ");
-            let match = 0;
-            target.split(" ").forEach(w => { if(words.includes(w)) match++; });
+            let match = 0; target.split(" ").forEach(w => { if(words.includes(w)) match++; });
             if (match / target.split(" ").length >= 0.6) handleAnswer(0, 0, true);
             else showToast("Try again! 🎤", "#F44336");
         }
-
         function checkSpelling(qIdx) {
             const input = document.getElementById(`spell-input-${qIdx}`);
-            const target = activeData[currentPage].qs[qIdx].target;
-            if (input.value.trim().toLowerCase() === target.toLowerCase()) handleAnswer(qIdx, 0, true);
-            else { showToast("Check spelling!", "#F44336"); }
+            if (input.value.trim().toLowerCase() === activeData[currentPage].qs[qIdx].target.toLowerCase()) handleAnswer(qIdx, 0, true);
+            else showToast("Check spelling!", "#F44336");
         }
-
         function handleAnswer(qIdx, oIdx, isCorrect = null) {
             const key = `${currentPage}-${qIdx}`;
             if (userAnswers[key] !== undefined) return;
-            const q = activeData[currentPage].qs[qIdx];
-            const finalCorrect = isCorrect !== null ? isCorrect : (oIdx === q.c);
+            const finalCorrect = isCorrect !== null ? isCorrect : (oIdx === activeData[currentPage].qs[qIdx].c);
             userAnswers[key] = oIdx;
-            
             if (finalCorrect) { 
                 globalScore++; 
-                stats.dailyTotal++;
-                if (globalScore > stats.allTimeBest) stats.allTimeBest = globalScore;
-                saveStats();
+                stats.dailyTotal++; 
+                if (globalScore > stats.allTimeBest) stats.allTimeBest = globalScore; 
+                saveStats(); 
                 showToast("BINGO! ⭐", "#4CAF50"); 
-            } else { 
-                showToast("OOPS! 🍌", "#F44336"); 
             }
+            else showToast("OOPS! 🍌", "#F44336");
             render();
         }
-
-        function showToast(msg, color) {
-            const t = document.getElementById('toast'); t.innerText = msg; t.style.backgroundColor = color; t.style.opacity = "1";
-            setTimeout(() => t.style.opacity = "0", 1500);
-        }
-
-        function renderHubItem(type, label, iconName, bgClass) {
-            return `<div onclick="startSection('${type}')" class="hub-card ${bgClass} text-white">
-                <i data-lucide="${iconName}" class="w-8 h-8"></i>
-                <h3>${label}</h3>
-            </div>`;
-        }
+        function showToast(msg, color) { const t = document.getElementById('toast'); t.innerText = msg; t.style.backgroundColor = color; t.style.opacity = "1"; setTimeout(() => t.style.opacity = "0", 1500); }
+        function renderHubItem(type, label, icon, bg) { return `<div onclick="startSection('${type}')" class="hub-card ${bg} text-white"><i data-lucide="${icon}" class="w-8 h-8"></i><h3>${label}</h3></div>`; }
 
         function render() {
-            const main = document.getElementById('main-view');
-            updateStatDisplay();
-
+            const main = document.getElementById('main-view'); updateStatDisplay();
             if (currentView === 'home') {
                 main.innerHTML = `<div class="space-y-4">
-                    <section>
-                        <div class="section-header"><i data-lucide="book-open" class="section-icon w-5 h-5"></i><h2 class="section-title">Magic English</h2></div>
-                        <div class="grid grid-cols-3 gap-4">
+                    <section><div class="section-header"><i data-lucide="book-open" class="section-icon w-5 h-5"></i><h2 class="section-title">Magic English</h2></div>
+                        <div class="grid grid-cols-3 gap-3">
                             ${renderHubItem('reading', 'Reading', 'mic', 'bg-card-reading')}
                             ${renderHubItem('writing', 'Spelling', 'pen-tool', 'bg-card-spelling')}
                             ${renderHubItem('stories', 'Stories', 'book-open', 'bg-card-stories')}
                             ${renderHubItem('wordparts', 'Word Lab', 'puzzle', 'bg-card-wordlab')}
                             ${renderHubItem('grammar', 'Grammar', 'edit-3', 'bg-card-grammar')}
-                        </div>
-                    </section>
-                    <section>
-                        <div class="section-header"><i data-lucide="target" class="section-icon w-5 h-5"></i><h2 class="section-title">Daily Mission</h2></div>
-                        <div onclick="startSection('lesson')" class="daily-mission-card">
-                            <i data-lucide="graduation-cap" class="w-14 h-14 mx-auto mb-4 text-white"></i>
-                            <h3 class="font-black text-xl uppercase tracking-widest">Lesson Mastery</h3>
-                        </div>
-                    </section>
-                    <section>
-                        <div class="section-header"><i data-lucide="calculator" class="section-icon w-5 h-5"></i><h2 class="section-title">Math Quests</h2></div>
-                        <div class="grid grid-cols-3 gap-4">
+                        </div></section>
+                    <section><div class="section-header"><i data-lucide="target" class="section-icon w-5 h-5"></i><h2 class="section-title">Daily Mission</h2></div>
+                        <div onclick="startSection('lesson')" class="daily-mission-card"><i data-lucide="graduation-cap" class="w-14 h-14 mx-auto mb-4 text-white"></i><h3 class="font-black text-xl uppercase tracking-widest">Lesson Mastery</h3></div></section>
+                    <section><div class="section-header"><i data-lucide="calculator" class="section-icon w-5 h-5"></i><h2 class="section-title">Math Quests</h2></div>
+                        <div class="grid grid-cols-3 gap-3">
                             ${renderHubItem('math', 'Math Lab', 'plus', 'bg-card-math')}
                             ${renderHubItem('time', 'Time Lab', 'clock', 'bg-card-time')}
                             ${renderHubItem('coin', 'Coin Lab', 'coins', 'bg-card-coin')}
                             ${renderHubItem('shapes', 'Shapes', 'shapes', 'bg-card-shapes')}
-                        </div>
-                    </section>
-                </div>`;
+                        </div></section></div>`;
             } else if (currentView === 'quiz') {
                 document.getElementById('quiz-footer').classList.remove('hidden');
                 document.getElementById('progress-container').classList.remove('hidden');
-                const data = activeData[currentPage], progress = ((currentPage + 1) / activeData.length) * 100;
-                document.getElementById('progress-bar').style.width = progress + "%";
+                const data = activeData[currentPage];
+                document.getElementById('progress-bar').style.width = ((currentPage + 1) / activeData.length) * 100 + "%";
                 const nextBtn = document.getElementById('next-btn');
-                if (nextBtn) {
-                    const isPageAnswered = data.qs.every((_, qIdx) => userAnswers[`${currentPage}-${qIdx}`] !== undefined);
-                    nextBtn.disabled = !isPageAnswered;
-                    nextBtn.style.opacity = isPageAnswered ? "1" : "0.3";
-                }
-
+                if (nextBtn) { const ans = data.qs.every((_, i) => userAnswers[`${currentPage}-${i}`] !== undefined); nextBtn.disabled = !ans; nextBtn.style.opacity = ans ? "1" : "0.3"; }
                 if (currentActivityType === 'reading') {
-                    const q = data.qs[0], answered = userAnswers[`${currentPage}-0`] !== undefined;
-                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><div class="instr-text">💡 ${data.instr}</div>
-                        <div class="card p-8 mb-4 flex flex-col items-center"><div class="q-text mb-8 leading-tight">"${q.q}"</div>
-                            <button onclick="toggleMic()" class="w-20 h-20 rounded-full ${isListening ? 'bg-red-500' : 'bg-[#7B68EE]'} text-white flex items-center justify-center text-2xl shadow-xl transition-all ${answered ? 'opacity-30' : ''}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-10 h-10"></i></button>
+                    const q = data.qs[0], ans = userAnswers[`${currentPage}-0`] !== undefined;
+                    main.innerHTML = `<div class="text-center w-full"><div class="instr-text">💡 ${data.instr}</div>
+                        <div class="card p-8 mb-4 flex flex-col items-center w-full"><div class="q-text mb-8 leading-tight">"${q.q}"</div>
+                            <button onclick="toggleMic()" class="w-20 h-20 rounded-full ${isListening ? 'bg-red-500' : 'bg-[#7B68EE]'} text-white flex items-center justify-center text-2xl shadow-xl ${ans ? 'opacity-30' : ''}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-10 h-10"></i></button>
                             <button onclick="speak('${q.original}')" class="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-600 rounded-2xl font-black"><i data-lucide="volume-2" class="w-5 h-5"></i> Listen</button>
                         </div></div>`;
+                } else if (data.qs[0].isWriting) {
+                    let qsHtml = data.qs.map((q, i) => {
+                        const ans = userAnswers[`${currentPage}-${i}`] !== undefined;
+                        return `<div class="card p-6 mb-6 w-full flex flex-col items-center"><button onclick="speak('${q.target}')" class="w-16 h-16 rounded-full bg-orange-500 text-white mb-6"><i data-lucide="volume-2" class="mx-auto"></i></button>
+                            <input type="text" id="spell-input-${i}" class="w-full p-4 border-2 rounded-xl mb-4 text-center font-bold" placeholder="Type here..." ${ans ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${i})">
+                            ${!ans ? `<button onclick="checkSpelling(${i})" class="bg-green-500 text-white px-8 py-2 rounded-xl font-black">CHECK</button>` : '<div class="text-green-600 font-black">CORRECT!</div>'}</div>`;
+                    }).join('');
+                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div><div class="w-full">${qsHtml}</div>`;
                 } else {
-                    let qsHtml = data.qs.map((q, qIdx) => {
-                        const ans = userAnswers[`${currentPage}-${qIdx}`], answered = ans !== undefined;
-                        return `<div class="card p-6 mb-6"><div class="q-text mb-6 font-black">${q.qText || q.q}</div>
-                            <div class="grid grid-cols-1 gap-3">
+                    let qsHtml = data.qs.map((q, i) => {
+                        const cur = userAnswers[`${currentPage}-${i}`], ans = cur !== undefined;
+                        return `<div class="card p-6 mb-6 w-full"><div class="q-text mb-6 font-black">${q.qText || q.q}</div>
+                            <div class="grid grid-cols-1 gap-4">
                                 ${q.opts.map((opt, oIdx) => {
-                                    let cls = answered ? (oIdx === q.c ? "correct" : (oIdx === ans ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
-                                    return `<button onclick="handleAnswer(${qIdx}, ${oIdx})" ${answered ? 'disabled' : ''} class="option-btn py-4 font-black transition-all ${cls}">${opt}</button>`;
+                                    let cls = ans ? (oIdx === q.c ? "correct" : (oIdx === cur ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
+                                    return `<button onclick="handleAnswer(${i}, ${oIdx})" ${ans ? 'disabled' : ''} class="option-btn py-5 px-4 font-black transition-all ${cls}">${opt}</button>`;
                                 }).join('')}
                             </div></div>`;
                     }).join('');
-                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div><div class="max-w-4xl mx-auto">${data.passage ? `<div class="passage-box p-6 mb-6 transform transition-all"><div class="flex items-center gap-2 mb-2 text-[#7B68EE] font-black"><i data-lucide="book" class="w-5 h-5"></i> STORY TIME</div><div class="passage-text text-gray-700 dark:text-gray-200">${data.passage}</div></div>` : ''}${qsHtml}</div>`;
+                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div><div class="w-full">${data.passage ? `<div class="passage-box p-6 mb-6 transform transition-all w-full"><div class="flex items-center gap-2 mb-2 text-[#7B68EE] font-black"><i data-lucide="book" class="w-5 h-5"></i> STORY TIME</div><div class="passage-text text-gray-700 dark:text-gray-200">${data.passage}</div></div>` : ''}${qsHtml}</div>`;
                 }
+            } else if (currentView === 'results') {
+                main.innerHTML = `<div class="text-center py-20"><h2 class="text-5xl font-black mb-4">WINNER!</h2><button onclick="goHome()" class="px-12 py-4 bg-[#7B68EE] text-white rounded-3xl font-black text-xl shadow-xl uppercase">Home</button></div>`;
             }
             lucide.createIcons();
         }
 
         function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); }
         function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render()) : finish(); }
-        function finish() {
-            currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden');
-            main.innerHTML = `<div class="text-center py-20"><h2 class="text-5xl font-black mb-4">WINNER!</h2><button onclick="goHome()" class="px-12 py-4 bg-[#7B68EE] text-white rounded-3xl font-black text-xl shadow-xl uppercase">Home</button></div>`;
-        }
-
-        window.onload = () => {
-            checkStreak();
-            render();
-        };
+        function finish() { currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden'); render(); }
+        window.onload = () => { checkStreak(); render(); };
     </script>
 </body>
 </html>
