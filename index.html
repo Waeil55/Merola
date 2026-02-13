@@ -238,8 +238,7 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full text-white font-black shadow-2xl opacity-0 pointer-events-none z-[60] text-base border-4 border-white transition-opacity duration-300"></div>
 
     <script>
-        // FULL LESSON DATA is now imported exclusively from lessonData.js
-        // The local hardcoded block was removed to fix the import issue.
+        // No local lessonData here anymore. It loads from lessonData.js imported in <head>.
 
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
@@ -310,6 +309,7 @@
             } else {
                 switch(type) {
                     case 'lesson': 
+                        // Pulls ALL questions from the externally loaded lessonData array
                         dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
                         break;
                     case 'stories': 
@@ -469,10 +469,10 @@
                         return `<div class="card p-5 sm:p-8 mb-6 flex flex-col items-center">
                             <button onclick="speak('${q.target}')" class="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-orange-500 text-white shadow-lg flex items-center justify-center text-2xl sm:text-4xl mb-4 hover:scale-110 active:scale-95 transition-all">🔊</button>
                             <input type="text" id="spell-input-${qIdx}" class="spelling-input text-xl sm:text-2xl mb-4 ${answered ? 'bg-green-100 border-green-500 text-green-700 font-bold' : ''}" placeholder="Type here..." ${answered ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${qIdx})">
-                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-8 py-2 bg-green-500 text-white rounded-full font-black shadow-lg uppercase">Check</button>` : '<div class="text-2xl font-black text-green-600">✨ CORRECT ✨</div>'}
+                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-8 py-2 bg-green-500 text-white rounded-full font-black shadow-lg uppercase">Check</button>` : '<div class="text-xl font-black text-green-600">✨ CORRECT ✨</div>'}
                         </div>`;
                     }).join('');
-                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-2xl font-black mb-2 text-orange-600 uppercase tracking-tight">${data.title}</h2><div class="instr-text mb-4">💡 ${data.instr}</div>${qsHtml}</div>`;
+                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-xl font-black mb-2 text-orange-600 uppercase tracking-tight">${data.title}</h2><div class="instr-text mb-4">💡 ${data.instr}</div>${qsHtml}</div>`;
                 } else {
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const ans = userAnswers[`${currentPage}-${qIdx}`], answered = ans !== undefined;
