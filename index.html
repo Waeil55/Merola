@@ -20,6 +20,7 @@
     
     <!-- Data Imports (External Files) -->
     <script src="readingData.js"></script>
+    <script src="lessonData.js"></script>
     <script src="quizGenerators.js"></script>
     <script src="wordPartsData.js"></script>
     <script src="storiesData.js"></script>
@@ -237,15 +238,8 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full text-white font-black shadow-2xl opacity-0 pointer-events-none z-[60] text-base border-4 border-white transition-opacity duration-300"></div>
 
     <script>
-        // FULL LESSON DATA
-        const lessonData = [
-            { title: "Antonyms: Set 1", instr: "Opposite Meanings", qs: [ { q: "A <u>problem</u>", opts: ["worry", "math", "solution", "sentence"], c: 2 }, { q: "Was <u>loose</u>", opts: ["tight", "large", "big", "win"], c: 0 }, { q: "A <u>question</u>", opts: ["word", "talk", "answer", "poem"], c: 2 }, { q: "Was <u>fact</u>", opts: ["true", "real", "scary", "fiction"], c: 3 }, { q: "Was <u>straight</u>", opts: ["bent", "tall", "narrow", "long"], c: 0 }, { q: "To <u>create</u>", opts: ["make", "build", "destroy", "draw"], c: 2 }, { q: "Was <u>shiny</u>", opts: ["bright", "dull", "pretty", "ugly"], c: 1 }, { q: "To <u>listen</u>", opts: ["hear", "ignore", "touch", "eat"], c: 1 }, { q: "Was <u>heavy</u>", opts: ["fat", "light", "hard", "solid"], c: 1 }, { q: "Is <u>safe</u>", opts: ["careful", "secure", "dangerous", "locked"], c: 2 } ] },
-            { title: "Antonyms: Set 2", instr: "Find the opposite", qs: [ { q: "Opposite of <u>rough</u>", opts: ["bumpy", "smooth", "hard", "tough"], c: 1 }, { q: "Opposite of <u>deep</u>", opts: ["shallow", "dark", "bottom", "blue"], c: 0 }, { q: "Opposite of <u>buy</u>", opts: ["sell", "get", "store", "shop"], c: 0 }, { q: "Opposite of <u>always</u>", opts: ["often", "never", "forever", "sometimes"], c: 1 }, { q: "Opposite of <u>early</u>", opts: ["soon", "late", "morning", "fast"], c: 1 }, { q: "Opposite of <u>tame</u>", opts: ["wild", "pet", "kind", "calm"], c: 0 }, { q: "Opposite of <u>brave</u>", opts: ["strong", "bold", "scared", "hero"], c: 2 }, { q: "Opposite of <u>push</u>", opts: ["shove", "pull", "move", "stop"], c: 1 }, { q: "Opposite of <u>cheap</u>", opts: ["expensive", "low", "free", "easy"], c: 0 }, { q: "Opposite of <u>clean</u>", opts: ["neat", "dirty", "fresh", "wash"], c: 1 } ] },
-            { title: "Antonyms: Set 3", instr: "Find the opposite", qs: [ { q: "Opposite of <u>young</u>", opts: ["baby", "old", "new", "small"], c: 1 }, { q: "Opposite of <u>sour</u>", opts: ["sweet", "tangy", "bitter", "lemon"], c: 0 }, { q: "Opposite of <u>full</u>", opts: ["whole", "empty", "half", "large"], c: 1 }, { q: "Opposite of <u>shout</u>", opts: ["whisper", "yell", "loud", "scream"], c: 0 }, { q: "Opposite of <u>top</u>", opts: ["high", "up", "bottom", "peak"], c: 2 }, { q: "Opposite of <u>friend</u>", opts: ["pal", "buddy", "enemy", "mate"], c: 2 }, { q: "Opposite of <u>start</u>", opts: ["begin", "go", "finish", "ready"], c: 2 }, { q: "Opposite of <u>asleep</u>", opts: ["dream", "awake", "nap", "tired"], c: 1 }, { q: "Opposite of <u>thick</u>", opts: ["fat", "heavy", "thin", "wide"], c: 2 }, { q: "Opposite of <u>smile</u>", opts: ["grin", "laugh", "frown", "happy"], c: 2 } ] },
-            { title: "Antonyms: Set 10", instr: "Final review", qs: [ { q: "Opposite of <u>up</u>", opts: ["high", "down", "left", "top"], c: 1 }, { q: "Opposite of <u>cold</u>", opts: ["chilly", "ice", "hot", "snow"], c: 2 } ] },
-            { title: "Synonyms: Set 1", instr: "Same Meanings", qs: [ { q: "Was <u>old</u>", opts: ["new", "loud", "ancient", "young"], c: 2 }, { q: "Was <u>quiet</u>", opts: ["loud", "silent", "noisy", "yelling"], c: 1 } ] },
-            // ... (Application logic handles remaining question sets from lessonData.js automatically)
-        ];
+        // FULL LESSON DATA is now imported exclusively from lessonData.js
+        // The local hardcoded block was removed to fix the import issue.
 
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
@@ -259,7 +253,7 @@
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
-            document.getElementById('theme-icon').innerText = isDarkMode ? '☀️' : '✨';
+            document.getElementById('theme-icon').innerText = isDarkMode ? '🌙' : '✨';
         }
 
         function shuffle(array) {
@@ -288,9 +282,14 @@
             if (!source || !Array.isArray(source)) return [];
             let flat = [];
             source.forEach(group => {
-                if (group && group.qs) {
+                if (group && group.qs && Array.isArray(group.qs)) {
                     group.qs.forEach(q => {
-                        flat.push({ title: group.title, instr: group.instr, passage: group.passage || null, qs: [q] });
+                        flat.push({ 
+                            title: group.title, 
+                            instr: group.instr, 
+                            passage: group.passage || null, 
+                            qs: [q] 
+                        });
                     });
                 }
             });
@@ -310,14 +309,30 @@
                 dataToShuffle = shuffle([...sentsSource]).map(s => ({ title: `Reading Mastery`, instr: "Try to speak!", qs: [{ q: s, original: s, isReading: true }] }));
             } else {
                 switch(type) {
-                    case 'lesson': dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); break;
-                    case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
-                    case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
-                    case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
-                    case 'time': dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); break;
-                    case 'math': dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); break;
-                    case 'shapes': dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify the shape!" }]); break;
-                    case 'grammar': dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Choose correctly!" }]); break;
+                    case 'lesson': 
+                        dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
+                        break;
+                    case 'stories': 
+                        dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); 
+                        break;
+                    case 'wordparts': 
+                        dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); 
+                        break;
+                    case 'coin': 
+                        dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); 
+                        break;
+                    case 'time': 
+                        dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); 
+                        break;
+                    case 'math': 
+                        dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); 
+                        break;
+                    case 'shapes': 
+                        dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify the shape!" }]); 
+                        break;
+                    case 'grammar': 
+                        dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Choose correctly!" }]); 
+                        break;
                 }
             }
             
@@ -389,7 +404,6 @@
                             <div class="section-icon">📕</div>
                             <h2 class="section-title">Magic English</h2>
                         </div>
-                        <!-- Updated Grid to 3 columns on mobile and 6 on desktop -->
                         <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-5">
                             ${renderHubItem('reading', 'Reading', '🎙️', 'bg-[#D63384]')}
                             ${renderHubItem('writing', 'Spelling', '✏️', 'bg-[#F9BC4D]')}
@@ -455,10 +469,10 @@
                         return `<div class="card p-5 sm:p-8 mb-6 flex flex-col items-center">
                             <button onclick="speak('${q.target}')" class="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-orange-500 text-white shadow-lg flex items-center justify-center text-2xl sm:text-4xl mb-4 hover:scale-110 active:scale-95 transition-all">🔊</button>
                             <input type="text" id="spell-input-${qIdx}" class="spelling-input text-xl sm:text-2xl mb-4 ${answered ? 'bg-green-100 border-green-500 text-green-700 font-bold' : ''}" placeholder="Type here..." ${answered ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${qIdx})">
-                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-8 py-2 bg-green-500 text-white rounded-full font-black shadow-lg uppercase">Check</button>` : '<div class="text-xl font-black text-green-600">✨ CORRECT ✨</div>'}
+                            ${!answered ? `<button onclick="checkSpelling(${qIdx})" class="px-8 py-2 bg-green-500 text-white rounded-full font-black shadow-lg uppercase">Check</button>` : '<div class="text-2xl font-black text-green-600">✨ CORRECT ✨</div>'}
                         </div>`;
                     }).join('');
-                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-xl font-black mb-2 text-orange-600 uppercase tracking-tight">${data.title}</h2><div class="instr-text mb-4">💡 ${data.instr}</div>${qsHtml}</div>`;
+                    main.innerHTML = `<div class="text-center max-w-2xl mx-auto"><h2 class="text-2xl font-black mb-2 text-orange-600 uppercase tracking-tight">${data.title}</h2><div class="instr-text mb-4">💡 ${data.instr}</div>${qsHtml}</div>`;
                 } else {
                     let qsHtml = data.qs.map((q, qIdx) => {
                         const ans = userAnswers[`${currentPage}-${qIdx}`], answered = ans !== undefined;
