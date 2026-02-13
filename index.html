@@ -21,7 +21,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Data Imports (External Files kept for reference) -->
+    <!-- Data Imports (External Files) -->
     <script src="readingData.js"></script>
     <script src="quizGenerators.js"></script>
     <script src="wordPartsData.js"></script>
@@ -45,8 +45,8 @@
         .dark {
             --bg-color: #1A1A2E;
             --card-bg: #2D3436;
-            --text-color: #FFFFFF; /* Brighter text for Dark Mode */
-            --title-color: #E1BEE7; /* Light lavender for titles in Dark Mode */
+            --text-color: #FFFFFF; 
+            --title-color: #E1BEE7; 
             --border-color: #5E35B1;
             --header-bg: #311B92;
             --passage-bg: #2C3E50;
@@ -147,7 +147,6 @@
         .section-icon { background: #E5E7EB; padding: 4px; border-radius: 8px; font-size: 1rem; color: #4B5563; }
         .section-title { font-family: 'Comic Neue', cursive; font-weight: 900; text-transform: uppercase; font-size: 1.1rem; color: #6B46C1; transition: color 0.3s ease; }
 
-        /* Dark mode overrides */
         .dark .section-title { color: var(--title-color) !important; }
         .dark .instr-text { opacity: 1 !important; color: #FFFFFF !important; }
         .dark .section-icon { background: #374151; color: #D1D5DB; }
@@ -176,7 +175,7 @@
             border-radius: 0 0 25px 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             padding-top: max(1.2rem, env(safe-area-inset-top)); 
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
         }
 
         .app-footer {
@@ -184,8 +183,8 @@
             border-top: 2px solid #D1C4E9;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
             transition: background 0.3s ease, border-color 0.3s ease;
-            padding-top: 0.75rem;
-            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+            padding-top: 1rem; 
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
         }
 
         .dark .app-footer {
@@ -212,17 +211,9 @@
                     <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/IMG_3813.png" class="w-full h-full object-cover scale-110" alt="Merola Icon">
                 </div>
                 <div>
-                  
-                
-                
-                <!-- This makes it significantly bigger on both mobile and desktop -->
-<h1 class="text-xl sm:text-2xl font-black font-['Comic_Neue'] tracking-tight leading-none uppercase">Merola's Lab</h1>
-
-         
-<p class="text-[10px] sm:text-xs uppercase font-bold text-yellow-300 leading-none mt-1 opacity-90">Grade 2 Discovery!</p>
-
-                
-                 </div>
+                    <h1 class="text-xl sm:text-2xl font-black font-['Comic_Neue'] tracking-tight leading-none uppercase">Merola's Lab</h1>
+                    <p class="text-[10px] sm:text-xs uppercase font-bold text-yellow-300 leading-none mt-1 opacity-90">Grade 2 Discovery!</p>
+                </div>
             </div>
 
             <div class="flex items-center gap-2 sm:gap-3">
@@ -260,10 +251,10 @@
         <div id="main-view"></div>
     </main>
 
-    <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 py-1.5 px-4 sm:px-6 z-40 app-footer backdrop-blur-lg">
+    <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 z-40 app-footer backdrop-blur-lg px-4 sm:px-6">
         <div class="max-w-xl mx-auto flex gap-3 sm:gap-4">
-            <button onclick="handleBack()" class="flex-1 py-2 bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-900 rounded-xl font-black text-xs sm:text-sm text-gray-600 dark:text-gray-100 active:translate-y-0.5 transition-all uppercase">Back</button>
-            <button id="next-btn" onclick="nextPage()" class="flex-1 py-2 bg-[#673AB7] text-white border-b-2 border-[#4527A0] rounded-xl font-black text-xs sm:text-sm shadow-md active:translate-y-0.5 transition-all uppercase">Next 🚀</button>
+            <button onclick="handleBack()" class="flex-1 py-3 bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-900 rounded-xl font-black text-xs sm:text-sm text-gray-600 dark:text-gray-100 active:translate-y-0.5 transition-all uppercase">Back</button>
+            <button id="next-btn" onclick="nextPage()" class="flex-1 py-3 bg-[#673AB7] text-white border-b-2 border-[#4527A0] rounded-xl font-black text-xs sm:text-sm shadow-md active:translate-y-0.5 transition-all uppercase">Next 🚀</button>
         </div>
     </footer>
 
@@ -271,8 +262,8 @@
 
     <script>
         const lessonData = [
-            // ANTONYMS
-            { title: "Antonyms: Set 1", instr: "Choose the opposite word.", qs: [ { q: "A <u>problem</u>", opts: ["worry", "math", "solution", "sentence"], c: 2 }, { q: "Was <u>loose</u>", opts: ["tight", "large", "big", "win"], c: 0 }, { q: "A <u>question</u>", opts: ["word", "talk", "answer", "poem"], c: 2 }, { q: "Was <u>fact</u>", opts: ["true", "real", "scary", "fiction"], c: 3 }, { q: "Was <u>straight</u>", opts: ["bent", "tall", "narrow", "long"], c: 0 }, { q: "To <u>create</u>", opts: ["make", "build", "destroy", "draw"], c: 2 }, { q: "Was <u>shiny</u>", opts: ["bright", "dull", "pretty", "ugly"], c: 1 }, { q: "To <u>listen</u>", opts: ["hear", "ignore", "touch", "eat"], c: 1 }, { q: "Was <u>heavy</u>", opts: ["fat", "light", "hard", "solid"], c: 1 }, { q: "Is <u>safe</u>", opts: ["careful", "secure", "dangerous", "locked"], c: 2 } ] },
+            // ANTONYMS (100 Questions)
+            { title: "Antonyms: Set 1", instr: "Choose the word that means the opposite of the underlined word.", qs: [ { q: "A <u>problem</u>", opts: ["worry", "math", "solution", "sentence"], c: 2 }, { q: "Was <u>loose</u>", opts: ["tight", "large", "big", "win"], c: 0 }, { q: "A <u>question</u>", opts: ["word", "talk", "answer", "poem"], c: 2 }, { q: "Was <u>fact</u>", opts: ["true", "real", "scary", "fiction"], c: 3 }, { q: "Was <u>straight</u>", opts: ["bent", "tall", "narrow", "long"], c: 0 }, { q: "To <u>create</u>", opts: ["make", "build", "destroy", "draw"], c: 2 }, { q: "Was <u>shiny</u>", opts: ["bright", "dull", "pretty", "ugly"], c: 1 }, { q: "To <u>listen</u>", opts: ["hear", "ignore", "touch", "eat"], c: 1 }, { q: "Was <u>heavy</u>", opts: ["fat", "light", "hard", "solid"], c: 1 }, { q: "Is <u>safe</u>", opts: ["careful", "secure", "dangerous", "locked"], c: 2 } ] },
             { title: "Antonyms: Set 2", instr: "Choose the word that means the opposite.", qs: [ { q: "Opposite of <u>rough</u>", opts: ["bumpy", "smooth", "hard", "tough"], c: 1 }, { q: "Opposite of <u>deep</u>", opts: ["shallow", "dark", "bottom", "blue"], c: 0 }, { q: "Opposite of <u>buy</u>", opts: ["sell", "get", "store", "shop"], c: 0 }, { q: "Opposite of <u>always</u>", opts: ["often", "never", "forever", "sometimes"], c: 1 }, { q: "Opposite of <u>early</u>", opts: ["soon", "late", "morning", "fast"], c: 1 }, { q: "Opposite of <u>tame</u>", opts: ["wild", "pet", "kind", "calm"], c: 0 }, { q: "Opposite of <u>brave</u>", opts: ["strong", "bold", "scared", "hero"], c: 2 }, { q: "Opposite of <u>push</u>", opts: ["shove", "pull", "move", "stop"], c: 1 }, { q: "Opposite of <u>cheap</u>", opts: ["expensive", "low", "free", "easy"], c: 0 }, { q: "Opposite of <u>clean</u>", opts: ["neat", "dirty", "fresh", "wash"], c: 1 } ] },
             { title: "Antonyms: Set 3", instr: "Choose the word that means the opposite.", qs: [ { q: "Opposite of <u>young</u>", opts: ["baby", "old", "new", "small"], c: 1 }, { q: "Opposite of <u>sour</u>", opts: ["sweet", "tangy", "bitter", "lemon"], c: 0 }, { q: "Opposite of <u>full</u>", opts: ["whole", "empty", "half", "large"], c: 1 }, { q: "Opposite of <u>shout</u>", opts: ["whisper", "yell", "loud", "scream"], c: 0 }, { q: "Opposite of <u>top</u>", opts: ["high", "up", "bottom", "peak"], c: 2 }, { q: "Opposite of <u>friend</u>", opts: ["pal", "buddy", "enemy", "mate"], c: 2 }, { q: "Opposite of <u>start</u>", opts: ["begin", "go", "finish", "ready"], c: 2 }, { q: "Opposite of <u>asleep</u>", opts: ["dream", "awake", "nap", "tired"], c: 1 }, { q: "Opposite of <u>thick</u>", opts: ["fat", "heavy", "thin", "wide"], c: 2 }, { q: "Opposite of <u>smile</u>", opts: ["grin", "laugh", "frown", "happy"], c: 2 } ] },
             { title: "Antonyms: Set 4", instr: "Choose the word that means the opposite.", qs: [ { q: "Opposite of <u>strong</u>", opts: ["weak", "tough", "big", "fast"], c: 0 }, { q: "Opposite of <u>dark</u>", opts: ["black", "night", "light", "shade"], c: 2 }, { q: "Opposite of <u>float</u>", opts: ["swim", "sink", "boat", "water"], c: 1 }, { q: "Opposite of <u>wrong</u>", opts: ["right", "bad", "false", "mistake"], c: 0 }, { q: "Opposite of <u>giant</u>", opts: ["huge", "big", "tiny", "tall"], c: 2 }, { q: "Opposite of <u>neat</u>", opts: ["clean", "tidy", "messy", "nice"], c: 2 }, { q: "Opposite of <u>win</u>", opts: ["play", "lose", "game", "first"], c: 1 }, { q: "Opposite of <u>sunny</u>", opts: ["bright", "hot", "cloudy", "yellow"], c: 2 }, { q: "Opposite of <u>soft</u>", opts: ["hard", "fluffy", "easy", "quiet"], c: 0 }, { q: "Opposite of <u>found</u>", opts: ["lost", "kept", "seen", "hid"], c: 0 } ] },
@@ -283,14 +274,14 @@
             { title: "Antonyms: Set 9", instr: "Find the opposite.", qs: [ { q: "Opposite of <u>dry</u>", opts: ["wet", "sand", "hot", "warm"], c: 0 }, { q: "Opposite of <u>near</u>", opts: ["close", "beside", "far", "here"], c: 2 }, { q: "Opposite of <u>land</u>", opts: ["ground", "sea", "dirt", "grass"], c: 1 }, { q: "Opposite of <u>odd</u>", opts: ["even", "strange", "funny", "same"], c: 0 }, { q: "Opposite of <u>outside</u>", opts: ["yard", "inside", "outdoor", "street"], c: 1 }, { q: "Opposite of <u>past</u>", opts: ["future", "before", "history", "old"], c: 0 }, { q: "Opposite of <u>useful</u>", opts: ["helpful", "useless", "good", "used"], c: 1 }, { q: "Opposite of <u>ugly</u>", opts: ["scary", "beautiful", "mean", "bad"], c: 1 }, { q: "Opposite of <u>take</u>", opts: ["keep", "hold", "give", "grab"], c: 2 }, { q: "Opposite of <u>loose</u>", opts: ["tight", "baggy", "free", "held"], c: 0 } ] },
             { title: "Antonyms: Set 10", instr: "Final review of opposites.", qs: [ { q: "Opposite of <u>up</u>", opts: ["high", "down", "left", "top"], c: 1 }, { q: "Opposite of <u>cold</u>", opts: ["chilly", "ice", "hot", "snow"], c: 2 }, { q: "Opposite of <u>fast</u>", opts: ["quick", "run", "slow", "race"], c: 2 }, { q: "Opposite of <u>short</u>", opts: ["small", "tall", "little", "tiny"], c: 1 }, { q: "Opposite of <u>thin</u>", opts: ["thick", "skinny", "flat", "narrow"], c: 0 }, { q: "Opposite of <u>light</u> (weight)", opts: ["bright", "white", "heavy", "thin"], c: 2 }, { q: "Opposite of <u>asleep</u>", opts: ["dreaming", "tired", "awake", "sleeping"], c: 2 }, { q: "Opposite of <u>off</u>", opts: ["out", "on", "away", "far"], c: 1 }, { q: "Opposite of <u>straight</u>", opts: ["crooked", "long", "flat", "level"], c: 0 }, { q: "Opposite of <u>correct</u>", opts: ["right", "incorrect", "true", "good"], c: 1 } ] },
 
-            // HOMOGRAPHS
+            // HOMOGRAPHS (50 Questions)
             { title: "Homographs: Set 1", instr: "Choose the word that correctly completes both sentences.", qs: [ { q: "1. She counted all the ___ in her purse. <br> 2. I will ___ into my gym clothes.", opts: ["coins", "watch", "change", "money"], c: 2 }, { q: "1. Use your ___ to tell the time. <br> 2. I like to ___ movies.", opts: ["watch", "clock", "show", "see"], c: 0 }, { q: "1. Turn on the ___ to cool down. <br> 2. I am a big ___ of the team.", opts: ["fan", "air", "water", "player"], c: 0 }, { q: "1. Buy a ___ of gum. <br> 2. Don't forget to ___ your bag.", opts: ["pack", "stick", "use", "bring"], c: 0 }, { q: "1. The bird has a sharp ___. <br> 2. Please pay the ___ for dinner.", opts: ["beak", "check", "bill", "wing"], c: 2 }, { q: "1. A ___ of cards. <br> 2. Sit on the ___ outside.", opts: ["set", "deck", "pack", "bench"], c: 1 }, { q: "1. A ___ flies at night. <br> 2. Hit the ball with a ___.", opts: ["bat", "bird", "stick", "ball"], c: 0 }, { q: "1. Water the flower ___. <br> 2. I work at the power ___.", opts: ["garden", "plant", "shop", "pot"], c: 1 }, { q: "1. The dog will ___ at the car. <br> 2. The tree has rough ___.", opts: ["bark", "leaf", "bite", "yell"], c: 0 }, { q: "1. A wedding ___ on the finger. <br> 2. Hear the telephone ___.", opts: ["ring", "call", "band", "sound"], c: 0 } ] },
-            { title: "Homographs: Set 2", instr: "Find the word that fits both blanks.", qs: [ { q: "1. Turn ___ at the corner. <br> 2. There are no cookies ___.", opts: ["right", "side", "left", "gone"], c: 2 }, { q: "1. A ___ is a small light. <br> 2. Strike a ___ to start a fire.", opts: ["lamp", "spark", "match", "clame"], c: 2 }, { q: "1. A ___ of water. <br> 2. Don't ___ the glass.", opts: ["drop", "splash", "sink", "cup"], c: 0 }, { q: "1. Use a ___ to measure. <br> 2. The king is the ___.", opts: ["ruler", "king", "tool", "boss"], c: 0 }, { q: "1. Wash your hands in the ___. <br> 2. Boats will ___ in the ocean.", opts: ["bowl", "sink", "water", "float"], c: 1 }, { q: "1. A yellow ___ flower. <br> 2. He ___ from his chair.", opts: ["daisy", "rose", "petal", "sat"], c: 1 }, { q: "1. Play in the ___. <br> 2. ___ the car in the lot.", opts: ["park", "yard", "drive", "lot"], c: 0 }, { q: "1. A heavy ___. <br> 2. I like to ___ movies.", opts: ["rock", "show", "stone", "star"], c: 1 }, { q: "1. Tie a ___ on the gift. <br> 2. Take a ___ after the play.", opts: ["knot", "ribbon", "bow", "string"], c: 2 }, { q: "1. A ___ to the zoo. <br> 2. Don't ___ on the rug.", opts: ["trip", "walk", "fall", "run"], c: 0 } ] },
+            { title: "Homographs: Set 2", instr: "Find the word that fits both blanks.", qs: [ { q: "1. Turn ___ at the corner. <br> 2. There are no cookies ___.", opts: ["right", "side", "left", "gone"], c: 2 }, { q: "1. A ___ is a small light. <br> 2. Strike a ___ to start a fire.", opts: ["lamp", "spark", "match", "flame"], c: 2 }, { q: "1. A ___ of water. <br> 2. Don't ___ the glass.", opts: ["drop", "splash", "sink", "cup"], c: 0 }, { q: "1. Use a ___ to measure. <br> 2. The king is the ___.", opts: ["ruler", "king", "tool", "boss"], c: 0 }, { q: "1. Wash your hands in the ___. <br> 2. Boats will ___ in the ocean.", opts: ["bowl", "sink", "water", "float"], c: 1 }, { q: "1. A yellow ___ flower. <br> 2. He ___ from his chair.", opts: ["daisy", "rose", "petal", "sat"], c: 1 }, { q: "1. Play in the ___. <br> 2. ___ the car in the lot.", opts: ["park", "yard", "drive", "lot"], c: 0 }, { q: "1. A heavy ___. <br> 2. I like to ___ movies.", opts: ["rock", "show", "stone", "star"], c: 1 }, { q: "1. Tie a ___ on the gift. <br> 2. Take a ___ after the play.", opts: ["knot", "ribbon", "bow", "string"], c: 2 }, { q: "1. A ___ to the zoo. <br> 2. Don't ___ on the rug.", opts: ["trip", "walk", "fall", "run"], c: 0 } ] },
             { title: "Homographs: Set 3", instr: "Find the word that fits both blanks.", qs: [ { q: "1. An ___ can fly. <br> 2. ___ is in the sky.", opts: ["airplane", "air", "bird", "cloud"], c: 1 }, { q: "1. Eat with a ___ and fork. <br> 2. A ___ in the road.", opts: ["spoon", "knife", "fork", "bend"], c: 2 }, { q: "1. Put a ___ in the box. <br> 2. ___ the ball to me.", opts: ["toy", "gift", "roll", "throw"], c: 2 }, { q: "1. A red ___ on the map. <br> 2. It is a ___ to see you.", opts: ["dot", "point", "sign", "spot"], c: 3 }, { q: "1. A ___ is for cereal. <br> 2. Don't ___ in the lane.", opts: ["bowl", "dish", "cup", "roll"], c: 0 }, { q: "1. The ___ of a mountain. <br> 2. The bird has a sharp ___.", opts: ["top", "peak", "beak", "side"], c: 1 }, { q: "1. A ___ of gum. <br> 2. ___ your lunch.", opts: ["stick", "pack", "piece", "box"], c: 1 }, { q: "1. The ___ is bright. <br> 2. He is a good ___.", opts: ["sun", "star", "light", "moon"], c: 1 }, { q: "1. ___ your name. <br> 2. A stop ___ on the road.", opts: ["write", "sign", "mark", "post"], c: 1 }, { q: "1. My ___ hurts. <br> 2. I am the ___ of the class.", opts: ["head", "foot", "arm", "face"], c: 0 } ] },
             { title: "Homographs: Set 4", instr: "Find the word that fits both blanks.", qs: [ { q: "1. A big ___ of water. <br> 2. ___ your hand to say hi.", opts: ["ocean", "wave", "pool", "river"], c: 1 }, { q: "1. A shiny gold ___. <br> 2. ___ the bell.", opts: ["coin", "ring", "bell", "band"], c: 1 }, { q: "1. Keep a ___ of the score. <br> 2. Do not ___ the glass.", opts: ["note", "mark", "break", "record"], c: 3 }, { q: "1. My ___ are tired. <br> 2. The ___ of the bed.", opts: ["legs", "feet", "arms", "toes"], c: 1 }, { q: "1. A ___ helps you see. <br> 2. Turn on the ___.", opts: ["lamp", "light", "eye", "sun"], c: 1 }, { q: "1. A ___ is a baby dog. <br> 2. Seal the ___ of the box.", opts: ["pup", "top", "tape", "lid"], c: 1 }, { q: "1. The ___ of a tree. <br> 2. A dog will ___.", opts: ["leaf", "bark", "branch", "root"], c: 1 }, { q: "1. Use a ___ to measure. <br> 2. He is the ___ of the land.", opts: ["ruler", "king", "meter", "boss"], c: 0 }, { q: "1. I am ___ to help. <br> 2. The ___ of a book.", opts: ["glad", "page", "ready", "back"], c: 3 }, { q: "1. A ___ of shoes. <br> 2. A ___ is a fruit.", opts: ["box", "pear", "pair", "set"], c: 2 } ] },
             { title: "Homographs: Set 5", instr: "Final Homograph Practice.", qs: [ { q: "1. He is a ___ boy. <br> 2. The ___ is in the sky.", opts: ["sun", "son", "bright", "star"], c: 3 }, { q: "1. A ___ is for a cat. <br> 2. Use a ___ for soup.", opts: ["bowl", "dish", "spoon", "cup"], c: 0 }, { q: "1. It is a ___ day. <br> 2. Pay the ___ at the fair.", opts: ["sunny", "fine", "ticket", "good"], c: 1 }, { q: "1. A baseball ___. <br> 2. The ___ flies at night.", opts: ["bat", "ball", "glove", "bird"], c: 0 }, { q: "1. Wash in the ___. <br> 2. The rock will ___.", opts: ["sink", "water", "float", "bowl"], c: 0 }, { q: "1. A ___ tells time. <br> 2. I like to ___ TV.", opts: ["watch", "clock", "show", "see"], c: 0 }, { q: "1. Turn ___. <br> 2. He is ___.", opts: ["right", "left", "correct", "wrong"], c: 0 }, { q: "1. A ___ of cards. <br> 2. Sit on the ___.", opts: ["deck", "pack", "bench", "set"], c: 0 }, { q: "1. Take a ___. <br> 2. Don't ___.", opts: ["nap", "trip", "fall", "run"], c: 1 }, { q: "1. The bird's ___. <br> 2. The total ___.", opts: ["beak", "bill", "wing", "check"], c: 1 } ] },
 
-            // SYNONYMS (Sets 1-10)
+            // SYNONYMS (100 Questions)
             { title: "Synonyms: Set 1", instr: "Choose the word that means the same, or about the same, as the underlined word.", qs: [ { q: "Was <u>old</u>", opts: ["new", "loud", "ancient", "young"], c: 2 }, { q: "Was <u>quiet</u>", opts: ["loud", "silent", "noisy", "yelling"], c: 1 }, { q: "Was <u>thin</u>", opts: ["narrow", "wide", "short", "tall"], c: 0 }, { q: "Was <u>unusual</u>", opts: ["regular", "normal", "strange", "same"], c: 2 }, { q: "Was <u>shiny</u>", opts: ["bright", "dull", "pretty", "dirty"], c: 0 }, { q: "Was <u>normal</u>", opts: ["regular", "different", "odd", "weird"], c: 0 }, { q: "Was <u>neat</u>", opts: ["messy", "dirty", "tidy", "good"], c: 2 }, { q: "Was <u>honest</u>", opts: ["lying", "truthful", "wrong", "dishonest"], c: 1 }, { q: "Was <u>scared</u>", opts: ["brave", "happy", "afraid", "mad"], c: 2 }, { q: "Was <u>glad</u>", opts: ["happy", "sad", "mad", "grumpy"], c: 0 } ] },
             { title: "Synonyms: Set 2", instr: "Find the similar word.", qs: [ { q: "Synonym of <u>small</u>", opts: ["big", "tiny", "huge", "large"], c: 1 }, { q: "Synonym of <u>fast</u>", opts: ["slow", "lazy", "quick", "crawl"], c: 2 }, { q: "Synonym of <u>mad</u>", opts: ["happy", "angry", "sad", "silly"], c: 1 }, { q: "Synonym of <u>shut</u>", opts: ["open", "close", "door", "wide"], c: 1 }, { q: "Synonym of <u>cold</u>", opts: ["hot", "warm", "chilly", "sunny"], c: 2 }, { q: "Synonym of <u>shout</u>", opts: ["whisper", "talk", "yell", "sing"], c: 2 }, { q: "Synonym of <u>gift</u>", opts: ["present", "box", "past", "future"], c: 0 }, { q: "Synonym of <u>neat</u>", opts: ["messy", "tidy", "dirty", "bad"], c: 1 }, { q: "Synonym of <u>easy</u>", opts: ["hard", "simple", "fast", "fun"], c: 1 }, { q: "Synonym of <u>smart</u>", opts: ["clever", "dumb", "slow", "tall"], c: 0 } ] },
             { title: "Synonyms: Set 3", instr: "Find the similar word.", qs: [ { q: "Synonym of <u>pretty</u>", opts: ["ugly", "beautiful", "scary", "mean"], c: 1 }, { q: "Synonym of <u>large</u>", opts: ["big", "small", "tiny", "little"], c: 0 }, { q: "Synonym of <u>ill</u>", opts: ["well", "sick", "brave", "strong"], c: 1 }, { q: "Synonym of <u>leap</u>", opts: ["run", "walk", "jump", "sit"], c: 2 }, { q: "Synonym of <u>couch</u>", opts: ["bed", "chair", "sofa", "table"], c: 2 }, { q: "Synonym of <u>friend</u>", opts: ["buddy", "enemy", "stranger", "foe"], c: 0 }, { q: "Synonym of <u>grab</u>", opts: ["give", "snatch", "drop", "lose"], c: 1 }, { q: "Synonym of <u>tasty</u>", opts: ["bad", "yummy", "gross", "bitter"], c: 1 }, { q: "Synonym of <u>start</u>", opts: ["end", "begin", "finish", "stop"], c: 1 }, { q: "Synonym of <u>look</u>", opts: ["see", "hear", "smell", "feel"], c: 0 } ] },
@@ -302,7 +293,7 @@
             { title: "Synonyms: Set 9", instr: "Find the similar word.", qs: [ { q: "Synonym of <u>glad</u>", opts: ["happy", "sad", "mad", "tired"], c: 0 }, { q: "Synonym of <u>pardon</u>", opts: ["excuse", "hello", "thanks", "goodbye"], c: 0 }, { q: "Synonym of <u>slim</u>", opts: ["fat", "slender", "wide", "heavy"], c: 1 }, { q: "Synonym of <u>scent</u>", opts: ["smell", "sight", "sound", "taste"], c: 0 }, { q: "Synonym of <u>select</u>", opts: ["choose", "lose", "give", "keep"], c: 0 }, { q: "Synonym of <u>under</u>", opts: ["above", "below", "beside", "on"], c: 1 }, { q: "Synonym of <u>cargo</u>", opts: ["load", "car", "driver", "road"], c: 0 }, { q: "Synonym of <u>relaxed</u>", opts: ["calm", "angry", "wild", "busy"], c: 0 }, { q: "Synonym of <u>raise</u>", opts: ["lift", "lower", "drop", "sink"], c: 0 }, { q: "Synonym of <u>neat</u>", opts: ["tidy", "messy", "dirty", "bad"], c: 0 } ] },
             { title: "Synonyms: Set 10", instr: "Final Synonyms review.", qs: [ { q: "Synonym of <u>tiny</u>", opts: ["small", "big", "huge", "giant"], c: 0 }, { q: "Synonym of <u>quick</u>", opts: ["slow", "fast", "lazy", "crawl"], c: 1 }, { q: "Synonym of <u>angry</u>", opts: ["mad", "happy", "sad", "silly"], c: 0 }, { q: "Synonym of <u>close</u>", opts: ["open", "shut", "door", "wide"], c: 1 }, { q: "Synonym of <u>begin</u>", opts: ["start", "end", "finish", "stop"], c: 0 }, { q: "Synonym of <u>yell</u>", opts: ["shout", "whisper", "talk", "hum"], c: 0 }, { q: "Synonym of <u>ill</u>", opts: ["sick", "well", "brave", "strong"], c: 0 }, { q: "Synonym of <u>tasty</u>", opts: ["delicious", "bad", "yummy", "gross"], c: 0 }, { q: "Synonym of <u>street</u>", opts: ["road", "river", "sky", "tree"], c: 0 }, { q: "Synonym of <u>wealthy</u>", opts: ["rich", "poor", "broke", "sad"], c: 0 } ] },
 
-            // CONTEXT CLUES (150 Questions) - Fill in the Blank
+            // CONTEXT CLUES (150 Questions)
             { title: "Context Clues: Set 1", instr: "Choose the word that best completes the sentence.", qs: [ { q: "My family is going on a <u>(1)</u> trip.", opts: ["large", "clean", "special", "hard"], c: 2 }, { q: "We will <u>(2)</u> to the beach in our car.", opts: ["swim", "travel", "together", "bring"], c: 1 }, { q: "Some people like to <u>(3)</u> soda and eat candy.", opts: ["drink", "carry", "start", "begin"], c: 0 }, { q: "You should <u>(4)</u> brush your teeth after you're done.", opts: ["never", "start", "begin", "always"], c: 3 }, { q: "The <u>(5)</u> sun was very hot today.", opts: ["bright", "blue", "cold", "wet"], c: 0 }, { q: "I used a <u>(6)</u> to eat my soup.", opts: ["fork", "spoon", "knife", "plate"], c: 1 }, { q: "The kitty has soft, white <u>(7)</u>.", opts: ["fur", "scales", "feathers", "leaves"], c: 0 }, { q: "Please <u>(8)</u> the door when you leave.", opts: ["open", "close", "kick", "run"], c: 1 }, { q: "The puppy <u>(9)</u> at the stranger.", opts: ["meowed", "barked", "sang", "flew"], c: 1 }, { q: "I like to <u>(10)</u> books before bed.", opts: ["write", "read", "eat", "jump"], c: 1 } ] },
             { title: "Context Clues: Set 2", instr: "Choose the best word.", qs: [ { q: "An ___ is a big fruit that is red.", opts: ["apple", "banana", "grape", "pear"], c: 0 }, { q: "We go to ___ to learn and play.", opts: ["park", "school", "store", "zoo"], c: 1 }, { q: "The sky is ___ on a sunny day.", opts: ["green", "blue", "red", "black"], c: 1 }, { q: "Birds have ___ to help them fly.", opts: ["arms", "wings", "legs", "fins"], c: 1 }, { q: "A ___ has a very long neck.", opts: ["dog", "giraffe", "cat", "pig"], c: 1 }, { q: "Brush your ___ twice a day.", opts: ["hair", "teeth", "shoes", "toys"], c: 1 }, { q: "Fish use ___ to breathe in water.", opts: ["lungs", "gills", "noses", "ears"], c: 1 }, { q: "The rabbit hopped ___ the grass.", opts: ["through", "over", "in", "under"], c: 0 }, { q: "It is ___ to share your toys.", opts: ["mean", "kind", "bad", "scary"], c: 1 }, { q: "Elephant is very ___.", opts: ["small", "tiny", "large", "thin"], c: 2 } ] },
             { title: "Context Clues: Set 3", instr: "Choose the best word.", qs: [ { q: "My mom baked a chocolate ___.", opts: ["pie", "cake", "bread", "fruit"], c: 1 }, { q: "I wear a ___ when it is cold.", opts: ["shirt", "coat", "hat", "sock"], c: 1 }, { q: "The grass is ___ after the rain.", opts: ["dry", "wet", "hot", "black"], c: 1 }, { q: "I see with my ___.", opts: ["ears", "eyes", "nose", "hands"], c: 1 }, { q: "A ___ says 'meow'.", opts: ["dog", "cat", "bird", "cow"], c: 1 }, { q: "The stars shine in the ___ sky.", opts: ["day", "night", "morning", "sunny"], c: 1 }, { q: "I write with a ___.", opts: ["pencil", "eraser", "ruler", "book"], c: 0 }, { q: "We sit on a ___ to watch TV.", opts: ["table", "couch", "bed", "floor"], c: 1 }, { q: "The honey is very ___.", opts: ["sour", "sweet", "salty", "bitter"], c: 1 }, { q: "I put my shoes on my ___.", opts: ["hands", "feet", "head", "ears"], c: 1 } ] },
@@ -363,12 +354,7 @@
             source.forEach(group => {
                 if (group && group.qs && Array.isArray(group.qs)) {
                     group.qs.forEach(q => {
-                        flat.push({ 
-                            title: group.title, 
-                            instr: group.instr, 
-                            passage: group.passage || null, 
-                            qs: [q] 
-                        });
+                        flat.push({ title: group.title, instr: group.instr, passage: group.passage || null, qs: [q] });
                     });
                 }
             });
@@ -524,7 +510,7 @@
                         <div class="card p-5 sm:p-8 mb-4 flex flex-col items-center border-dashed"><div class="q-text mb-6 text-gray-800 leading-tight">"${q.q}"</div>
                             <div class="flex flex-col items-center gap-4">
                                 <div class="relative flex items-center justify-center">${isListening ? '<div class="listening-ring"></div>' : ''}
-                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl sm:text-3xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
+                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
                                 </div>
                                 <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="flex items-center gap-2 px-5 py-2 bg-blue-500 text-white rounded-xl font-black text-sm shadow-md transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-0.5'}"><i data-lucide="volume-2" class="w-4 h-4"></i> Listen</button>
                                 ${answered ? '<div class="text-3xl animate-bounce mt-2 text-green-500 font-black">CORRECT!</div>' : ''}
