@@ -166,13 +166,14 @@
         .correct { background: #4CAF50 !important; color: white !important; border-color: #2E7D32 !important; box-shadow: 0 4px 0 #2E7D32 !important; }
         .wrong { background: #F44336 !important; color: white !important; border-color: #B71C1C !important; box-shadow: 0 4px 0 #B71C1C !important; }
 
+        /* Header Fix: Handle Safe Areas for iPhone Status Bars */
         .glass-header { 
             background: linear-gradient(135deg, #673AB7 0%, #5E35B1 100%); 
             border-bottom: 3px solid #512DA8;
             border-radius: 0 0 25px 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            padding-top: max(1.1rem, env(safe-area-inset-top)); 
-            padding-bottom: 0.4rem;
+            padding-top: max(1.2rem, env(safe-area-inset-top)); 
+            padding-bottom: 0.5rem;
         }
 
         .app-footer {
@@ -180,7 +181,9 @@
             border-top: 2px solid #D1C4E9;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
             transition: background 0.3s ease, border-color 0.3s ease;
-            padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
+            /* Slightly increased footer padding for better presence */
+            padding-top: 0.75rem; 
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
 
         .dark .app-footer {
@@ -246,23 +249,19 @@
         <div id="main-view"></div>
     </main>
 
-    <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 py-1.5 px-4 sm:px-6 z-40 app-footer backdrop-blur-lg">
+    <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 z-40 app-footer backdrop-blur-lg px-4 sm:px-6">
         <div class="max-w-xl mx-auto flex gap-3 sm:gap-4">
-            <button onclick="handleBack()" class="flex-1 py-1.5 bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-900 rounded-xl font-black text-xs sm:text-sm text-gray-600 dark:text-gray-100 active:translate-y-0.5 transition-all uppercase">Back</button>
-            <button id="next-btn" onclick="nextPage()" class="flex-1 py-1.5 bg-[#673AB7] text-white border-b-2 border-[#4527A0] rounded-xl font-black text-xs sm:text-sm shadow-md active:translate-y-0.5 transition-all uppercase">Next 🚀</button>
+            <!-- Increased button padding slightly for better reach -->
+            <button onclick="handleBack()" class="flex-1 py-2.5 bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-900 rounded-xl font-black text-xs sm:text-sm text-gray-600 dark:text-gray-100 active:translate-y-0.5 transition-all uppercase">Back</button>
+            <button id="next-btn" onclick="nextPage()" class="flex-1 py-2.5 bg-[#673AB7] text-white border-b-2 border-[#4527A0] rounded-xl font-black text-xs sm:text-sm shadow-md active:translate-y-0.5 transition-all uppercase">Next 🚀</button>
         </div>
     </footer>
 
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-white font-black shadow-xl opacity-0 pointer-events-none z-[60] text-sm border-2 border-white transition-opacity duration-300"></div>
 
     <script>
-        const lessonData = [
-            // ANTONYMS (Sets 1-10)
-            { title: "Antonyms: Set 1", instr: "Opposite Meanings", qs: [ { q: "A <u>problem</u>", opts: ["worry", "math", "solution", "sentence"], c: 2 }, { q: "Was <u>loose</u>", opts: ["tight", "large", "big", "win"], c: 0 }, { q: "A <u>question</u>", opts: ["word", "talk", "answer", "poem"], c: 2 }, { q: "Was <u>fact</u>", opts: ["true", "real", "scary", "fiction"], c: 3 }, { q: "Was <u>straight</u>", opts: ["bent", "tall", "narrow", "long"], c: 0 }, { q: "To <u>create</u>", opts: ["make", "build", "destroy", "draw"], c: 2 }, { q: "Was <u>shiny</u>", opts: ["bright", "dull", "pretty", "ugly"], c: 1 }, { q: "To <u>listen</u>", opts: ["hear", "ignore", "touch", "eat"], c: 1 }, { q: "Was <u>heavy</u>", opts: ["fat", "light", "hard", "solid"], c: 1 }, { q: "Is <u>safe</u>", opts: ["careful", "secure", "dangerous", "locked"], c: 2 } ] },
-            { title: "Antonyms: Set 2", instr: "Choose the opposite", qs: [ { q: "Opposite of <u>rough</u>", opts: ["bumpy", "smooth", "hard", "tough"], c: 1 }, { q: "Opposite of <u>deep</u>", opts: ["shallow", "dark", "bottom", "blue"], c: 0 }, { q: "Opposite of <u>buy</u>", opts: ["sell", "get", "store", "shop"], c: 0 }, { q: "Opposite of <u>always</u>", opts: ["often", "never", "forever", "sometimes"], c: 1 }, { q: "Opposite of <u>early</u>", opts: ["soon", "late", "morning", "fast"], c: 1 }, { q: "Opposite of <u>tame</u>", opts: ["wild", "pet", "kind", "calm"], c: 0 }, { q: "Opposite of <u>brave</u>", opts: ["strong", "bold", "scared", "hero"], c: 2 }, { q: "Opposite of <u>push</u>", opts: ["shove", "pull", "move", "stop"], c: 1 }, { q: "Opposite of <u>cheap</u>", opts: ["expensive", "low", "free", "easy"], c: 0 }, { q: "Opposite of <u>clean</u>", opts: ["neat", "dirty", "fresh", "wash"], c: 1 } ] },
-            { title: "Antonyms: Set 3", instr: "Choose the opposite", qs: [ { q: "Opposite of <u>young</u>", opts: ["baby", "old", "new", "small"], c: 1 }, { q: "Opposite of <u>sour</u>", opts: ["sweet", "tangy", "bitter", "lemon"], c: 0 }, { q: "Opposite of <u>full</u>", opts: ["whole", "empty", "half", "large"], c: 1 }, { q: "Opposite of <u>shout</u>", opts: ["whisper", "yell", "loud", "scream"], c: 0 }, { q: "Opposite of <u>top</u>", opts: ["high", "up", "bottom", "peak"], c: 2 }, { q: "Opposite of <u>friend</u>", opts: ["pal", "buddy", "enemy", "mate"], c: 2 }, { q: "Opposite of <u>start</u>", opts: ["begin", "go", "finish", "ready"], c: 2 }, { q: "Opposite of <u>asleep</u>", opts: ["dream", "awake", "nap", "tired"], c: 1 }, { q: "Opposite of <u>thick</u>", opts: ["fat", "heavy", "thin", "wide"], c: 2 }, { q: "Opposite of <u>smile</u>", opts: ["grin", "laugh", "frown", "happy"], c: 2 } ] },
-            { title: "Antonyms: Set 10", instr: "Final Practice", qs: [ { q: "Opposite of <u>up</u>", opts: ["high", "down", "left", "top"], c: 1 }, { q: "Opposite of <u>cold</u>", opts: ["chilly", "ice", "hot", "snow"], c: 2 } ] }
-        ];
+        // Data loading logic points to external files to ensure all 400 questions load.
+        // The flattenData function splits grouped questions so they appear one at a time.
 
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
@@ -328,29 +327,16 @@
             } else {
                 switch(type) {
                     case 'lesson': 
+                        // Pulling 400 questions from external lessonData.js
                         dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
                         break;
-                    case 'stories': 
-                        dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); 
-                        break;
-                    case 'wordparts': 
-                        dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); 
-                        break;
-                    case 'coin': 
-                        dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); 
-                        break;
-                    case 'time': 
-                        dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); 
-                        break;
-                    case 'math': 
-                        dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); 
-                        break;
-                    case 'shapes': 
-                        dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify shape!" }]); 
-                        break;
-                    case 'grammar': 
-                        dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Choose correctly!" }]); 
-                        break;
+                    case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
+                    case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
+                    case 'coin': dataToShuffle = flattenData([{ qs: typeof initialCoinData !== 'undefined' ? initialCoinData : [], title: "Coin Lab", instr: "Count the coins!" }]); break;
+                    case 'time': dataToShuffle = flattenData([{ qs: typeof generateTimeData === 'function' ? generateTimeData() : [], title: "Time Lab", instr: "Read the clock!" }]); break;
+                    case 'math': dataToShuffle = flattenData([{ qs: typeof generateMathData === 'function' ? generateMathData() : [], title: "Math Lab", instr: "Solve the problem!" }]); break;
+                    case 'shapes': dataToShuffle = flattenData([{ qs: typeof generateShapesData === 'function' ? generateShapesData() : [], title: "Shapes Lab", instr: "Identify shape!" }]); break;
+                    case 'grammar': dataToShuffle = flattenData([{ qs: typeof generateGrammarData === 'function' ? generateGrammarData() : [], title: "Grammar Lab", instr: "Choose correctly!" }]); break;
                 }
             }
             
@@ -475,7 +461,7 @@
                         <div class="card p-5 sm:p-8 mb-4 flex flex-col items-center border-dashed"><div class="q-text mb-6 text-gray-800 leading-tight">"${q.q}"</div>
                             <div class="flex flex-col items-center gap-4">
                                 <div class="relative flex items-center justify-center">${isListening ? '<div class="listening-ring"></div>' : ''}
-                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
+                                    <button onclick="toggleMic()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full ${isListening ? 'bg-red-500 shadow-lg' : 'bg-purple-600 shadow-md'} text-white flex items-center justify-center text-2xl sm:text-3xl z-10 transition-all ${answered ? 'opacity-30 pointer-events-none' : 'hover:scale-105'}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-8 h-8"></i></button>
                                 </div>
                                 <button onclick="speak('${q.original}')" ${!canListen ? 'disabled' : ''} class="flex items-center gap-2 px-5 py-2 bg-blue-500 text-white rounded-xl font-black text-sm shadow-md transition-all ${!canListen ? 'opacity-30 grayscale pointer-events-none' : 'hover:bg-blue-600 active:translate-y-0.5'}"><i data-lucide="volume-2" class="w-4 h-4"></i> Listen</button>
                                 ${answered ? '<div class="text-3xl animate-bounce mt-2 text-green-500 font-black">CORRECT!</div>' : ''}
