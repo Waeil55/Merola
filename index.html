@@ -277,8 +277,6 @@
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full text-white font-black shadow-2xl opacity-0 pointer-events-none z-[60] transition-opacity duration-300"></div>
 
     <script>
-        // Data is now loaded from lessonData.js
-
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
@@ -315,17 +313,18 @@
             window.scrollTo(0, 0);
         }
 
+        // Updated to load EVERY question from EVERY group
         function flattenData(source) {
             if (!source || !Array.isArray(source)) return [];
             let flat = [];
             source.forEach(group => {
-                if (group && group.qs) {
-                    group.qs.forEach(q => {
+                if (group && group.qs && Array.isArray(group.qs)) {
+                    group.qs.forEach(questionObj => {
                         flat.push({ 
                             title: group.title, 
                             instr: group.instr, 
                             passage: group.passage || null, 
-                            qs: [q] 
+                            qs: [questionObj] 
                         });
                     });
                 }
@@ -347,7 +346,6 @@
             } else {
                 switch(type) {
                     case 'lesson': 
-                        // Directly use the imported lessonData from lessonData.js
                         dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); 
                         break;
                     case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
