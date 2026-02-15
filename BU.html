@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>Merola's Lab</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Merola's Lab">
+    
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Waeil55/Merola/main/M.PNG">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Waeil55/Merola/main/M.PNG">
+    <meta name="theme-color" content="#673AB7">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script src="lessonData.js"></script>
+    <script src="readingData.js"></script>
+    <script src="quizGenerators.js"></script>
+    <script src="wordPartsData.js"></script>
+    <script src="storiesData.js"></script>
+    <script src="writingData.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #F8F4FF;
+            --card-bg: #ffffff;
+            --text-color: #2D3436;
+            --title-color: #9C27B0;
+            --instr-color: #673AB7;
+            --border-color: #E0E0E0;
+            --primary-action: #6C5CE7;
+            --user-font-size: 22px;
+            --header-bg: #7C69EF;
+            --passage-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --footer-border: #F0F0F0;
+        }
+
+        .dark {
+            --bg-color: #1A1A2E;
+            --card-bg: #2D3436;
+            --text-color: #FFFFFF; 
+            --title-color: #E1BEE7; 
+            --border-color: #5E35B1;
+            --header-bg: #311B92;
+            --passage-bg: #2D3436;
+            --footer-bg: #1A1A2E;
+            --footer-border: #311B92;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Comic Neue', cursive;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .q-text { 
+            font-size: var(--user-font-size) !important; 
+            font-family: 'Comic Neue', cursive; 
+            font-weight: 900;
+            color: var(--text-color) !important; 
+        }
+
+        .passage-text { 
+            font-size: calc(var(--user-font-size) * 0.9) !important; 
+            line-height: 1.5; 
+            font-weight: 800; 
+            font-family: 'Comic Neue', cursive;
+            color: var(--text-color) !important;
+        }
+
+        .instr-text { 
+            font-size: calc(var(--user-font-size) * 0.7) !important; 
+            line-height: 1.2; 
+            font-weight: 800; 
+            font-family: 'Comic Neue';
+            color: #A688FA;
+            margin-bottom: 12px;
+        }
+
+        .option-btn { 
+            font-size: calc(var(--user-font-size) * 0.9) !important; 
+            border-radius: 20px; 
+            background: var(--card-bg); 
+            box-shadow: 0 5px 0 var(--border-color); 
+            border: 2px solid var(--border-color); 
+            color: var(--text-color); 
+            width: 100%; 
+        }
+        .option-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--border-color); }
+
+        .correct { 
+            background-color: #90EE90 !important; 
+            color: #1B5E20 !important; 
+            border-color: #81C784 !important; 
+            box-shadow: 0 5px 0 #66BB6A !important; 
+        }
+        
+        .wrong { 
+            background-color: #FFB2B2 !important; 
+            color: #B71C1C !important; 
+            border-color: #EF9A9A !important; 
+            box-shadow: 0 5px 0 #E57373 !important; 
+        }
+
+        .card { 
+            background-color: var(--card-bg); 
+            border: 4px solid var(--border-color); 
+            border-radius: 35px; 
+            box-shadow: 6px 6px 0px var(--border-color); 
+            width: 100%; 
+            max-width: none !important;
+        }
+        
+        .passage-box { 
+            background-color: var(--passage-bg) !important; 
+            border: 4px solid #7B68EE !important; 
+            border-radius: 25px !important; 
+            box-shadow: 0 8px 20px rgba(123, 104, 238, 0.15);
+            position: sticky;
+            top: 100px; 
+            z-index: 30;
+            max-height: 35vh;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            scrollbar-width: thin;
+            scrollbar-color: #7B68EE transparent;
+            width: 100%; 
+        }
+
+        @media (min-width: 1024px), (orientation: landscape) and (max-height: 600px) {
+            .quiz-container {
+                display: flex;
+                gap: 2rem;
+                align-items: flex-start;
+            }
+            .passage-box {
+                flex: 1;
+                position: sticky;
+                top: 80px;
+                max-height: 60vh;
+            }
+            .questions-container {
+                flex: 1.2;
+            }
+            .options-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .passage-box::-webkit-scrollbar { width: 6px; }
+        .passage-box::-webkit-scrollbar-thumb { background: #7B68EE; border-radius: 10px; }
+
+        .hub-card { 
+            aspect-ratio: 1 / 1;
+            border-radius: 35px; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 0 rgba(0,0,0,0.05);
+            border: none;
+        }
+        .hub-card:hover { transform: scale(1.02); }
+        .hub-card:active { transform: scale(0.95); }
+        
+        .hub-card h3 {
+            font-family: 'Comic Neue', cursive;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            text-align: center;
+            line-height: 1;
+            letter-spacing: 0.5px;
+        }
+
+        .hub-card i {
+            background: rgba(255,255,255,0.3);
+            padding: 12px;
+            border-radius: 20px;
+        }
+
+        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; margin-top: 1.5rem;}
+        .section-icon { color: #2D3436; font-size: 1.2rem; }
+        .section-title { font-family: 'Comic Neue', cursive; font-weight: 900; font-size: 1.2rem; color: #A688FA; }
+
+        .dark .section-icon { color: #FFFFFF; }
+
+        .daily-mission-card {
+            border-radius: 45px;
+            background: linear-gradient(180deg, #A285FF 0%, #7B68EE 100%);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 12px 0 #6C5BD8;
+            transition: transform 0.2s;
+            max-width: 100%;
+            margin-top: 10px;
+        }
+        .daily-mission-card:active { transform: translateY(6px); box-shadow: 0 6px 0 #6C5BD8; }
+
+        .glass-header { 
+            background: #7B68EE; 
+            border-radius: 0 0 45px 45px; 
+            box-shadow: 0 6px 20px rgba(123, 104, 238, 0.3);
+            padding-top: max(1.2rem, env(safe-area-inset-top)); 
+            padding-bottom: 1.2rem;
+        }
+
+        .bg-pink-soft { background-color: #F8BBD0; }
+        .bg-blue-soft { background-color: #BBDEFB; }
+        .bg-yellow-soft { background-color: #FFF9C4; }
+        
+        .bg-card-reading { background-color: #EC80B5; }
+        .bg-card-spelling { background-color: #F5A65B; }
+        .bg-card-stories { background-color: #79D9A7; }
+        .bg-card-wordlab { background-color: #7AAFFF; }
+        .bg-card-grammar { background-color: #98D64E; }
+
+        .bg-card-math { background-color: #69C0FF; }
+        .bg-card-time { background-color: #FFD666; }
+        .bg-card-coin { background-color: #73D13D; }
+        .bg-card-shapes { background-color: #D466E8; }
+
+        .app-footer {
+            background-color: var(--footer-bg);
+            border-top: 2px solid var(--footer-border);
+            padding-top: 0.6rem; 
+            padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .dark #back-btn { background-color: #2D3436; color: #FFFFFF; }
+
+        .stat-pill {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .stat-pill:active { transform: scale(0.95); }
+
+        main { padding-left: 10px !important; padding-right: 10px !important; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="glass-header sticky top-0 z-50 px-4 text-white">
+        <div class="flex justify-between items-center max-w-5xl mx-auto w-full">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white/40 shadow-lg">
+                    <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/M.PNG" class="w-full h-full object-cover" alt="Merola Icon">
+                </div>
+                <div>
+                    <h1 class="text-xl font-black font-['Comic_Neue'] tracking-wide leading-none uppercase">Merola</h1>
+                    <p class="text-[10px] uppercase font-bold text-yellow-300 leading-none mt-1">Grade 2 Discovery!</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <div class="flex items-center bg-black/10 rounded-full px-2 py-1 gap-1">
+                    <button onclick="adjustFont(-2)" class="w-8 h-8 flex items-center justify-center"><i data-lucide="minus" class="w-4 h-4"></i></button>
+                    <button onclick="adjustFont(2)" class="w-8 h-8 flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                </div>
+
+                <button onclick="toggleTheme()" class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </button>
+
+                <div onclick="resetDaily()" class="bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer active:scale-95">
+                    <span class="text-yellow-300 text-lg">⭐</span>
+                    <span id="score-val" class="font-black">0</span>
+                </div>
+                
+                <button onclick="goHome()" class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="progress-container" class="hidden max-w-5xl mx-auto w-full mt-4 px-4">
+            <div class="h-2 bg-black/10 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-yellow-400 transition-all duration-700"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto px-6 py-4 w-full">
+        <div id="top-pills" class="flex justify-between gap-4 mb-8">
+            <div onclick="confirmReset('streak')" class="stat-pill flex-1 h-16 bg-pink-soft rounded-[25px] flex flex-col items-center justify-center shadow-sm">
+                <i data-lucide="medal" class="text-pink-500 w-5 h-5"></i>
+                <span id="streak-count" class="text-xs font-black text-pink-600">0</span>
+            </div>
+            <div onclick="confirmReset('daily')" class="stat-pill flex-1 h-16 bg-blue-soft rounded-[25px] flex flex-col items-center justify-center shadow-sm">
+                <i data-lucide="star" class="text-blue-500 w-5 h-5"></i>
+                <span id="daily-total" class="text-xs font-black text-blue-600">0</span>
+            </div>
+            <div onclick="confirmReset('alltime')" class="stat-pill flex-1 h-16 bg-yellow-soft rounded-[25px] flex flex-col items-center justify-center shadow-sm">
+                <i data-lucide="crown" class="text-yellow-600 w-5 h-5"></i>
+                <span id="alltime-best" class="text-xs font-black text-yellow-700">0</span>
+            </div>
+        </div>
+
+        <div id="main-view" class="w-full"></div>
+    </main>
+
+    <footer id="quiz-footer" class="hidden sticky bottom-0 left-0 right-0 z-40 app-footer backdrop-blur-lg px-6">
+        <div class="max-w-xl mx-auto flex gap-4">
+            <button id="back-btn" onclick="handleBack()" class="flex-1 py-3 bg-gray-100 rounded-2xl font-black text-gray-500 uppercase tracking-widest active:scale-95 transition-all">Back</button>
+            <button id="next-btn" onclick="nextPage()" class="flex-[2] py-3 bg-[#7B68EE] text-white rounded-2xl font-black shadow-lg shadow-purple-200 uppercase tracking-widest active:scale-95 transition-all">Next 🚀</button>
+        </div>
+    </footer>
+
+    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full text-white font-black shadow-2xl opacity-0 pointer-events-none z-[60] transition-opacity duration-300"></div>
+
+    <script>
+        let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
+        let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
+        let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
+
+        const stats = {
+            streak: parseInt(localStorage.getItem('merola_streak') || 0),
+            lastDate: localStorage.getItem('merola_last_date'),
+            dailyTotal: parseInt(localStorage.getItem('merola_daily_total') || 0),
+            allTimeBest: parseInt(localStorage.getItem('merola_alltime_best') || 0)
+        };
+
+        // Audio Context for App Sounds
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, now); // C5
+                oscillator.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1); // C6
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                oscillator.start(now);
+                oscillator.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(220, now); // A3
+                oscillator.frequency.linearRampToValueAtTime(110, now + 0.2); // A2
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                oscillator.start(now);
+                oscillator.stop(now + 0.4);
+            } else if (type === 'click') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, now);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                oscillator.start(now);
+                oscillator.stop(now + 0.05);
+            }
+        }
+
+        function updateStatDisplay() {
+            document.getElementById('streak-count').innerText = stats.streak + " DAYS";
+            document.getElementById('daily-total').innerText = stats.dailyTotal + " TODAY";
+            document.getElementById('alltime-best').innerText = "BEST: " + stats.allTimeBest;
+            document.getElementById('score-val').innerText = globalScore;
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            if (stats.lastDate) {
+                const last = new Date(stats.lastDate);
+                const diff = (new Date(today) - last) / (1000 * 60 * 60 * 24);
+                if (diff === 1) stats.streak++;
+                else if (diff > 1) stats.streak = 1;
+            } else stats.streak = 1;
+            if (stats.lastDate !== today) stats.dailyTotal = 0; 
+            stats.lastDate = today;
+            saveStats();
+        }
+
+        function saveStats() {
+            localStorage.setItem('merola_streak', stats.streak);
+            localStorage.setItem('merola_last_date', stats.lastDate);
+            localStorage.setItem('merola_daily_total', stats.dailyTotal);
+            localStorage.setItem('merola_alltime_best', stats.allTimeBest);
+            updateStatDisplay();
+        }
+
+        function resetDaily() {
+            if (confirm("Reset Merola's current session stars?")) {
+                globalScore = 0;
+                saveStats();
+                showToast("Stars reset! 🌟", "#6C5CE7");
+                playSound('click');
+            }
+        }
+
+        function confirmReset(type) {
+            const msgs = { streak: "Reset streak?", daily: "Reset today's stars?", alltime: "Reset record?" };
+            if (confirm(msgs[type])) {
+                if (type === 'streak') stats.streak = 0;
+                if (type === 'daily') { stats.dailyTotal = 0; globalScore = 0; }
+                if (type === 'alltime') stats.allTimeBest = 0;
+                saveStats();
+                showToast("Reset! 🧹", "#6C5CE7");
+                playSound('click');
+            }
+        }
+
+        function adjustFont(val) {
+            fontSize = Math.max(16, Math.min(42, fontSize + val));
+            document.documentElement.style.setProperty('--user-font-size', fontSize + 'px');
+            playSound('click');
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark', isDarkMode);
+            lucide.createIcons();
+            playSound('click');
+        }
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.onstart = () => { isListening = true; render(); };
+            recognition.onend = () => { isListening = false; render(); };
+            recognition.onresult = (e) => checkReading(e.results[0][0].transcript);
+        }
+
+        function goHome() {
+            currentView = 'home';
+            document.getElementById('quiz-footer').classList.add('hidden');
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('top-pills').classList.remove('hidden');
+            render();
+            window.scrollTo(0, 0);
+            playSound('click');
+        }
+
+        function flattenData(source) {
+            if (!source || !Array.isArray(source)) return [];
+            let flat = [];
+            source.forEach(group => {
+                if (group && group.qs && Array.isArray(group.qs)) {
+                    group.qs.forEach(qObj => {
+                        flat.push({ title: group.title, instr: group.instr, passage: group.passage || null, qs: [qObj] });
+                    });
+                }
+            });
+            return flat;
+        }
+
+        function startSection(type) {
+            currentActivityType = type; micUsedOnThisPage = false;
+            let dataToShuffle = [];
+            if (type === 'writing') {
+                const words = (typeof spellingWords !== 'undefined') ? spellingWords : ["apple"];
+                dataToShuffle = shuffle([...words]).map(w => ({ title: `Spelling`, instr: "Type it!", qs: [{ target: w, isWriting: true }] }));
+            } else if (type === 'reading') {
+                const sents = (typeof readingSentences !== 'undefined') ? readingSentences : ["Hello"];
+                dataToShuffle = shuffle([...sents]).map(s => ({ title: `Reading`, instr: "Speak!", qs: [{ q: s, original: s, isReading: true }] }));
+            } else {
+                switch(type) {
+                    case 'lesson': dataToShuffle = flattenData(typeof lessonData !== 'undefined' ? lessonData : []); break;
+                    case 'stories': dataToShuffle = flattenData(typeof storiesData !== 'undefined' ? storiesData : []); break;
+                    case 'wordparts': dataToShuffle = flattenData(typeof wordPartsData !== 'undefined' ? wordPartsData : []); break;
+                    case 'coin': dataToShuffle = flattenData([{ qs: (typeof initialCoinData !== 'undefined' ? initialCoinData : []), title: "Coins", instr: "Count!" }]); break;
+                    case 'time': dataToShuffle = flattenData([{ qs: (typeof generateTimeData === 'function' ? generateTimeData() : []), title: "Time", instr: "Read!" }]); break;
+                    case 'math': dataToShuffle = flattenData([{ qs: (typeof generateMathData === 'function' ? generateMathData() : []), title: "Math", instr: "Solve!" }]); break;
+                    case 'shapes': dataToShuffle = flattenData([{ qs: (typeof generateShapesData === 'function' ? generateShapesData() : []), title: "Shapes", instr: "Name!" }]); break;
+                    case 'grammar': dataToShuffle = flattenData([{ qs: (typeof generateGrammarData === 'function' ? generateGrammarData() : []), title: "Grammar", instr: "Pick!" }]); break;
+                }
+            }
+            activeData = shuffle([...dataToShuffle]);
+            currentPage = 0; userAnswers = {}; currentView = 'quiz';
+            document.getElementById('top-pills').classList.add('hidden');
+            render();
+            window.scrollTo(0, 0);
+            playSound('click');
+        }
+
+        function toggleMic() { if (!recognition) return; micUsedOnThisPage = true; isListening ? recognition.stop() : recognition.start(); playSound('click'); }
+        function speak(text) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.rate = 0.8; window.speechSynthesis.speak(msg); }
+        function checkReading(heard) {
+            const target = activeData[currentPage].qs[0].original.toLowerCase().replace(/[.,!?;:]/g, "");
+            const words = heard.toLowerCase().split(" ");
+            let match = 0; target.split(" ").forEach(w => { if(words.includes(w)) match++; });
+            if (match / target.split(" ").length >= 0.6) {
+                handleAnswer(0, 0, true);
+            } else {
+                showToast("Try again! 🎤", "#F44336");
+                playSound('wrong');
+            }
+        }
+        function checkSpelling(qIdx) {
+            if (document.getElementById(`spell-input-${qIdx}`).value.trim().toLowerCase() === activeData[currentPage].qs[qIdx].target.toLowerCase()) {
+                handleAnswer(qIdx, 0, true);
+            } else {
+                showToast("Check spelling!", "#F44336");
+                playSound('wrong');
+            }
+        }
+        function handleAnswer(qIdx, oIdx, isCorrect = null) {
+            const key = `${currentPage}-${qIdx}`;
+            if (userAnswers[key] !== undefined) return;
+            const finalCorrect = isCorrect !== null ? isCorrect : (oIdx === activeData[currentPage].qs[qIdx].c);
+            userAnswers[key] = oIdx;
+            if (finalCorrect) { 
+                globalScore++; 
+                stats.dailyTotal++; 
+                if (globalScore > stats.allTimeBest) stats.allTimeBest = globalScore; 
+                saveStats(); 
+                showToast("BINGO! ⭐", "#4CAF50");
+                playSound('correct');
+            }
+            else {
+                showToast("OOPS! 🍌", "#F44336");
+                playSound('wrong');
+            }
+            render();
+        }
+        function showToast(msg, color) { const t = document.getElementById('toast'); t.innerText = msg; t.style.backgroundColor = color; t.style.opacity = "1"; setTimeout(() => t.style.opacity = "0", 1500); }
+        function renderHubItem(type, label, icon, bg) { return `<div onclick="startSection('${type}')" class="hub-card ${bg} text-white"><i data-lucide="${icon}" class="w-8 h-8"></i><h3>${label}</h3></div>`; }
+
+        function render() {
+            const main = document.getElementById('main-view'); updateStatDisplay();
+            if (currentView === 'home') {
+                main.innerHTML = `<div class="space-y-4">
+                    <section><div class="section-header"><i data-lucide="book-open" class="section-icon w-5 h-5"></i><h2 class="section-title">Magic English</h2></div>
+                        <div class="grid grid-cols-3 gap-3">
+                            ${renderHubItem('reading', 'Reading', 'mic', 'bg-card-reading')}
+                            ${renderHubItem('writing', 'Spelling', 'pen-tool', 'bg-card-spelling')}
+                            ${renderHubItem('stories', 'Stories', 'book-open', 'bg-card-stories')}
+                            ${renderHubItem('wordparts', 'Word Lab', 'puzzle', 'bg-card-wordlab')}
+                            ${renderHubItem('grammar', 'Grammar', 'edit-3', 'bg-card-grammar')}
+                        </div></section>
+                    <section><div class="section-header"><i data-lucide="target" class="section-icon w-5 h-5"></i><h2 class="section-title">Daily Mission</h2></div>
+                        <div onclick="startSection('lesson')" class="daily-mission-card"><i data-lucide="graduation-cap" class="w-14 h-14 mx-auto mb-4 text-white"></i><h3 class="font-black text-xl uppercase tracking-widest">Lesson Mastery</h3></div></section>
+                    <section><div class="section-header"><i data-lucide="calculator" class="section-icon w-5 h-5"></i><h2 class="section-title">Math Quests</h2></div>
+                        <div class="grid grid-cols-3 gap-3">
+                            ${renderHubItem('math', 'Math Lab', 'plus', 'bg-card-math')}
+                            ${renderHubItem('time', 'Time Lab', 'clock', 'bg-card-time')}
+                            ${renderHubItem('coin', 'Coin Lab', 'coins', 'bg-card-coin')}
+                            ${renderHubItem('shapes', 'Shapes', 'shapes', 'bg-card-shapes')}
+                        </div></section></div>`;
+            } else if (currentView === 'quiz') {
+                document.getElementById('quiz-footer').classList.remove('hidden');
+                document.getElementById('progress-container').classList.remove('hidden');
+                const data = activeData[currentPage];
+                document.getElementById('progress-bar').style.width = ((currentPage + 1) / activeData.length) * 100 + "%";
+                const nextBtn = document.getElementById('next-btn');
+                if (nextBtn) { const ans = data.qs.every((_, i) => userAnswers[`${currentPage}-${i}`] !== undefined); nextBtn.disabled = !ans; nextBtn.style.opacity = ans ? "1" : "0.3"; }
+                
+                if (currentActivityType === 'reading') {
+                    const q = data.qs[0], ans = userAnswers[`${currentPage}-0`] !== undefined;
+                    main.innerHTML = `<div class="text-center w-full"><div class="instr-text">💡 ${data.instr}</div>
+                        <div class="card p-8 mb-4 flex flex-col items-center w-full"><div class="q-text mb-8 leading-tight">"${q.q}"</div>
+                            <button onclick="toggleMic()" class="w-20 h-20 rounded-full ${isListening ? 'bg-red-500' : 'bg-[#7B68EE]'} text-white flex items-center justify-center text-2xl shadow-xl ${ans ? 'opacity-30' : ''}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-10 h-10"></i></button>
+                            <button onclick="speak('${q.original}')" class="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-600 rounded-2xl font-black"><i data-lucide="volume-2" class="w-5 h-5"></i> Listen</button>
+                        </div></div>`;
+                } else if (data.qs[0].isWriting) {
+                    let qsHtml = data.qs.map((q, i) => {
+                        const ans = userAnswers[`${currentPage}-${i}`] !== undefined;
+                        return `<div class="card p-6 mb-6 w-full flex flex-col items-center"><button onclick="speak('${q.target}')" class="w-16 h-16 rounded-full bg-orange-500 text-white mb-6"><i data-lucide="volume-2" class="mx-auto"></i></button>
+                            <input type="text" id="spell-input-${i}" class="w-full p-4 border-2 rounded-xl mb-4 text-center font-bold" placeholder="Type here..." ${ans ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${i})">
+                            ${!ans ? `<button onclick="checkSpelling(${i})" class="bg-green-500 text-white px-8 py-2 rounded-xl font-black">CHECK</button>` : '<div class="text-green-600 font-black">CORRECT!</div>'}</div>`;
+                    }).join('');
+                    main.innerHTML = `<div class="instr-text text-center">💡 ${data.instr}</div><div class="w-full">${qsHtml}</div>`;
+                } else {
+                    let qsHtml = data.qs.map((q, i) => {
+                        const cur = userAnswers[`${currentPage}-${i}`], ans = cur !== undefined;
+                        return `<div class="card p-6 mb-6 w-full"><div class="q-text mb-6 font-black">${q.qText || q.q}</div>
+                            <div class="options-grid">
+                                ${q.opts.map((opt, oIdx) => {
+                                    let cls = ans ? (oIdx === q.c ? "correct" : (oIdx === cur ? "wrong" : "opacity-30")) : "hover:bg-gray-50";
+                                    return `<button onclick="handleAnswer(${i}, ${oIdx})" ${ans ? 'disabled' : ''} class="option-btn py-5 px-4 font-black transition-all ${cls}">${opt}</button>`;
+                                }).join('')}
+                            </div></div>`;
+                    }).join('');
+
+                    main.innerHTML = `
+                        <div class="instr-text text-center">💡 ${data.instr}</div>
+                        <div class="quiz-container">
+                            ${data.passage ? `
+                                <div class="passage-box p-6 transform transition-all">
+                                    <div class="flex items-center gap-2 mb-2 text-[#7B68EE] font-black"><i data-lucide="book" class="w-5 h-5"></i> STORY TIME</div>
+                                    <div class="passage-text text-gray-700 dark:text-gray-200">${data.passage}</div>
+                                </div>` : ''}
+                            <div class="questions-container">${qsHtml}</div>
+                        </div>`;
+                }
+            } else if (currentView === 'results') {
+                main.innerHTML = `<div class="text-center py-20"><h2 class="text-5xl font-black mb-4">WINNER!</h2><button onclick="goHome()" class="px-12 py-4 bg-[#7B68EE] text-white rounded-3xl font-black text-xl shadow-xl uppercase">Home</button></div>`;
+            }
+            lucide.createIcons();
+        }
+
+        function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); playSound('click'); }
+        function nextPage() { currentPage < activeData.length - 1 ? (currentPage++, render()) : finish(); playSound('click'); }
+        function finish() { currentView = 'results'; document.getElementById('quiz-footer').classList.add('hidden'); render(); playSound('correct'); }
+        window.onload = () => { checkStreak(); render(); };
+    </script>
+</body>
+</html>
