@@ -3,429 +3,937 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Marley Shorts</title>
     
+    <title>Shorts</title>
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Marley">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Waeil55/Marley/main/Y.JPG">
+    <meta name="apple-mobile-web-app-title" content="Shorts">
     
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG">
+    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG">
+    <meta name="theme-color" content="#000000">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- ✅ EXTERNAL DATA IMPORTS (Strictly Preserved) -->
+    <!-- These files must exist in the same folder for data to load -->
+    <script src="lessonData.js"></script>
+    <script src="readingData.js"></script>
+    <script src="quizGenerators.js"></script>
+    <script src="wordPartsData.js"></script>
+    <script src="storiesData.js"></script>
+    <script src="writingData.js"></script>
+
     <style>
         :root {
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
+            --yt-black: #000000;
+            --yt-white: #ffffff;
             --yt-red: #ff0000;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
+            background-color: var(--yt-black);
+            color: var(--yt-white);
             font-family: 'Roboto', sans-serif;
-            background-color: #000;
-            color: white;
             margin: 0;
+            padding: 0;
             overflow: hidden;
             height: 100vh;
             width: 100vw;
-            overscroll-behavior-y: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
         }
 
-        .shorts-wrapper {
+        /* --- SHORTS CONTAINER --- */
+        #shorts-container {
             height: 100vh;
+            width: 100%;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
             scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
+            position: relative;
+            z-index: 10;
+            background: #000;
+            padding-bottom: 48px;
         }
-        .shorts-wrapper::-webkit-scrollbar { display: none; }
+        #shorts-container::-webkit-scrollbar { display: none; }
 
-        .short-card {
-            height: 100vh;
-            width: 100vw;
+        .short-section {
+            height: 100vh; /* Full viewport height */
+            height: calc(100vh - 48px);
+            width: 100%;
             scroll-snap-align: start;
+            scroll-snap-stop: always;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: #000;
+            overflow: hidden;
         }
 
+        /* Video Background Simulation */
+        .video-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* --- YT HEADER --- */
         .yt-header {
             position: fixed;
-            top: var(--safe-top);
-            left: 0;
-            width: 100%;
+            top: 0; left: 0; width: 100%;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 16px;
-            z-index: 1000;
+            z-index: 50;
             pointer-events: none;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
         }
-        .header-left { display: flex; align-items: center; gap: 8px; pointer-events: auto; }
-        .shorts-title { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
-        .header-right { display: flex; items-center; gap: 20px; pointer-events: auto; }
+        .yt-header-icons { pointer-events: auto; display: flex; gap: 20px; }
 
-        .prog-header {
-            position: fixed;
-            top: calc(var(--safe-top) + 2px);
-            left: 0;
-            width: 100%;
-            display: flex;
-            gap: 4px;
-            padding: 0 10px;
-            z-index: 1001;
-            pointer-events: none;
-        }
-        .seg { flex: 1; height: 2px; background: rgba(255,255,255,0.2); border-radius: 1px; }
-        .fill { height: 100%; width: 0%; background: #fff; transition: width 0.3s; }
-
-        .sidebar {
+        /* --- YT RIGHT ACTIONS --- */
+        .action-bar {
             position: absolute;
             right: 8px;
-            bottom: calc(85px + var(--safe-bottom));
+            bottom: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 20;
+            align-items: center;
+        }
+        .action-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            z-index: 100;
-            pointer-events: auto;
+            gap: 2px;
         }
-        .sidebar-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; cursor: pointer; }
-        .icon-box { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        .label { font-size: 12px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        .action-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .action-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
+        .action-label { font-size: 12px; font-weight: 500; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-        .profile-wrap {
-            width: 44px; height: 44px; border-radius: 50%; border: 2px solid #fff;
-            position: relative; margin-bottom: 8px;
+        /* --- YT BOTTOM OVERLAY --- */
+        .bottom-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
+            padding: 16px;
+            padding-right: 60px;
+            z-index: 15;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .plus-badge {
-            position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-            background: var(--yt-red); width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; border: 2px solid #000;
+        .channel-info { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .channel-avatar { width: 36px; height: 36px; background: #333; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+        .channel-name { font-weight: 700; font-size: 14px; color: white; }
+        .sub-btn { 
+            background: white; color: black; 
+            padding: 6px 14px; border-radius: 18px; 
+            font-size: 12px; font-weight: 600; 
+            margin-left: 8px;
+            transition: background 0.2s;
         }
-
-        .bottom-ui {
-            position: absolute; bottom: calc(15px + var(--safe-bottom));
-            left: 12px; right: 80px; z-index: 100; pointer-events: none;
-        }
-        .handle-row { font-weight: 700; font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; pointer-events: auto; }
-        .sub-btn { background: #fff; color: #000; padding: 6px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; cursor: pointer; }
-        .caption { font-size: 14px; line-height: 1.4; margin-bottom: 12px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); pointer-events: auto; }
-
-        .video-fx { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--color, #6366f1) 0%, #000 100%); opacity: 0.6; z-index: 0; }
-        .main-canvas { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 30px; pointer-events: auto; }
-        .hero-visual { font-size: 10rem; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); font-family: 'Quicksand', sans-serif; margin-bottom: 30px; }
+        .sub-btn.subscribed { background: rgba(255,255,255,0.2); color: white; }
         
-        .grid-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 340px; }
-        .opt-bubble { background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(25px); border: 1.5px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 18px 5px; font-weight: 700; font-size: 1.2rem; color: white; cursor: pointer; }
-        .opt-bubble.correct { background: #22c55e; border-color: #4ade80; }
-        .opt-bubble.wrong { background: #ef4444; border-color: #f87171; }
+        .video-desc { font-size: 14px; color: #f1f1f1; line-height: 1.3; font-weight: 400; max-width: 85%; }
+        
+        /* Music Ticker */
+        .music-ticker { 
+            display: flex; align-items: center; gap: 8px; 
+            font-size: 13px; margin-top: 10px; font-weight: 500;
+            background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 4px;
+        }
+        .scrolling-container { width: 150px; overflow: hidden; white-space: nowrap; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+        .scrolling-text { display: inline-block; padding-left: 100%; animation: scroll 10s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        .mic-btn { width: 85px; height: 85px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; margin-top: 10px; transition: all 0.2s; cursor: pointer; }
-        .mic-btn.active { background: var(--yt-red); box-shadow: 0 0 35px var(--yt-red); animation: mic-pulse 1s infinite; }
-        @keyframes mic-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        /* --- CONTENT AREA --- */
+        .content-stage {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 80px;
+        }
+        
+        .option-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            width: 100%;
+            text-align: left;
+            font-weight: 600;
+            font-size: 17px;
+            color: white;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .option-card:active { transform: scale(0.98); background: rgba(255, 255, 255, 0.25); }
+        .option-card.correct-ans {
+            background: rgba(255, 255, 255, 0.95);
+            color: black;
+            border-color: white;
+            transform: scale(1.02);
+        }
+        .option-card.wrong-ans {
+            background: rgba(220, 20, 60, 0.8);
+            border-color: red;
+        }
+        
+        /* --- BOTTOM NAV BAR --- */
+        .yt-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            height: 48px;
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: white; opacity: 0.6; font-size: 10px; background: none; border: none; }
+        .nav-item.active { opacity: 1; }
+        .nav-plus-btn { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); }
 
-        .game-obj { position: absolute; z-index: 200; font-size: 7.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 180px; height: 180px; will-change: transform, left, top; transition: left 0.3s ease-out, top 0.3s ease-out; }
-        .pop-bubble { border-radius: 50%; background: rgba(255,255,255,0.4); border: 4px solid rgba(255,255,255,0.5); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; position: absolute; animation: fly-up var(--d) linear forwards; cursor: pointer; }
-        @keyframes fly-up { from { transform: translateY(110vh); } to { transform: translateY(-20vh); } }
+        /* --- GAME OVERLAY --- */
+        #game-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 200;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        #game-canvas { position: absolute; width: 100%; height: 100%; }
 
-        .yt-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; align-items: center; z-index: 2000; padding-bottom: var(--safe-bottom); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
-        .nav-label { font-size: 10px; font-weight: 500; }
+        /* --- ANIMATIONS --- */
+        @keyframes heart-burst { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+        .big-heart {
+            position: absolute; top: 50%; left: 50%; width: 120px; height: 120px;
+            margin-left: -60px; margin-top: -60px; pointer-events: none; z-index: 60;
+            fill: white; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+            opacity: 0;
+        }
+        .big-heart.animate { animation: heart-burst 0.8s ease-out forwards; }
+        
+        .progress-bar-bottom {
+            position: absolute; bottom: 0; left: 0; height: 3px;
+            background: red; z-index: 16; width: 0%;
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 10px red;
+        }
 
-        .confetti { position: absolute; pointer-events: none; z-index: 1000; animation: pop 1s ease-out forwards; }
-        @keyframes pop { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) rotate(360deg) scale(0); opacity: 0; } }
+        .confetti { position: absolute; width: 8px; height: 8px; opacity: 0.8; border-radius: 50%; }
+        
+        /* Question Styles */
+        .q-badge { background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .question-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 24px; text-shadow: 0 4px 8px rgba(0,0,0,0.8); line-height: 1.3; }
+
     </style>
 </head>
 <body>
 
-    <div class="prog-header" id="prog-header"></div>
+    <!-- YT HEADER -->
     <div class="yt-header">
-        <div class="header-left"><span class="shorts-title">Shorts</span></div>
-        <div class="header-right">
-            <i data-lucide="search" class="w-6 h-6"></i>
-            <i data-lucide="camera" class="w-6 h-6"></i>
-            <i data-lucide="more-vertical" class="w-6 h-6"></i>
+        <div class="font-bold text-lg tracking-tight flex items-center gap-2">
+            <span id="streak-counter" class="text-sm bg-red-600 px-2 py-0.5 rounded font-bold hidden">🔥 0</span>
+        </div>
+        <div class="yt-header-icons">
+            <i data-lucide="search" class="w-6 h-6 text-white"></i>
+            <i data-lucide="more-vertical" class="w-6 h-6 text-white"></i>
         </div>
     </div>
 
-    <div id="shorts-feed" class="shorts-wrapper"></div>
+    <!-- MAIN APP VIEW -->
+    <main id="app-root" class="w-full h-full relative">
+        
+        <!-- HOME / FEED -->
+        <div id="home-view" class="w-full h-full bg-black p-4 pt-16 overflow-y-auto pb-20">
+            <div class="flex items-center gap-3 mb-6">
+                <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-10 h-10 rounded-full border border-white/20">
+                <h1 class="text-xl font-bold">Merola Learning</h1>
+            </div>
 
+            <div class="grid grid-cols-2 gap-3">
+                <div onclick="App.startSession('lesson')" class="aspect-[9/16] bg-gradient-to-br from-purple-900 to-black rounded-xl border border-white/10 relative overflow-hidden group active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Daily Mix</span>
+                        <span class="text-xs text-gray-400">1.2M views</span>
+                    </div>
+                    <div class="absolute top-2 right-2 bg-red-600 px-1.5 py-0.5 rounded text-[10px] font-bold">LIVE</div>
+                </div>
+
+                <div onclick="App.startSession('math')" class="aspect-[9/16] bg-gradient-to-br from-blue-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Math Lab</span>
+                        <span class="text-xs text-gray-400">845K views</span>
+                    </div>
+                </div>
+
+                <div onclick="App.startSession('reading')" class="aspect-[9/16] bg-gradient-to-br from-green-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Reading</span>
+                        <span class="text-xs text-gray-400">2.1M views</span>
+                    </div>
+                </div>
+                
+                <div onclick="App.startSession('spelling')" class="aspect-[9/16] bg-gradient-to-br from-yellow-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Spelling</span>
+                        <span class="text-xs text-gray-400">500K views</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHORTS SCROLL CONTAINER -->
+        <div id="shorts-container" class="hidden">
+            <!-- Injected -->
+        </div>
+
+    </main>
+
+    <!-- BOTTOM NAV (YT STYLE) -->
     <nav class="yt-nav">
-        <div class="nav-item"><i data-lucide="home" class="w-6 h-6"></i><span class="nav-label">Home</span></div>
-        <div class="nav-item"><i data-lucide="compass" class="w-6 h-6 text-white"></i><span class="nav-label">Shorts</span></div>
-        <div class="w-10 h-10 border border-white/40 rounded-full flex items-center justify-center"><i data-lucide="plus" class="w-7 h-7"></i></div>
-        <div class="nav-item opacity-40"><i data-lucide="play-square" class="w-6 h-6"></i><span class="nav-label">Subs</span></div>
-        <div class="nav-item opacity-40"><i data-lucide="user" class="w-6 h-6"></i><span class="nav-label">You</span></div>
+        <button class="nav-item" onclick="App.goHome()">
+            <i data-lucide="home" class="w-6 h-6 stroke-[1.5]"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item active">
+            <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-6 h-6 rounded-full border border-white">
+            <span>Shorts</span>
+        </button>
+        <div class="nav-plus-btn">
+            <i data-lucide="plus" class="w-6 h-6 text-white stroke-[1.5]"></i>
+        </div>
+        <button class="nav-item">
+            <i data-lucide="play-square" class="w-6 h-6 stroke-[1.5]"></i>
+            <span>Subs</span>
+        </button>
+        <button class="nav-item" id="library-btn">
+            <i data-lucide="library" class="w-6 h-6 stroke-[1.5]"></i>
+            <span>You</span>
+        </button>
     </nav>
 
+    <!-- GAME OVERLAY -->
+    <div id="game-overlay">
+        <canvas id="game-canvas"></canvas>
+        <div class="game-ui absolute top-20 w-full text-center pointer-events-none">
+            <h2 class="text-4xl font-black text-white italic tracking-tighter mb-2 drop-shadow-lg" id="game-title">BONUS!</h2>
+            <div class="game-timer text-7xl font-black text-yellow-400 drop-shadow-xl" id="game-timer-display">20</div>
+            <div class="text-white font-bold mt-4 text-xl animate-bounce">TAP TAP TAP!</div>
+        </div>
+        <button class="absolute top-10 right-6 bg-white/20 px-4 py-2 rounded-full text-white font-bold backdrop-blur-md" onclick="GameEngine.stop()">Skip</button>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md text-white px-6 py-3 rounded-lg font-medium text-sm shadow-2xl opacity-0 transition-opacity pointer-events-none z-[200] border border-white/10"></div>
+
     <script>
-        const apiKey = "";
-        const ANIMALS = {"🐶":"Dog","🐱":"Cat","🐻":"Bear","🦁":"Lion","🐮":"Cow","🐷":"Pig","🐸":"Frog","🐔":"Hen","🐦":"Bird","🦆":"Duck","🦇":"Bat","🐺":"Wolf","🐟":"Fish","🐐":"Goat"};
-        const FOOD = {"🍐":"Pear","🥝":"Kiwi","🌽":"Corn","🥩":"Meat","🍰":"Cake","🥧":"Pie","🥚":"Egg","🥣":"Soup","🍚":"Rice","🥛":"Milk","🌮":"Taco","🥯":"Bun"};
-        const NUMS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen","Twenty"];
-        const GAMES = {"🍐":"Pear","⚽":"Ball","⭐":"Star","🧁":"Cake","🥚":"Egg","🌽":"Corn"};
-
-        let POOL = [];
-        let state = {
-            score: parseInt(localStorage.getItem('m_v17_stars') || 0),
-            idx: -1,
-            maxIdxReached: 0,
-            canAns: true,
-            timers: [],
-            voices: [],
-            rec: null,
-            currentAudio: null,
-            audioRequestId: 0
-        };
-
-        function buildPool() {
-            let temp = [];
-            Object.keys(ANIMALS).forEach(e => temp.push({e, n: ANIMALS[e], c: "#6366f1", type: "spell"}));
-            Object.keys(FOOD).forEach(e => temp.push({e, n: FOOD[e], c: "#ef4444", type: "spell"}));
-            for(let i=1; i<=20; i++) temp.push({e:i, n: NUMS[i], c: "#10b981", type: "pick"});
-            "ABCD".split('').forEach(l => temp.push({e:l, n: l, c: "#f59e0b", type: "pick"}));
+        /* ------------------------------------------------------------
+           VIDEO FX ENGINE (Generates Dynamic Backgrounds)
+           ------------------------------------------------------------ */
+        const VideoFX = {
+            canvases: {},
             
-            // Addition tasks (1 to 5)
-            for(let i=1; i<=5; i++) {
-                for(let j=0; j<=5; j++) {
-                    if(i+j <= 10) temp.push({e:`${i} + ${j}`, n: (i+j).toString(), c: "#8b5cf6", type: "add"});
-                }
-            }
-
-            temp.sort(() => Math.random() - 0.5);
-            while(POOL.length < 400) POOL.push({...temp[POOL.length % temp.length]});
-        }
-
-        async function speak(text, requestId) {
-            stopAllSounds();
-            if (requestId !== state.audioRequestId) return;
-            const u = new SpeechSynthesisUtterance(text);
-            const v = state.voices.find(v => (v.name.includes("Google") || v.name.includes("Samantha") || v.name.includes("Natural")) && v.lang.startsWith("en"));
-            if(v) u.voice = v;
-            u.pitch = 1.1; u.rate = 1.0;
-            window.speechSynthesis.speak(u);
-        }
-
-        function stopAllSounds() {
-            window.speechSynthesis.cancel();
-            if (state.currentAudio) {
-                state.currentAudio.pause();
-                state.currentAudio.src = "";
-                state.currentAudio = null;
-            }
-        }
-
-        function init() {
-            buildPool();
-            const feed = document.getElementById('shorts-feed');
-            const prog = document.getElementById('prog-header');
-            POOL.forEach((item, i) => {
-                const card = document.createElement('div');
-                card.className = 'short-card'; card.id = `card-${i}`;
-                feed.appendChild(card);
-                prog.innerHTML += `<div class="seg"><div id="fill-${i}" class="fill"></div></div>`;
-            });
-            lucide.createIcons();
-            const sv = () => { state.voices = window.speechSynthesis.getVoices(); };
-            sv(); 
-            if (speechSynthesis.onvoiceschanged !== undefined) {
-                speechSynthesis.onvoiceschanged = sv;
-            }
-            if ('webkitSpeechRecognition' in window) {
-                state.rec = new webkitSpeechRecognition();
-                state.rec.continuous = false;
-                state.rec.interimResults = false; 
-                state.rec.lang = 'en-US';
-            }
-            feed.addEventListener('scroll', handleScroll, {passive: true});
-            handleScroll();
-        }
-
-        function renderCard(i) {
-            const card = document.getElementById(`card-${i}`);
-            if (card.innerHTML !== '') return;
-            const item = POOL[i];
-            
-            if (i > 0 && i % 4 === 3) {
-                const games = ['catch', 'pop', 'tap'];
-                const type = games[i % games.length];
-                const emojis = Object.keys(GAMES);
-                const emoji = emojis[i % emojis.length];
-                card.dataset.type = "game"; card.dataset.game = type; card.dataset.emoji = emoji;
-                card.innerHTML = `<div class="video-fx" style="--color: #ff0055"></div><div class="main-canvas"><h2 class="text-4xl font-black italic mb-2 tracking-tighter">GAME TIME</h2><div id="game-zone-${i}" class="absolute inset-0 w-full h-full pointer-events-none"></div></div>${getSidebar()}${getBottom(`Catch the ${GAMES[emoji]}!`)}`;
-            } else if (item.type === "spell" && i % 2 === 0) {
-                card.dataset.type = "spell";
-                card.innerHTML = `<div class="video-fx" style="--color: ${item.c}"></div><div class="main-canvas"><div class="hero-visual">${item.e}</div><h3 class="text-2xl font-bold mb-4 uppercase text-center">Say it!</h3><button id="mic-${i}" onclick="startMic(${i}, '${item.n}')" class="mic-btn"><i data-lucide="mic" class="w-10 h-10 text-white"></i></button></div>${getSidebar()}${getBottom(`Say ${item.n}!`)}`;
-            } else if (item.type === "add") {
-                let opts = [item.n];
-                while(opts.length < 4) {
-                    let r = Math.floor(Math.random() * 11).toString();
-                    if(!opts.includes(r)) opts.push(r);
-                }
-                opts.sort(() => Math.random() - 0.5);
-                card.innerHTML = `<div class="video-fx" style="--color: ${item.c}"></div><div class="main-canvas"><div class="hero-visual">${item.e}</div><div class="grid-opts">${opts.map(o => `<button onclick="checkPick(${i}, '${o}', '${item.n}', this)" class="opt-bubble">${o}</button>`).join('')}</div></div>${getSidebar()}${getBottom(`What is ${item.e}?`)}`;
-            } else {
-                let opts = [item];
-                while(opts.length < 4) {
-                    let r = POOL[Math.floor(Math.random()*POOL.length)];
-                    if(!opts.find(o => o.n === r.n)) opts.push(r);
-                }
-                opts.sort(() => Math.random() - 0.5);
-                card.innerHTML = `<div class="video-fx" style="--color: ${item.c}"></div><div class="main-canvas"><div class="hero-visual">${item.e}</div><div class="grid-opts">${opts.map(o => `<button onclick="checkPick(${i}, '${o.n}', '${item.n}', this)" class="opt-bubble">${o.n}</button>`).join('')}</div></div>${getSidebar()}${getBottom(`Find ${item.n}!`)}`;
-            }
-            lucide.createIcons();
-        }
-
-        function getSidebar() {
-            return `<div class="sidebar"><div class="profile-wrap"><img src="https://raw.githubusercontent.com/Waeil55/Marley/main/Y.JPG" class="profile-img"><div class="plus-badge">+</div></div><div class="sidebar-btn" onclick="celebrate(innerWidth/2, innerHeight/2)"><div class="icon-box"><i data-lucide="thumbs-up" class="w-7 h-7 fill-white text-white"></i></div><span class="label">12K</span></div><div class="sidebar-btn"><div class="icon-box"><i data-lucide="message-square" class="w-7 h-7 fill-white text-white"></i></div><span class="label">421</span></div><div class="sidebar-btn"><div class="icon-box"><i data-lucide="share-2" class="w-7 h-7 fill-white text-white"></i></div><span class="label">Share</span></div><div class="w-8 h-8 rounded border-2 border-white overflow-hidden animate-[spin_4s_linear_infinite]"><img src="https://raw.githubusercontent.com/Waeil55/Marley/main/Y.JPG" class="w-full h-full object-cover"></div></div>`;
-        }
-
-        function getBottom(desc) {
-            return `<div class="bottom-ui"><div class="handle-row"><div class="w-8 h-8 rounded-full overflow-hidden border border-white/20"><img src="https://raw.githubusercontent.com/Waeil55/Marley/main/Y.JPG" class="w-full h-full object-cover"></div>@marley_world <span class="subscribe-btn">Subscribe</span></div><div class="caption">${desc}</div></div>`;
-        }
-
-        function handleScroll() {
-            const feed = document.getElementById('shorts-feed');
-            const currentTop = feed.scrollTop;
-            const idx = Math.round(currentTop / window.innerHeight);
-
-            // Block scrolling back down
-            if (idx < state.idx) {
-                feed.scrollTo({top: state.idx * window.innerHeight, behavior: 'auto'});
-                return;
-            }
-
-            if(idx !== state.idx) {
-                stopAllSounds();
-                state.audioRequestId++;
-                const currentReqId = state.audioRequestId;
-
-                state.timers.forEach(t => clearInterval(t)); state.timers = [];
-                state.idx = idx; state.canAns = true;
+            mount(id, type) {
+                const cvs = document.getElementById(`bg-canvas-${id}`);
+                if(!cvs) return;
+                const ctx = cvs.getContext('2d');
+                let w = cvs.width = window.innerWidth;
+                let h = cvs.height = window.innerHeight;
                 
-                document.querySelectorAll('.short-card').forEach((c, i) => {
-                    if (Math.abs(i - idx) > 1) c.innerHTML = '';
-                    else renderCard(i);
+                this.canvases[id] = { active: true, type, ctx, w, h, t: 0, elements: [] };
+                
+                // Initialize based on type
+                if(type === 'math') this.initParticles(this.canvases[id], 'numbers');
+                else if(type === 'space') this.initParticles(this.canvases[id], 'stars');
+                else this.initParticles(this.canvases[id], 'blobs');
+                
+                this.loop(id);
+            },
+
+            unmount(id) {
+                if(this.canvases[id]) this.canvases[id].active = false;
+            },
+
+            initParticles(scene, style) {
+                for(let i=0; i<30; i++) {
+                    scene.elements.push({
+                        x: Math.random()*scene.w,
+                        y: Math.random()*scene.h,
+                        vx: (Math.random()-0.5)*2,
+                        vy: (Math.random()-0.5)*2,
+                        size: Math.random()*20 + 5,
+                        val: style === 'numbers' ? Math.floor(Math.random()*9) : null,
+                        color: `hsla(${Math.random()*360}, 70%, 60%, 0.3)`
+                    });
+                }
+            },
+
+            loop(id) {
+                const s = this.canvases[id];
+                if(!s || !s.active) return;
+                
+                s.ctx.clearRect(0,0,s.w,s.h);
+                s.t += 0.01;
+
+                // Dynamic Background Gradient
+                const g = s.ctx.createLinearGradient(0,0,0,s.h);
+                g.addColorStop(0, `hsl(${Math.sin(s.t)*30 + 240}, 60%, 10%)`);
+                g.addColorStop(1, `hsl(${Math.cos(s.t)*30 + 280}, 60%, 5%)`);
+                s.ctx.fillStyle = g;
+                s.ctx.fillRect(0,0,s.w,s.h);
+
+                // Draw Elements
+                s.elements.forEach(e => {
+                    e.x += e.vx; e.y += e.vy;
+                    if(e.x < 0 || e.x > s.w) e.vx *= -1;
+                    if(e.y < 0 || e.y > s.h) e.vy *= -1;
+
+                    s.ctx.fillStyle = e.color;
+                    s.ctx.font = `${e.size}px Roboto`;
+                    
+                    if(e.val !== null) s.ctx.fillText(e.val, e.x, e.y);
+                    else {
+                        s.ctx.beginPath();
+                        s.ctx.arc(e.x, e.y, e.size/2, 0, Math.PI*2);
+                        s.ctx.fill();
+                    }
                 });
 
-                document.querySelectorAll('.fill').forEach((f, i) => f.style.width = i <= idx ? '100%' : '0');
-                const card = document.getElementById(`card-${idx}`);
-                
-                if(card && card.dataset.type === "game") startGames(idx, card.dataset.game, card.dataset.emoji);
-                
-                const item = POOL[idx]; let msg = "";
-                if(card && card.dataset.type === "game") msg = `Catch the ${GAMES[card.dataset.emoji]}!`;
-                else if(card && card.dataset.type === "spell") msg = `Can you say ${item.n}?`;
-                else if(item.type === "add") msg = `What is ${item.e}?`;
-                else msg = `Find ${item.n}!`;
-                
-                speak(msg, currentReqId);
+                requestAnimationFrame(() => this.loop(id));
             }
-        }
+        };
 
-        function startGames(idx, type, emoji) {
-            const zone = document.getElementById(`game-zone-${idx}`);
-            if(!zone) return; zone.innerHTML = ''; zone.style.pointerEvents = 'auto';
-            if(type === 'catch') {
-                const t = document.createElement('div'); t.className = 'game-obj'; t.innerHTML = emoji;
-                t.style.left = '50%'; t.style.top = '50%'; t.onpointerdown = () => winGame(idx, t);
-                zone.appendChild(t); const move = () => {
-                    t.style.left = (Math.random() * (innerWidth - 180) + 10) + 'px';
-                    t.style.top = (Math.random() * (innerHeight * 0.45) + (innerHeight * 0.25)) + 'px';
-                };
-                state.timers.push(setInterval(move, 400)); move();
-            } else if(type === 'pop') {
-                const gen = () => {
-                    if(zone.children.length > 8) return;
-                    const b = document.createElement('div'); b.className = 'pop-bubble'; b.innerHTML = emoji;
-                    b.style.left = (Math.random() * 80 + 5) + '%'; b.style.setProperty('--d', (2 + Math.random()) + 's');
-                    b.onpointerdown = () => { b.style.transform='scale(0)'; setTimeout(()=>b.remove(),100); if(Math.random()>0.8) winGame(idx, null); };
-                    zone.appendChild(b); setTimeout(() => b.remove(), 3500);
-                };
-                state.timers.push(setInterval(gen, 300));
-            } else if(type === 'tap') {
-                const t = document.createElement('div'); t.className = 'game-obj vibrate'; t.innerHTML = emoji;
-                t.style.left = '50%'; t.style.top = '45%'; t.style.transform = 'translate(-50%, -50%) scale(1.8)';
-                let h = 0; t.onpointerdown = (e) => { 
-                    h++; t.style.transform = `translate(-50%, -50%) scale(${1.8 + h * 0.5})`;
-                    celebrate(e.clientX, e.clientY); if(h >= 6) winGame(idx, t);
-                };
-                zone.appendChild(t);
-            }
-        }
+        /* ------------------------------------------------------------
+           AUDIO ENGINE
+           ------------------------------------------------------------ */
+        const AudioEngine = {
+            ctx: new (window.AudioContext || window.webkitAudioContext)(),
+            playTone(freq, type, duration, vol = 0.1) {
+                if(this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+            correct() { this.playTone(800, 'sine', 0.1); setTimeout(() => this.playTone(1200, 'sine', 0.3), 100); },
+            wrong() { this.playTone(150, 'sawtooth', 0.4); },
+            star() { this.playTone(1000, 'triangle', 0.1); setTimeout(() => this.playTone(2000, 'sine', 0.4), 100); },
+            pop() { this.playTone(400 + Math.random()*400, 'triangle', 0.05, 0.1); }
+        };
 
-        function winGame(idx, el) {
-            if(el) { el.style.transform = "scale(20) rotate(720deg)"; el.style.opacity = "0"; el.style.pointerEvents = "none"; }
-            state.timers.forEach(t => clearInterval(t)); celebrate(innerWidth/2, innerHeight/2);
-            speak("Wow! Superstar!", state.audioRequestId);
-            setTimeout(() => document.getElementById('shorts-feed').scrollBy({top: window.innerHeight, behavior: 'smooth'}), 1200);
-        }
-
-        function checkPick(i, pick, match, btn) {
-            if(!state.canAns) return;
-            if(pick === match) {
-                state.canAns = false; btn.classList.add('correct'); celebrate(innerWidth/2, innerHeight/2);
-                speak(`${match} is right!`, state.audioRequestId);
-                setTimeout(() => document.getElementById('shorts-feed').scrollBy({top: window.innerHeight, behavior: 'smooth'}), 1500);
-            } else { speak("Try again!", state.audioRequestId); }
-        }
-
-        function startMic(idx, target) {
-            if (!state.rec) return;
-            const btn = document.getElementById(`mic-${idx}`); btn.classList.add('active');
-            
-            // Immediate start
-            state.rec.start();
-            
-            state.rec.onresult = (e) => {
-                const heard = e.results[0][0].transcript.toLowerCase(); 
-                btn.classList.remove('active');
-                state.rec.stop(); // Stop immediately after result to reduce background noise capture
-                
-                if (heard.includes(target.toLowerCase())) {
-                    celebrate(innerWidth/2, innerHeight/2); 
-                    speak("Perfect!", state.audioRequestId);
-                    setTimeout(() => document.getElementById('shorts-feed').scrollBy({top: window.innerHeight, behavior: 'smooth'}), 1200);
-                } else { 
-                    speak(`Try again! Say ${target}`, state.audioRequestId); 
+        /* ------------------------------------------------------------
+           VOICE ENGINE
+           ------------------------------------------------------------ */
+        const VoiceEngine = {
+            recognition: null,
+            init() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    this.recognition.continuous = false;
+                    this.recognition.lang = 'en-US';
                 }
-            };
-            
-            state.rec.onerror = () => {
-                btn.classList.remove('active');
-                state.rec.stop();
-            };
-            
-            // Automatic timeout if no sound to prevent background noise infinite listening
-            setTimeout(() => {
-                if(btn.classList.contains('active')) {
-                    btn.classList.remove('active');
-                    state.rec.stop();
-                }
-            }, 3000);
-        }
-
-        function celebrate(x, y) {
-            const ems = ['⭐','✨','🎈','🎊','❤️','🔥'];
-            for(let i=0; i<12; i++) {
-                const c = document.createElement('div'); c.className = 'confetti';
-                c.innerHTML = ems[Math.floor(Math.random()*ems.length)];
-                c.style.left = x + 'px'; c.style.top = y + 'px';
-                c.style.setProperty('--tx', (Math.random()-0.5) * 600 + 'px');
-                c.style.setProperty('--ty', (Math.random()-0.5) * 600 + 'px');
-                document.body.appendChild(c); setTimeout(() => c.remove(), 1200);
+            },
+            listen(target, callback) {
+                if (!this.recognition) return App.showToast("Mic not supported");
+                this.recognition.onresult = (e) => {
+                    const heard = e.results[0][0].transcript.toLowerCase();
+                    const cleanTarget = target.toLowerCase().replace(/[.,!]/g, '');
+                    const cleanHeard = heard.replace(/[.,!]/g, '');
+                    if (cleanHeard.includes(cleanTarget) || cleanTarget.includes(cleanHeard)) callback(true);
+                    else { App.showToast(`Heard: "${heard}"`); AudioEngine.wrong(); }
+                };
+                try { this.recognition.start(); } catch(e) { this.recognition.stop(); setTimeout(() => this.recognition.start(), 200); }
+            },
+            speak(text) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.rate = 1.0;
+                window.speechSynthesis.speak(u);
             }
-        }
-        window.onload = init;
+        };
+
+        /* ------------------------------------------------------------
+           GAME ENGINE
+           ------------------------------------------------------------ */
+        const GameEngine = {
+            active: false,
+            canvas: document.getElementById('game-canvas'),
+            ctx: document.getElementById('game-canvas').getContext('2d'),
+            timer: 20,
+            interval: null,
+            loopId: null,
+            entities: [],
+            width: window.innerWidth,
+            height: window.innerHeight,
+
+            init() {
+                window.addEventListener('resize', () => {
+                    this.width = window.innerWidth;
+                    this.height = window.innerHeight;
+                    this.canvas.width = this.width;
+                    this.canvas.height = this.height;
+                });
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+                
+                const handleInput = (e) => {
+                    e.preventDefault();
+                    const x = e.touches ? e.touches[0].clientX : e.clientX;
+                    const y = e.touches ? e.touches[0].clientY : e.clientY;
+                    this.input(x, y);
+                };
+                this.canvas.addEventListener('mousedown', handleInput);
+                this.canvas.addEventListener('touchstart', handleInput);
+            },
+
+            start() {
+                this.active = true;
+                this.timer = 20;
+                this.entities = [];
+                document.getElementById('game-overlay').style.display = 'flex';
+                setTimeout(() => document.getElementById('game-overlay').style.opacity = 1, 10);
+                
+                this.interval = setInterval(() => {
+                    this.timer--;
+                    document.getElementById('game-timer-display').innerText = this.timer;
+                    if(this.timer <= 0) this.stop();
+                }, 1000);
+                this.loop();
+            },
+
+            stop() {
+                this.active = false;
+                clearInterval(this.interval);
+                cancelAnimationFrame(this.loopId);
+                document.getElementById('game-overlay').style.opacity = 0;
+                setTimeout(() => document.getElementById('game-overlay').style.display = 'none', 300);
+                App.nextShort();
+            },
+
+            input(x, y) {
+                for (let i = this.entities.length - 1; i >= 0; i--) {
+                    const b = this.entities[i];
+                    const dist = Math.sqrt((x - b.x)**2 + (y - b.y)**2);
+                    if (dist < b.r + 30) {
+                        this.entities.splice(i, 1);
+                        AudioEngine.pop();
+                        App.showToast("POP! +100");
+                        this.createBurst(x, y, b.color);
+                        return;
+                    }
+                }
+            },
+            
+            createBurst(x, y, color) {
+                // simple burst logic could go here
+            },
+
+            loop() {
+                if(!this.active) return;
+                this.ctx.clearRect(0,0, this.width, this.height);
+                
+                if(Math.random() < 0.08) {
+                    this.entities.push({
+                        x: Math.random() * (this.width - 50) + 25,
+                        y: this.height + 50,
+                        r: 30 + Math.random()*20,
+                        speed: 5 + Math.random()*5,
+                        color: `hsl(${Math.random()*360}, 80%, 60%)`
+                    });
+                }
+
+                this.entities.forEach((e, i) => {
+                    e.y -= e.speed;
+                    this.ctx.fillStyle = e.color;
+                    this.ctx.beginPath();
+                    this.ctx.arc(e.x, e.y, e.r, 0, Math.PI*2);
+                    this.ctx.fill();
+                    
+                    // Highlight
+                    this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    this.ctx.beginPath();
+                    this.ctx.arc(e.x - e.r/3, e.y - e.r/3, e.r/4, 0, Math.PI*2);
+                    this.ctx.fill();
+                    
+                    if(e.y < -50) this.entities.splice(i,1);
+                });
+
+                this.loopId = requestAnimationFrame(() => this.loop());
+            }
+        };
+
+        /* ------------------------------------------------------------
+           APP LOGIC
+           ------------------------------------------------------------ */
+        const App = {
+            stars: 0,
+            streak: 0,
+            sessionData: [],
+            currentIdx: 0,
+            lastTap: 0,
+
+            init() {
+                VoiceEngine.init();
+                GameEngine.init();
+                lucide.createIcons();
+                const saved = localStorage.getItem('merola_stars');
+                if(saved) this.stars = parseInt(saved);
+                this.updateScoreUI();
+                
+                // Double tap listener on container
+                document.getElementById('shorts-container').addEventListener('click', (e) => {
+                    const now = new Date().getTime();
+                    const timesince = now - this.lastTap;
+                    if((timesince < 300) && (timesince > 0)) {
+                        this.showBigHeart();
+                        AudioEngine.star();
+                        this.handleLike();
+                    }
+                    this.lastTap = now;
+                });
+            },
+            
+            showBigHeart() {
+                const h = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                h.setAttribute("viewBox", "0 0 24 24");
+                h.setAttribute("class", "big-heart animate");
+                h.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 1000);
+            },
+            
+            handleLike() {
+                const label = document.getElementById(`like-count-${this.currentIdx}`);
+                if(label) {
+                    let val = parseInt(label.innerText);
+                    if(!label.classList.contains('liked')) {
+                        label.innerText = val + 1;
+                        label.classList.add('liked', 'text-red-500');
+                        document.getElementById(`like-icon-${this.currentIdx}`).style.fill = 'red';
+                        document.getElementById(`like-icon-${this.currentIdx}`).style.color = 'red';
+                    }
+                }
+            },
+
+            // ✨ UPGRADED: Import Data from External Files or Fallback
+            startSession(type) {
+                let data = [];
+
+                // 1. Try to load External Data
+                if (type === 'reading' && typeof readingSentences !== 'undefined') {
+                    // Load from readingData.js
+                    data = readingSentences.sort(() => Math.random() - 0.5).slice(0, 15).map(sent => ({
+                        type: 'voice', cat: 'Reading', q: sent
+                    }));
+                } 
+                else if (type === 'spelling' && typeof spellingWords !== 'undefined') {
+                    // Load from writingData.js
+                    data = spellingWords.sort(() => Math.random() - 0.5).slice(0, 15).map(word => {
+                        const opts = [word, 'X', 'Y', 'Z'].map(x => (x === 'X' || x === 'Y' || x === 'Z') ? this.generateDistractor(word) : x).sort(() => Math.random() - 0.5);
+                        return { type: 'choice', cat: 'Spelling', q: `Select: ${word}`, opts: opts, ans: opts.indexOf(word) };
+                    });
+                }
+                else if (type === 'lesson' && typeof lessonData !== 'undefined') {
+                    // Load from lessonData.js (Complex nested structure usually)
+                    // We flatten it simply for shorts
+                    lessonData.forEach(topic => {
+                        if(topic.qs) {
+                            topic.qs.forEach(q => {
+                                data.push({ type: 'choice', cat: 'Lesson', q: q.q, opts: q.opts, ans: q.c });
+                            });
+                        }
+                    });
+                    data = data.sort(() => Math.random() - 0.5).slice(0, 15);
+                }
+
+                // 2. Fallback Generator if External Data is Empty/Missing
+                if (data.length === 0) {
+                    for(let i=0; i<15; i++) {
+                        const r = Math.random();
+                        if(type === 'math' || (type === 'lesson' && r < 0.33)) {
+                            const a = Math.floor(Math.random()*12);
+                            const b = Math.floor(Math.random()*12);
+                            const ans = a+b;
+                            const opts = [ans, ans+1, ans-1, ans+10].sort(()=>Math.random()-.5);
+                            data.push({ type: 'choice', cat: 'Math Lab', q: `${a} + ${b} = ?`, opts, ans: opts.indexOf(ans) });
+                        } else if (type === 'reading' || (type === 'lesson' && r < 0.66)) {
+                             const words = ["Elephant", "Sunshine", "Rainbow", "Adventure", "Butterfly", "Dinosaur"];
+                             const w = words[Math.floor(Math.random()*words.length)];
+                             data.push({ type: 'voice', cat: 'Reading', q: w });
+                        } else {
+                            const words = ["Cat", "Dog", "Bird", "Fish"];
+                            const w = words[Math.floor(Math.random()*words.length)];
+                            const opts = [...words].sort(()=>Math.random()-.5);
+                            data.push({ type: 'choice', cat: 'Spelling', q: `Which is: ${w}?`, opts, ans: opts.indexOf(w) });
+                        }
+                    }
+                }
+
+                this.sessionData = data;
+                this.renderShorts();
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('shorts-container').classList.remove('hidden');
+                document.getElementById('streak-counter').classList.remove('hidden');
+            },
+
+            generateDistractor(word) {
+                // Simple helper to make fake words or grab random ones
+                const others = ["Cat", "Ball", "House", "Tree", "Milk"];
+                return others[Math.floor(Math.random()*others.length)];
+            },
+
+            renderShorts() {
+                const container = document.getElementById('shorts-container');
+                container.innerHTML = '';
+                
+                this.sessionData.forEach((item, idx) => {
+                    const section = document.createElement('section');
+                    section.className = 'short-section';
+                    section.id = `short-${idx}`;
+                    
+                    let interactHTML = '';
+                    if (item.type === 'choice') {
+                        interactHTML = `<div class="w-full">`;
+                        item.opts.forEach((opt, oIdx) => {
+                            interactHTML += `<button onclick="App.handleChoice(${idx}, ${oIdx}, ${item.ans}, this)" class="option-card">
+                                <span>${opt}</span>
+                            </button>`;
+                        });
+                        interactHTML += `</div>`;
+                    } else if (item.type === 'voice') {
+                        interactHTML = `
+                            <div class="flex flex-col items-center">
+                                <button onclick="App.handleVoice(${idx}, '${item.q}')" class="w-24 h-24 rounded-full bg-red-600/20 border-4 border-red-600 flex items-center justify-center mb-6 active:scale-90 transition animate-pulse shadow-[0_0_30px_rgba(255,0,0,0.4)]">
+                                    <i data-lucide="mic" class="w-10 h-10 text-red-500"></i>
+                                </button>
+                                <p class="text-white font-bold bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">Tap to Speak</p>
+                            </div>
+                        `;
+                    }
+
+                    // Background Canvas
+                    const bgCanvas = `<canvas id="bg-canvas-${idx}" class="video-bg"></canvas>`;
+
+                    // Views Gen
+                    const views = (Math.random() * 800 + 100).toFixed(1) + 'K';
+
+                    section.innerHTML = `
+                        ${bgCanvas}
+                        
+                        <!-- Content Center -->
+                        <div class="content-stage">
+                            <div class="q-badge">${item.cat}</div>
+                            <div class="question-text">${item.q}</div>
+                            ${interactHTML}
+                        </div>
+
+                        <!-- Right Actions (Shorts Authentic) -->
+                        <div class="action-bar">
+                            <div class="action-item">
+                                <button class="action-btn" onclick="App.handleLike()">
+                                    <i data-lucide="heart" class="w-7 h-7 stroke-[2]" id="like-icon-${idx}"></i>
+                                </button>
+                                <span class="action-label" id="like-count-${idx}">${views}</span>
+                            </div>
+                            <div class="action-item">
+                                <button class="action-btn" onclick="App.nextShort()">
+                                    <i data-lucide="thumbs-down" class="w-7 h-7 stroke-[2]"></i>
+                                </button>
+                                <span class="action-label">Dislike</span>
+                            </div>
+                            <div class="action-item">
+                                <button class="action-btn" onclick="VoiceEngine.speak('${item.q}')">
+                                    <i data-lucide="message-circle" class="w-7 h-7 stroke-[2]"></i>
+                                </button>
+                                <span class="action-label">Speak</span>
+                            </div>
+                            <div class="action-item">
+                                <button class="action-btn">
+                                    <i data-lucide="share-2" class="w-7 h-7 stroke-[2]"></i>
+                                </button>
+                                <span class="action-label">Share</span>
+                            </div>
+                            <div class="action-item">
+                                <button class="action-btn bg-white/10 rounded-lg overflow-hidden !p-0">
+                                    <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-full h-full object-cover opacity-80">
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Text Overlay -->
+                        <div class="bottom-overlay">
+                            <div class="channel-info">
+                                <div class="channel-avatar">
+                                    <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-full h-full object-cover">
+                                </div>
+                                <span class="channel-name">@MerolaLearn</span>
+                                <button class="sub-btn" onclick="this.classList.add('subscribed'); this.innerText='Subscribed'">Subscribe</button>
+                            </div>
+                            <div class="video-desc">Can you solve this? Grade 2 Challenge! #education #learning #kids</div>
+                            <div class="music-ticker">
+                                <i data-lucide="music-2" class="w-3 h-3"></i>
+                                <div class="scrolling-container">
+                                    <div class="scrolling-text">Merola Original Sound - Educational Beat - Learning Mode On</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Line -->
+                        <div class="progress-bar-bottom" id="prog-${idx}"></div>
+                    `;
+                    container.appendChild(section);
+                    
+                    // Init Canvas FX
+                    requestAnimationFrame(() => VideoFX.mount(idx, item.cat === 'Math Lab' ? 'math' : 'blobs'));
+                });
+                
+                lucide.createIcons();
+                this.detectActiveShort();
+            },
+
+            handleChoice(qIdx, oIdx, cIdx, btn) {
+                if(btn.parentElement.classList.contains('answered')) return;
+                btn.parentElement.classList.add('answered');
+                
+                if (oIdx === cIdx) {
+                    btn.classList.add('correct-ans');
+                    this.success(qIdx);
+                } else {
+                    btn.classList.add('wrong-ans');
+                    btn.parentElement.children[cIdx].classList.add('correct-ans');
+                    AudioEngine.wrong();
+                    this.streak = 0;
+                    document.getElementById('streak-counter').innerText = `🔥 ${this.streak}`;
+                    setTimeout(() => this.nextShort(), 2000);
+                }
+                document.getElementById(`prog-${qIdx}`).style.width = "100%";
+            },
+
+            handleVoice(qIdx, target) {
+                VoiceEngine.listen(target, (success) => {
+                    if(success) {
+                        this.success(qIdx);
+                        document.getElementById(`prog-${qIdx}`).style.width = "100%";
+                    }
+                });
+            },
+
+            success(qIdx) {
+                AudioEngine.correct();
+                this.stars++;
+                this.streak++;
+                document.getElementById('streak-counter').innerText = `🔥 ${this.streak}`;
+                this.showBigHeart();
+                this.handleLike(); // Auto like on correct
+                
+                localStorage.setItem('merola_stars', this.stars);
+                
+                // Spawn confetti
+                for(let i=0; i<30; i++) {
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.background = ['#f00', '#fff', '#00f'][Math.floor(Math.random()*3)];
+                    c.style.left = (Math.random()*100) + '%';
+                    c.style.top = '-10px';
+                    document.getElementById(`short-${qIdx}`).appendChild(c);
+                    c.style.transition = `top ${1+Math.random()}s linear`;
+                    setTimeout(()=> c.style.top = '100vh', 10);
+                }
+
+                if (this.stars % 4 === 0) {
+                    setTimeout(() => GameEngine.start(), 1500);
+                } else {
+                    setTimeout(() => this.nextShort(), 1500);
+                }
+            },
+
+            updateScoreUI() {
+                // Future use
+            },
+
+            detectActiveShort() {
+                const shorts = document.querySelectorAll('.short-section');
+                shorts.forEach((s, i) => {
+                    const rect = s.getBoundingClientRect();
+                    if(rect.top > -100 && rect.top < 100) {
+                        this.currentIdx = i;
+                    }
+                });
+            },
+
+            nextShort() {
+                const next = document.getElementById(`short-${this.currentIdx + 1}`);
+                if (next) next.scrollIntoView({ behavior: 'smooth' });
+                else {
+                    this.showToast("You finished the set!");
+                    setTimeout(() => this.goHome(), 2000);
+                }
+            },
+
+            goHome() {
+                document.getElementById('shorts-container').classList.add('hidden');
+                document.getElementById('home-view').classList.remove('hidden');
+                document.getElementById('streak-counter').classList.add('hidden');
+            },
+
+            showToast(msg) {
+                const t = document.getElementById('toast');
+                t.innerText = msg;
+                t.style.opacity = 1;
+                setTimeout(() => t.style.opacity = 0, 2000);
+            }
+        };
+
+        window.onload = () => App.init();
     </script>
 </body>
 </html>
+
 
