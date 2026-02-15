@@ -18,8 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- ✅ EXTERNAL DATA IMPORTS (Strictly Preserved) -->
-    <!-- These files must exist in the same folder for data to load -->
+    <!-- ✅ EXTERNAL DATA IMPORTS -->
     <script src="lessonData.js"></script>
     <script src="readingData.js"></script>
     <script src="quizGenerators.js"></script>
@@ -45,6 +44,7 @@
             overflow: hidden;
             height: 100vh;
             width: 100vw;
+            overscroll-behavior-y: none;
         }
 
         /* --- SHORTS CONTAINER --- */
@@ -63,8 +63,8 @@
         #shorts-container::-webkit-scrollbar { display: none; }
 
         .short-section {
-            height: 100vh; /* Full viewport height */
-            height: calc(100vh - 48px);
+            height: 100vh;
+            height: calc(100vh - 48px); /* Account for bottom nav */
             width: 100%;
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -112,23 +112,12 @@
             z-index: 20;
             align-items: center;
         }
-        .action-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .action-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+            width: 48px; height: 48px; border-radius: 50%;
             background: rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            border: none;
-            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: white; border: none; cursor: pointer;
             transition: transform 0.1s;
         }
         .action-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
@@ -136,33 +125,22 @@
 
         /* --- YT BOTTOM OVERLAY --- */
         .bottom-overlay {
-            position: absolute;
-            bottom: 12px;
-            left: 0;
-            width: 100%;
-            padding: 16px;
-            padding-right: 60px;
-            z-index: 15;
+            position: absolute; bottom: 12px; left: 0; width: 100%;
+            padding: 16px; padding-right: 60px; z-index: 15;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            display: flex; flex-direction: column; align-items: flex-start;
         }
         .channel-info { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         .channel-avatar { width: 36px; height: 36px; background: #333; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
         .channel-name { font-weight: 700; font-size: 14px; color: white; }
         .sub-btn { 
-            background: white; color: black; 
-            padding: 6px 14px; border-radius: 18px; 
-            font-size: 12px; font-weight: 600; 
-            margin-left: 8px;
-            transition: background 0.2s;
+            background: white; color: black; padding: 6px 14px; 
+            border-radius: 18px; font-size: 12px; font-weight: 600; 
+            margin-left: 8px; transition: background 0.2s;
         }
         .sub-btn.subscribed { background: rgba(255,255,255,0.2); color: white; }
-        
         .video-desc { font-size: 14px; color: #f1f1f1; line-height: 1.3; font-weight: 400; max-width: 85%; }
         
-        /* Music Ticker */
         .music-ticker { 
             display: flex; align-items: center; gap: 8px; 
             font-size: 13px; margin-top: 10px; font-weight: 500;
@@ -174,15 +152,11 @@
 
         /* --- CONTENT AREA --- */
         .content-stage {
-            width: 100%;
-            max-width: 500px;
-            position: relative;
-            z-index: 5;
+            width: 100%; max-width: 500px;
+            position: relative; z-index: 5;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             margin-bottom: 80px;
         }
         
@@ -190,44 +164,23 @@
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px 20px;
-            width: 100%;
-            text-align: left;
-            font-weight: 600;
-            font-size: 17px;
-            color: white;
-            margin-bottom: 10px;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-radius: 12px; padding: 16px 20px;
+            width: 100%; text-align: left;
+            font-weight: 600; font-size: 17px; color: white;
+            margin-bottom: 10px; transition: all 0.2s;
+            display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .option-card:active { transform: scale(0.98); background: rgba(255, 255, 255, 0.25); }
-        .option-card.correct-ans {
-            background: rgba(255, 255, 255, 0.95);
-            color: black;
-            border-color: white;
-            transform: scale(1.02);
-        }
-        .option-card.wrong-ans {
-            background: rgba(220, 20, 60, 0.8);
-            border-color: red;
-        }
+        .option-card.correct-ans { background: rgba(255, 255, 255, 0.95); color: black; border-color: white; transform: scale(1.02); }
+        .option-card.wrong-ans { background: rgba(220, 20, 60, 0.8); border-color: red; }
         
         /* --- BOTTOM NAV BAR --- */
         .yt-nav {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            height: 48px;
-            background: #000;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 100;
-            padding-bottom: env(safe-area-inset-bottom);
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 48px;
+            background: #000; border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 100; padding-bottom: env(safe-area-inset-bottom);
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: white; opacity: 0.6; font-size: 10px; background: none; border: none; }
         .nav-item.active { opacity: 1; }
@@ -258,13 +211,9 @@
             transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             box-shadow: 0 0 10px red;
         }
-
-        .confetti { position: absolute; width: 8px; height: 8px; opacity: 0.8; border-radius: 50%; }
-        
-        /* Question Styles */
+        .confetti { position: absolute; width: 8px; height: 8px; opacity: 0.8; border-radius: 50%; z-index: 20; }
         .q-badge { background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .question-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 24px; text-shadow: 0 4px 8px rgba(0,0,0,0.8); line-height: 1.3; }
-
     </style>
 </head>
 <body>
@@ -379,28 +328,20 @@
                 const ctx = cvs.getContext('2d');
                 let w = cvs.width = window.innerWidth;
                 let h = cvs.height = window.innerHeight;
-                
                 this.canvases[id] = { active: true, type, ctx, w, h, t: 0, elements: [] };
-                
-                // Initialize based on type
                 if(type === 'math') this.initParticles(this.canvases[id], 'numbers');
                 else if(type === 'space') this.initParticles(this.canvases[id], 'stars');
                 else this.initParticles(this.canvases[id], 'blobs');
-                
                 this.loop(id);
             },
 
-            unmount(id) {
-                if(this.canvases[id]) this.canvases[id].active = false;
-            },
+            unmount(id) { if(this.canvases[id]) this.canvases[id].active = false; },
 
             initParticles(scene, style) {
-                for(let i=0; i<30; i++) {
+                for(let i=0; i<25; i++) {
                     scene.elements.push({
-                        x: Math.random()*scene.w,
-                        y: Math.random()*scene.h,
-                        vx: (Math.random()-0.5)*2,
-                        vy: (Math.random()-0.5)*2,
+                        x: Math.random()*scene.w, y: Math.random()*scene.h,
+                        vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5,
                         size: Math.random()*20 + 5,
                         val: style === 'numbers' ? Math.floor(Math.random()*9) : null,
                         color: `hsla(${Math.random()*360}, 70%, 60%, 0.3)`
@@ -411,34 +352,24 @@
             loop(id) {
                 const s = this.canvases[id];
                 if(!s || !s.active) return;
-                
                 s.ctx.clearRect(0,0,s.w,s.h);
                 s.t += 0.01;
-
-                // Dynamic Background Gradient
+                // Subtle gradient animation
                 const g = s.ctx.createLinearGradient(0,0,0,s.h);
                 g.addColorStop(0, `hsl(${Math.sin(s.t)*30 + 240}, 60%, 10%)`);
                 g.addColorStop(1, `hsl(${Math.cos(s.t)*30 + 280}, 60%, 5%)`);
                 s.ctx.fillStyle = g;
                 s.ctx.fillRect(0,0,s.w,s.h);
-
                 // Draw Elements
                 s.elements.forEach(e => {
                     e.x += e.vx; e.y += e.vy;
                     if(e.x < 0 || e.x > s.w) e.vx *= -1;
                     if(e.y < 0 || e.y > s.h) e.vy *= -1;
-
                     s.ctx.fillStyle = e.color;
                     s.ctx.font = `${e.size}px Roboto`;
-                    
                     if(e.val !== null) s.ctx.fillText(e.val, e.x, e.y);
-                    else {
-                        s.ctx.beginPath();
-                        s.ctx.arc(e.x, e.y, e.size/2, 0, Math.PI*2);
-                        s.ctx.fill();
-                    }
+                    else { s.ctx.beginPath(); s.ctx.arc(e.x, e.y, e.size/2, 0, Math.PI*2); s.ctx.fill(); }
                 });
-
                 requestAnimationFrame(() => this.loop(id));
             }
         };
@@ -447,9 +378,15 @@
            AUDIO ENGINE
            ------------------------------------------------------------ */
         const AudioEngine = {
-            ctx: new (window.AudioContext || window.webkitAudioContext)(),
-            playTone(freq, type, duration, vol = 0.1) {
+            ctx: null,
+            init() {
+                if(!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
                 if(this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            playTone(freq, type, duration, vol = 0.1) {
+                this.init();
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 osc.type = type;
@@ -481,6 +418,7 @@
                 }
             },
             listen(target, callback) {
+                AudioEngine.init(); // ensure audio context is ready
                 if (!this.recognition) return App.showToast("Mic not supported");
                 this.recognition.onresult = (e) => {
                     const heard = e.results[0][0].transcript.toLowerCase();
@@ -510,6 +448,7 @@
             interval: null,
             loopId: null,
             entities: [],
+            returnIndex: 0,
             width: window.innerWidth,
             height: window.innerHeight,
 
@@ -533,8 +472,9 @@
                 this.canvas.addEventListener('touchstart', handleInput);
             },
 
-            start() {
+            start(returnIdx) {
                 this.active = true;
+                this.returnIndex = returnIdx;
                 this.timer = 20;
                 this.entities = [];
                 document.getElementById('game-overlay').style.display = 'flex';
@@ -553,8 +493,10 @@
                 clearInterval(this.interval);
                 cancelAnimationFrame(this.loopId);
                 document.getElementById('game-overlay').style.opacity = 0;
-                setTimeout(() => document.getElementById('game-overlay').style.display = 'none', 300);
-                App.nextShort();
+                setTimeout(() => {
+                    document.getElementById('game-overlay').style.display = 'none';
+                    App.nextShort(this.returnIndex + 1); // Return to flow
+                }, 300);
             },
 
             input(x, y) {
@@ -565,46 +507,29 @@
                         this.entities.splice(i, 1);
                         AudioEngine.pop();
                         App.showToast("POP! +100");
-                        this.createBurst(x, y, b.color);
                         return;
                     }
                 }
             },
             
-            createBurst(x, y, color) {
-                // simple burst logic could go here
-            },
-
             loop() {
                 if(!this.active) return;
                 this.ctx.clearRect(0,0, this.width, this.height);
-                
                 if(Math.random() < 0.08) {
                     this.entities.push({
-                        x: Math.random() * (this.width - 50) + 25,
-                        y: this.height + 50,
-                        r: 30 + Math.random()*20,
-                        speed: 5 + Math.random()*5,
+                        x: Math.random() * (this.width - 50) + 25, y: this.height + 50,
+                        r: 30 + Math.random()*20, speed: 5 + Math.random()*5,
                         color: `hsl(${Math.random()*360}, 80%, 60%)`
                     });
                 }
-
                 this.entities.forEach((e, i) => {
                     e.y -= e.speed;
                     this.ctx.fillStyle = e.color;
                     this.ctx.beginPath();
                     this.ctx.arc(e.x, e.y, e.r, 0, Math.PI*2);
                     this.ctx.fill();
-                    
-                    // Highlight
-                    this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                    this.ctx.beginPath();
-                    this.ctx.arc(e.x - e.r/3, e.y - e.r/3, e.r/4, 0, Math.PI*2);
-                    this.ctx.fill();
-                    
                     if(e.y < -50) this.entities.splice(i,1);
                 });
-
                 this.loopId = requestAnimationFrame(() => this.loop());
             }
         };
@@ -627,8 +552,15 @@
                 if(saved) this.stars = parseInt(saved);
                 this.updateScoreUI();
                 
-                // Double tap listener on container
-                document.getElementById('shorts-container').addEventListener('click', (e) => {
+                // CRITICAL FIX: Update active index on scroll
+                const container = document.getElementById('shorts-container');
+                container.addEventListener('scroll', () => {
+                    clearTimeout(this.scrollTimeout);
+                    this.scrollTimeout = setTimeout(() => this.detectActiveShort(), 100);
+                });
+
+                // Double tap listener
+                container.addEventListener('click', (e) => {
                     const now = new Date().getTime();
                     const timesince = now - this.lastTap;
                     if((timesince < 300) && (timesince > 0)) {
@@ -637,6 +569,7 @@
                         this.handleLike();
                     }
                     this.lastTap = now;
+                    AudioEngine.init(); // Initialize audio on first click
                 });
             },
             
@@ -662,38 +595,24 @@
                 }
             },
 
-            // ✨ UPGRADED: Import Data from External Files or Fallback
             startSession(type) {
                 let data = [];
-
-                // 1. Try to load External Data
+                // Load Data Logic
                 if (type === 'reading' && typeof readingSentences !== 'undefined') {
-                    // Load from readingData.js
-                    data = readingSentences.sort(() => Math.random() - 0.5).slice(0, 15).map(sent => ({
-                        type: 'voice', cat: 'Reading', q: sent
-                    }));
+                    data = readingSentences.sort(() => Math.random() - 0.5).slice(0, 15).map(sent => ({ type: 'voice', cat: 'Reading', q: sent }));
                 } 
                 else if (type === 'spelling' && typeof spellingWords !== 'undefined') {
-                    // Load from writingData.js
                     data = spellingWords.sort(() => Math.random() - 0.5).slice(0, 15).map(word => {
                         const opts = [word, 'X', 'Y', 'Z'].map(x => (x === 'X' || x === 'Y' || x === 'Z') ? this.generateDistractor(word) : x).sort(() => Math.random() - 0.5);
                         return { type: 'choice', cat: 'Spelling', q: `Select: ${word}`, opts: opts, ans: opts.indexOf(word) };
                     });
                 }
                 else if (type === 'lesson' && typeof lessonData !== 'undefined') {
-                    // Load from lessonData.js (Complex nested structure usually)
-                    // We flatten it simply for shorts
-                    lessonData.forEach(topic => {
-                        if(topic.qs) {
-                            topic.qs.forEach(q => {
-                                data.push({ type: 'choice', cat: 'Lesson', q: q.q, opts: q.opts, ans: q.c });
-                            });
-                        }
-                    });
+                    lessonData.forEach(topic => { if(topic.qs) { topic.qs.forEach(q => { data.push({ type: 'choice', cat: 'Lesson', q: q.q, opts: q.opts, ans: q.c }); }); } });
                     data = data.sort(() => Math.random() - 0.5).slice(0, 15);
                 }
 
-                // 2. Fallback Generator if External Data is Empty/Missing
+                // Fallback Generator
                 if (data.length === 0) {
                     for(let i=0; i<15; i++) {
                         const r = Math.random();
@@ -704,7 +623,7 @@
                             const opts = [ans, ans+1, ans-1, ans+10].sort(()=>Math.random()-.5);
                             data.push({ type: 'choice', cat: 'Math Lab', q: `${a} + ${b} = ?`, opts, ans: opts.indexOf(ans) });
                         } else if (type === 'reading' || (type === 'lesson' && r < 0.66)) {
-                             const words = ["Elephant", "Sunshine", "Rainbow", "Adventure", "Butterfly", "Dinosaur"];
+                             const words = ["Elephant", "Sunshine", "Rainbow", "Adventure"];
                              const w = words[Math.floor(Math.random()*words.length)];
                              data.push({ type: 'voice', cat: 'Reading', q: w });
                         } else {
@@ -724,8 +643,7 @@
             },
 
             generateDistractor(word) {
-                // Simple helper to make fake words or grab random ones
-                const others = ["Cat", "Ball", "House", "Tree", "Milk"];
+                const others = ["Cat", "Ball", "House", "Tree", "Milk", "Star", "Moon"];
                 return others[Math.floor(Math.random()*others.length)];
             },
 
@@ -742,9 +660,7 @@
                     if (item.type === 'choice') {
                         interactHTML = `<div class="w-full">`;
                         item.opts.forEach((opt, oIdx) => {
-                            interactHTML += `<button onclick="App.handleChoice(${idx}, ${oIdx}, ${item.ans}, this)" class="option-card">
-                                <span>${opt}</span>
-                            </button>`;
+                            interactHTML += `<button onclick="App.handleChoice(${idx}, ${oIdx}, ${item.ans}, this)" class="option-card"><span>${opt}</span></button>`;
                         });
                         interactHTML += `</div>`;
                     } else if (item.type === 'voice') {
@@ -758,84 +674,33 @@
                         `;
                     }
 
-                    // Background Canvas
-                    const bgCanvas = `<canvas id="bg-canvas-${idx}" class="video-bg"></canvas>`;
-
-                    // Views Gen
                     const views = (Math.random() * 800 + 100).toFixed(1) + 'K';
-
                     section.innerHTML = `
-                        ${bgCanvas}
-                        
-                        <!-- Content Center -->
+                        <canvas id="bg-canvas-${idx}" class="video-bg"></canvas>
                         <div class="content-stage">
                             <div class="q-badge">${item.cat}</div>
                             <div class="question-text">${item.q}</div>
                             ${interactHTML}
                         </div>
-
-                        <!-- Right Actions (Shorts Authentic) -->
                         <div class="action-bar">
-                            <div class="action-item">
-                                <button class="action-btn" onclick="App.handleLike()">
-                                    <i data-lucide="heart" class="w-7 h-7 stroke-[2]" id="like-icon-${idx}"></i>
-                                </button>
-                                <span class="action-label" id="like-count-${idx}">${views}</span>
-                            </div>
-                            <div class="action-item">
-                                <button class="action-btn" onclick="App.nextShort()">
-                                    <i data-lucide="thumbs-down" class="w-7 h-7 stroke-[2]"></i>
-                                </button>
-                                <span class="action-label">Dislike</span>
-                            </div>
-                            <div class="action-item">
-                                <button class="action-btn" onclick="VoiceEngine.speak('${item.q}')">
-                                    <i data-lucide="message-circle" class="w-7 h-7 stroke-[2]"></i>
-                                </button>
-                                <span class="action-label">Speak</span>
-                            </div>
-                            <div class="action-item">
-                                <button class="action-btn">
-                                    <i data-lucide="share-2" class="w-7 h-7 stroke-[2]"></i>
-                                </button>
-                                <span class="action-label">Share</span>
-                            </div>
-                            <div class="action-item">
-                                <button class="action-btn bg-white/10 rounded-lg overflow-hidden !p-0">
-                                    <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-full h-full object-cover opacity-80">
-                                </button>
-                            </div>
+                            <div class="action-item"><button class="action-btn" onclick="App.handleLike()"><i data-lucide="heart" class="w-7 h-7 stroke-[2]" id="like-icon-${idx}"></i></button><span class="action-label" id="like-count-${idx}">${views}</span></div>
+                            <div class="action-item"><button class="action-btn" onclick="App.nextShort(${idx + 1})"><i data-lucide="thumbs-down" class="w-7 h-7 stroke-[2]"></i></button><span class="action-label">Skip</span></div>
+                            <div class="action-item"><button class="action-btn" onclick="VoiceEngine.speak('${item.q}')"><i data-lucide="message-circle" class="w-7 h-7 stroke-[2]"></i></button><span class="action-label">Speak</span></div>
+                            <div class="action-item"><button class="action-btn"><i data-lucide="share-2" class="w-7 h-7 stroke-[2]"></i></button><span class="action-label">Share</span></div>
+                            <div class="action-item"><button class="action-btn bg-white/10 rounded-lg overflow-hidden !p-0"><img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-full h-full object-cover opacity-80"></button></div>
                         </div>
-
-                        <!-- Bottom Text Overlay -->
                         <div class="bottom-overlay">
-                            <div class="channel-info">
-                                <div class="channel-avatar">
-                                    <img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-full h-full object-cover">
-                                </div>
-                                <span class="channel-name">@MerolaLearn</span>
-                                <button class="sub-btn" onclick="this.classList.add('subscribed'); this.innerText='Subscribed'">Subscribe</button>
-                            </div>
-                            <div class="video-desc">Can you solve this? Grade 2 Challenge! #education #learning #kids</div>
-                            <div class="music-ticker">
-                                <i data-lucide="music-2" class="w-3 h-3"></i>
-                                <div class="scrolling-container">
-                                    <div class="scrolling-text">Merola Original Sound - Educational Beat - Learning Mode On</div>
-                                </div>
-                            </div>
+                            <div class="channel-info"><div class="channel-avatar"><img src="https://raw.githubusercontent.com/Waeil55/Merola/main/Y.JPG" class="w-full h-full object-cover"></div><span class="channel-name">@MerolaLearn</span><button class="sub-btn" onclick="this.classList.add('subscribed'); this.innerText='Subscribed'">Subscribe</button></div>
+                            <div class="video-desc">Grade 2 Challenge! #education #learning</div>
+                            <div class="music-ticker"><i data-lucide="music-2" class="w-3 h-3"></i><div class="scrolling-container"><div class="scrolling-text">Merola Original Sound - Educational Beat</div></div></div>
                         </div>
-                        
-                        <!-- Progress Line -->
                         <div class="progress-bar-bottom" id="prog-${idx}"></div>
                     `;
                     container.appendChild(section);
-                    
-                    // Init Canvas FX
                     requestAnimationFrame(() => VideoFX.mount(idx, item.cat === 'Math Lab' ? 'math' : 'blobs'));
                 });
-                
                 lucide.createIcons();
-                this.detectActiveShort();
+                this.detectActiveShort(); // Set initial index
             },
 
             handleChoice(qIdx, oIdx, cIdx, btn) {
@@ -851,7 +716,7 @@
                     AudioEngine.wrong();
                     this.streak = 0;
                     document.getElementById('streak-counter').innerText = `🔥 ${this.streak}`;
-                    setTimeout(() => this.nextShort(), 2000);
+                    setTimeout(() => this.nextShort(qIdx + 1), 2000); // CRITICAL: Explicitly pass next index
                 }
                 document.getElementById(`prog-${qIdx}`).style.width = "100%";
             },
@@ -871,11 +736,10 @@
                 this.streak++;
                 document.getElementById('streak-counter').innerText = `🔥 ${this.streak}`;
                 this.showBigHeart();
-                this.handleLike(); // Auto like on correct
-                
+                this.handleLike(); 
                 localStorage.setItem('merola_stars', this.stars);
                 
-                // Spawn confetti
+                // Confetti
                 for(let i=0; i<30; i++) {
                     const c = document.createElement('div');
                     c.className = 'confetti';
@@ -888,15 +752,13 @@
                 }
 
                 if (this.stars % 4 === 0) {
-                    setTimeout(() => GameEngine.start(), 1500);
+                    setTimeout(() => GameEngine.start(qIdx), 1500); // Pass current index so game knows where to return
                 } else {
-                    setTimeout(() => this.nextShort(), 1500);
+                    setTimeout(() => this.nextShort(qIdx + 1), 1500);
                 }
             },
 
-            updateScoreUI() {
-                // Future use
-            },
+            updateScoreUI() {},
 
             detectActiveShort() {
                 const shorts = document.querySelectorAll('.short-section');
@@ -908,10 +770,14 @@
                 });
             },
 
-            nextShort() {
-                const next = document.getElementById(`short-${this.currentIdx + 1}`);
-                if (next) next.scrollIntoView({ behavior: 'smooth' });
-                else {
+            // ROBUST NAVIGATION: Accepts specific index or defaults to current + 1
+            nextShort(targetIdx) {
+                const idxToFind = (typeof targetIdx === 'number') ? targetIdx : (this.currentIdx + 1);
+                const next = document.getElementById(`short-${idxToFind}`);
+                if (next) {
+                    next.scrollIntoView({ behavior: 'smooth' });
+                    this.currentIdx = idxToFind;
+                } else {
                     this.showToast("You finished the set!");
                     setTimeout(() => this.goHome(), 2000);
                 }
