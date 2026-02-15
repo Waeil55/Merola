@@ -247,7 +247,6 @@
         #home-view { padding-top: calc(16px + env(safe-area-inset-top)) !important; }
         #toast { top: calc(80px + env(safe-area-inset-top)) !important; }
 
-        /* Mic Animation */
         .mic-listening { animation: pulse-red 1s infinite; background-color: #ff0000 !important; border-color: #ffcccc !important; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
@@ -277,6 +276,7 @@
                 <h1 class="text-xl font-bold">Merola Learning</h1>
             </div>
 
+            <!-- Enhanced Grid for All Subjects -->
             <div class="grid grid-cols-2 gap-3">
                 <div onclick="App.startSession('lesson')" class="aspect-[9/16] bg-gradient-to-br from-purple-900 to-black rounded-xl border border-white/10 relative overflow-hidden group active:scale-95 transition">
                     <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
@@ -304,6 +304,49 @@
                     <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
                         <span class="text-white font-bold text-sm">Spelling</span>
                         <span class="text-xs text-gray-400">500K views</span>
+                    </div>
+                </div>
+
+                <!-- NEW SECTIONS -->
+                <div onclick="App.startSession('stories')" class="aspect-[9/16] bg-gradient-to-br from-teal-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Story Time</span>
+                        <span class="text-xs text-gray-400">New Episode</span>
+                    </div>
+                </div>
+
+                <div onclick="App.startSession('wordparts')" class="aspect-[9/16] bg-gradient-to-br from-indigo-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Word Lab</span>
+                        <span class="text-xs text-gray-400">Learning</span>
+                    </div>
+                </div>
+
+                <div onclick="App.startSession('grammar')" class="aspect-[9/16] bg-gradient-to-br from-lime-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Grammar</span>
+                        <span class="text-xs text-gray-400">Trending</span>
+                    </div>
+                </div>
+
+                <div onclick="App.startSession('time')" class="aspect-[9/16] bg-gradient-to-br from-orange-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Time Lab</span>
+                        <span class="text-xs text-gray-400">300K views</span>
+                    </div>
+                </div>
+
+                <div onclick="App.startSession('coin')" class="aspect-[9/16] bg-gradient-to-br from-emerald-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Coin Count</span>
+                        <span class="text-xs text-gray-400">Money Skills</span>
+                    </div>
+                </div>
+
+                <div onclick="App.startSession('shapes')" class="aspect-[9/16] bg-gradient-to-br from-pink-900 to-black rounded-xl border border-white/10 relative overflow-hidden active:scale-95 transition">
+                    <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/90 to-transparent">
+                        <span class="text-white font-bold text-sm">Shapes</span>
+                        <span class="text-xs text-gray-400">Geometry</span>
                     </div>
                 </div>
             </div>
@@ -454,7 +497,7 @@
         };
 
         /* ------------------------------------------------------------
-           VOICE ENGINE 2.0 (High Performance)
+           VOICE ENGINE 2.0
            ------------------------------------------------------------ */
         const VoiceEngine = {
             recognition: null,
@@ -793,50 +836,77 @@
 
             startSession(type) {
                 let data = [];
-                // Load Data Logic
+                const flatten = (source) => {
+                    let flat = [];
+                    if (Array.isArray(source)) {
+                        source.forEach(topic => {
+                            if (topic.qs) {
+                                topic.qs.forEach(q => {
+                                    flat.push({
+                                        type: 'choice',
+                                        cat: topic.title || 'Practice',
+                                        instr: topic.instr || "Choose the correct answer:",
+                                        q: q.qText || q.q,
+                                        opts: q.opts,
+                                        ans: q.c
+                                    });
+                                });
+                            }
+                        });
+                    }
+                    return flat;
+                };
+
+                // 1. Reading
                 if (type === 'reading' && typeof readingSentences !== 'undefined') {
                     data = readingSentences.sort(() => Math.random() - 0.5).slice(0, 15).map(sent => ({ type: 'voice', cat: 'Reading', instr: "Read this sentence:", q: sent }));
                 } 
+                // 2. Spelling
                 else if (type === 'spelling' && typeof spellingWords !== 'undefined') {
                     data = spellingWords.sort(() => Math.random() - 0.5).slice(0, 15).map(word => {
                         const opts = [word, 'X', 'Y', 'Z'].map(x => (x === 'X' || x === 'Y' || x === 'Z') ? this.generateDistractor(word) : x).sort(() => Math.random() - 0.5);
                         return { type: 'choice', cat: 'Spelling', instr: "Select the correct word:", q: `Select: ${word}`, opts: opts, ans: opts.indexOf(word) };
                     });
                 }
+                // 3. Lesson
                 else if (type === 'lesson' && typeof lessonData !== 'undefined') {
-                    lessonData.forEach(topic => { 
-                        if(topic.qs) { 
-                            topic.qs.forEach(q => { 
-                                data.push({ 
-                                    type: 'choice', 
-                                    cat: topic.title.split(':')[0] || 'Lesson', 
-                                    instr: topic.instr || "Choose the correct answer:", 
-                                    q: q.q, 
-                                    opts: q.opts, 
-                                    ans: q.c 
-                                }); 
-                            }); 
-                        } 
-                    });
-                    data = data.sort(() => Math.random() - 0.5).slice(0, 15);
+                    data = flatten(lessonData).sort(() => Math.random() - 0.5).slice(0, 15);
+                }
+                // 4. Stories
+                else if (type === 'stories' && typeof storiesData !== 'undefined') {
+                    data = flatten(storiesData).sort(() => Math.random() - 0.5).slice(0, 15);
+                }
+                // 5. Word Parts
+                else if (type === 'wordparts' && typeof wordPartsData !== 'undefined') {
+                    data = flatten(wordPartsData).sort(() => Math.random() - 0.5).slice(0, 15);
+                }
+                // 6. Math
+                else if (type === 'math' && typeof generateMathData === 'function') {
+                     data = generateMathData().map(q => ({ type: 'choice', cat: 'Math', instr: 'Solve:', q: q.q, opts: q.opts, ans: q.c }));
+                }
+                // 7. Time
+                else if (type === 'time' && typeof generateTimeData === 'function') {
+                     data = generateTimeData().map(q => ({ type: 'choice', cat: 'Time', instr: 'What time is it?', q: q.q, opts: q.opts, ans: q.c }));
+                }
+                // 8. Coins
+                else if (type === 'coin' && typeof initialCoinData !== 'undefined') {
+                     data = initialCoinData.map(q => ({ type: 'choice', cat: 'Coins', instr: 'Count the money:', q: q.q, opts: q.opts, ans: q.c }));
+                }
+                // 9. Shapes
+                else if (type === 'shapes' && typeof generateShapesData === 'function') {
+                     data = generateShapesData().map(q => ({ type: 'choice', cat: 'Shapes', instr: 'Identify the shape:', q: q.q, opts: q.opts, ans: q.c }));
+                }
+                // 10. Grammar
+                else if (type === 'grammar' && typeof generateGrammarData === 'function') {
+                     data = generateGrammarData().map(q => ({ type: 'choice', cat: 'Grammar', instr: 'Choose the best word:', q: q.q, opts: q.opts, ans: q.c }));
                 }
 
+                // Fallback Generator
                 if (data.length === 0) {
                     for(let i=0; i<15; i++) {
-                        const r = Math.random();
-                        if(type === 'math' || (type === 'lesson' && r < 0.33)) {
-                            const a = Math.floor(Math.random()*12); const b = Math.floor(Math.random()*12);
-                            const opts = [a+b, a+b+1, a+b-1, a+b+10].sort(()=>Math.random()-.5);
-                            data.push({ type: 'choice', cat: 'Math Lab', instr: "Solve:", q: `${a} + ${b} = ?`, opts, ans: opts.indexOf(a+b) });
-                        } else if (type === 'reading' || (type === 'lesson' && r < 0.66)) {
-                             const words = ["Elephant", "Sunshine", "Rainbow", "Adventure"];
-                             data.push({ type: 'voice', cat: 'Reading', instr: "Say the word:", q: words[Math.floor(Math.random()*words.length)] });
-                        } else {
-                            const words = ["Cat", "Dog", "Bird", "Fish"];
-                            const w = words[Math.floor(Math.random()*words.length)];
-                            const opts = [...words].sort(()=>Math.random()-.5);
-                            data.push({ type: 'choice', cat: 'Spelling', instr: "Which one is correct?", q: `Which is: ${w}?`, opts, ans: opts.indexOf(w) });
-                        }
+                        const a = Math.floor(Math.random()*12); const b = Math.floor(Math.random()*12);
+                        const opts = [a+b, a+b+1, a+b-1, a+b+10].sort(()=>Math.random()-.5);
+                        data.push({ type: 'choice', cat: 'Math Lab', instr: "Solve:", q: `${a} + ${b} = ?`, opts, ans: opts.indexOf(a+b) });
                     }
                 }
 
