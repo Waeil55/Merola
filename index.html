@@ -64,7 +64,7 @@
 
         .short-section {
             height: 100vh;
-            height: calc(100vh - 48px); /* Account for bottom nav */
+            height: calc(100vh - 48px);
             width: 100%;
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -77,7 +77,6 @@
             overflow: hidden;
         }
 
-        /* Video Background Simulation */
         .video-bg {
             position: absolute;
             top: 0; left: 0;
@@ -87,19 +86,18 @@
             pointer-events: none;
         }
 
-        /* --- YT HEADER (SAFE AREA FIX) --- */
+        /* --- YT HEADER --- */
         .yt-header {
             position: fixed;
             top: 0; left: 0; width: 100%;
             padding: 12px 16px;
-            /* 🔥 Critical Fix for iPhone Notch/Status Bar */
             padding-top: calc(12px + env(safe-area-inset-top)); 
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 50;
             pointer-events: none;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, transparent 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
         }
         .yt-header-icons { pointer-events: auto; display: flex; gap: 20px; }
 
@@ -177,7 +175,7 @@
         .option-card.correct-ans { background: rgba(255, 255, 255, 0.95); color: black; border-color: white; transform: scale(1.02); }
         .option-card.wrong-ans { background: rgba(220, 20, 60, 0.8); border-color: red; }
         
-        /* --- BOTTOM NAV BAR --- */
+        /* --- BOTTOM NAV --- */
         .yt-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 48px;
             background: #000; border-top: 1px solid rgba(255,255,255,0.1);
@@ -197,16 +195,14 @@
         }
         #game-canvas { position: absolute; width: 100%; height: 100%; }
         
-        /* 🔥 Safe Area for Game Close Button */
         .game-close-btn {
             position: absolute;
-            top: calc(16px + env(safe-area-inset-top)); /* Safe area fix */
+            top: calc(16px + env(safe-area-inset-top));
             right: 24px;
             background: rgba(255,255,255,0.2);
             padding: 8px 16px;
             border-radius: 999px;
-            color: white;
-            font-weight: 700;
+            color: white; font-weight: 700;
             backdrop-filter: blur(8px);
             z-index: 210;
         }
@@ -229,29 +225,17 @@
         }
         .confetti { position: absolute; width: 8px; height: 8px; opacity: 0.8; border-radius: 50%; z-index: 20; }
         
-        /* Badge Styles */
         .q-badge { 
-            background: rgba(255,255,255,0.15); 
-            backdrop-filter: blur(4px);
-            padding: 6px 12px; 
-            border-radius: 6px; 
-            font-size: 11px; 
-            font-weight: 800; 
-            color: rgba(255,255,255,0.8); 
-            margin-bottom: 8px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+            padding: 6px 12px; border-radius: 6px; 
+            font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.8); 
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; 
         }
         
         .instr-badge {
-            background: #FF0000;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 900;
-            margin-bottom: 16px;
-            text-transform: uppercase;
+            background: #FF0000; color: white; padding: 8px 16px;
+            border-radius: 20px; font-size: 14px; font-weight: 900;
+            margin-bottom: 16px; text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(255,0,0,0.3);
             animation: pulse-badge 2s infinite;
         }
@@ -260,15 +244,12 @@
         .question-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 24px; text-shadow: 0 4px 8px rgba(0,0,0,0.8); line-height: 1.3; }
         .score-pill { background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 4px; }
         
-        /* 🔥 Safe Area for Home View */
-        #home-view {
-            padding-top: calc(16px + env(safe-area-inset-top)) !important;
-        }
-        
-        /* 🔥 Safe Area for Toast */
-        #toast {
-            top: calc(80px + env(safe-area-inset-top)) !important;
-        }
+        #home-view { padding-top: calc(16px + env(safe-area-inset-top)) !important; }
+        #toast { top: calc(80px + env(safe-area-inset-top)) !important; }
+
+        /* Mic Animation */
+        .mic-listening { animation: pulse-red 1s infinite; background-color: #ff0000 !important; border-color: #ffcccc !important; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
     </style>
 </head>
@@ -374,11 +355,10 @@
 
     <script>
         /* ------------------------------------------------------------
-           VIDEO FX ENGINE (Generates Dynamic Backgrounds)
+           VIDEO FX ENGINE 
            ------------------------------------------------------------ */
         const VideoFX = {
             canvases: {},
-            
             mount(id, type) {
                 const cvs = document.getElementById(`bg-canvas-${id}`);
                 if(!cvs) return;
@@ -391,9 +371,7 @@
                 else this.initParticles(this.canvases[id], 'blobs');
                 this.loop(id);
             },
-
             unmount(id) { if(this.canvases[id]) this.canvases[id].active = false; },
-
             initParticles(scene, style) {
                 for(let i=0; i<25; i++) {
                     scene.elements.push({
@@ -405,7 +383,6 @@
                     });
                 }
             },
-
             loop(id) {
                 const s = this.canvases[id];
                 if(!s || !s.active) return;
@@ -435,9 +412,7 @@
         const AudioEngine = {
             ctx: null,
             init() {
-                if(!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
+                if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
                 if(this.ctx.state === 'suspended') this.ctx.resume();
             },
             playTone(freq, type, duration, vol = 0.1) {
@@ -448,42 +423,91 @@
                 osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
                 gain.gain.setValueAtTime(vol, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + duration);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + duration);
             },
             correct() { this.playTone(800, 'sine', 0.1); setTimeout(() => this.playTone(1200, 'sine', 0.3), 100); },
             wrong() { this.playTone(150, 'sawtooth', 0.4); },
             star() { this.playTone(1000, 'triangle', 0.1); setTimeout(() => this.playTone(2000, 'sine', 0.4), 100); },
             pop() { this.playTone(400 + Math.random()*400, 'triangle', 0.05, 0.1); },
-            gameStart() { this.playTone(400, 'square', 0.1); setTimeout(() => this.playTone(600, 'square', 0.4), 100); }
+            gameStart() { this.playTone(400, 'square', 0.1); setTimeout(() => this.playTone(600, 'square', 0.4), 100); },
+            swipe() { 
+                this.init();
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.15);
+            },
+            jump() {
+                this.init();
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(500, this.ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.1);
+            }
         };
 
         /* ------------------------------------------------------------
-           VOICE ENGINE
+           VOICE ENGINE 2.0 (High Performance)
            ------------------------------------------------------------ */
         const VoiceEngine = {
             recognition: null,
+            isListening: false,
             init() {
                 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                     this.recognition = new SpeechRecognition();
-                    this.recognition.continuous = false;
+                    this.recognition.continuous = false; // Easier to detect ends
+                    this.recognition.interimResults = true; // 🔥 FAST RESPONSE
                     this.recognition.lang = 'en-US';
                 }
             },
-            listen(target, callback) {
+            listen(target, callback, btnId) {
                 AudioEngine.init(); 
                 if (!this.recognition) return App.showToast("Mic not supported");
-                this.recognition.onresult = (e) => {
-                    const heard = e.results[0][0].transcript.toLowerCase();
-                    const cleanTarget = target.toLowerCase().replace(/[.,!]/g, '');
-                    const cleanHeard = heard.replace(/[.,!]/g, '');
-                    if (cleanHeard.includes(cleanTarget) || cleanTarget.includes(cleanHeard)) callback(true);
-                    else { App.showToast(`Heard: "${heard}"`); AudioEngine.wrong(); }
+                
+                if (this.isListening) {
+                    this.recognition.stop();
+                    return; // Toggle off if tapped again
+                }
+
+                const cleanTarget = target.toLowerCase().replace(/[.,!]/g, '').trim();
+                const btn = document.getElementById(btnId);
+                
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    if(btn) btn.classList.add('mic-listening');
                 };
-                try { this.recognition.start(); } catch(e) { this.recognition.stop(); setTimeout(() => this.recognition.start(), 200); }
+
+                this.recognition.onresult = (e) => {
+                    // Check Interim Results immediately for speed
+                    for (let i = e.resultIndex; i < e.results.length; ++i) {
+                        const transcript = e.results[i][0].transcript.toLowerCase();
+                        const cleanHeard = transcript.replace(/[.,!]/g, '').trim();
+                        
+                        // Fuzzy Logic
+                        if (cleanHeard.includes(cleanTarget) || cleanTarget.includes(cleanHeard)) {
+                            this.recognition.stop(); // Stop immediately on match
+                            this.isListening = false;
+                            if(btn) btn.classList.remove('mic-listening');
+                            callback(true);
+                            return;
+                        }
+                    }
+                };
+
+                this.recognition.onend = () => {
+                    this.isListening = false;
+                    if(btn) btn.classList.remove('mic-listening');
+                };
+
+                try { this.recognition.start(); } catch(e) { /* Ignore start errors */ }
             },
             speak(text) {
                 window.speechSynthesis.cancel();
@@ -494,7 +518,7 @@
         };
 
         /* ------------------------------------------------------------
-           MULTI-GAME ENGINE
+           MULTI-GAME ENGINE (10 Games)
            ------------------------------------------------------------ */
         const GameEngine = {
             active: false,
@@ -505,31 +529,23 @@
             loopId: null,
             entities: [],
             returnIndex: 0,
-            mode: 'pop', // 'pop', 'catch', 'whack'
+            mode: 'pop', 
             width: window.innerWidth,
             height: window.innerHeight,
-            player: { x: 0, y: 0, w: 60, h: 60 },
-
+            player: { x: 0, y: 0, w: 60, h: 60, vy: 0, grounded: false, score: 0 },
+            trail: [], 
+            
             init() {
-                window.addEventListener('resize', () => {
-                    this.width = window.innerWidth;
-                    this.height = window.innerHeight;
-                    this.canvas.width = this.width;
-                    this.canvas.height = this.height;
-                });
-                this.canvas.width = this.width;
-                this.canvas.height = this.height;
+                window.addEventListener('resize', () => { this.width = window.innerWidth; this.height = window.innerHeight; this.canvas.width = this.width; this.canvas.height = this.height; });
+                this.canvas.width = this.width; this.canvas.height = this.height;
                 
-                const handleInput = (e) => {
-                    e.preventDefault();
-                    const x = e.touches ? e.touches[0].clientX : e.clientX;
-                    const y = e.touches ? e.touches[0].clientY : e.clientY;
-                    this.input(x, y);
-                };
+                const handleInput = (e) => { e.preventDefault(); const x = e.touches ? e.touches[0].clientX : e.clientX; const y = e.touches ? e.touches[0].clientY : e.clientY; this.input(x, y); };
+                const handleMove = (e) => { e.preventDefault(); const x = e.touches ? e.touches[0].clientX : e.clientX; const y = e.touches ? e.touches[0].clientY : e.clientY; if(e.buttons === 1 || e.touches) this.input(x, y, true); };
+
                 this.canvas.addEventListener('mousedown', handleInput);
                 this.canvas.addEventListener('touchstart', handleInput);
-                this.canvas.addEventListener('touchmove', handleInput);
-                this.canvas.addEventListener('mousemove', (e) => { if(e.buttons === 1) this.input(e.clientX, e.clientY); });
+                this.canvas.addEventListener('touchmove', handleMove);
+                this.canvas.addEventListener('mousemove', handleMove);
             },
 
             start(returnIdx) {
@@ -537,24 +553,41 @@
                 this.returnIndex = returnIdx;
                 this.timer = 15;
                 this.entities = [];
+                this.trail = [];
+                this.player.score = 0;
                 AudioEngine.gameStart();
 
-                // 🎲 Randomize Game Mode
-                const modes = ['pop', 'catch', 'whack'];
+                // 🎲 10 Game Modes
+                const modes = ['pop', 'catch', 'whack', 'slice', 'jump', 'crush', 'stack', 'rain', 'collect', 'pump'];
                 this.mode = modes[Math.floor(Math.random() * modes.length)];
 
                 // Setup specific mode
-                if(this.mode === 'catch') {
-                    this.player.x = this.width / 2;
-                    this.player.y = this.height - 80;
+                if(this.mode === 'catch' || this.mode === 'collect' || this.mode === 'rain') {
+                    this.player.x = this.width / 2; this.player.y = this.height - 80;
+                } else if (this.mode === 'jump') {
+                    this.player.x = 50; this.player.y = this.height - 150; this.player.vy = 0; this.player.grounded = true;
+                } else if (this.mode === 'stack') {
+                    this.player.x = 0; this.player.y = this.height - 50; this.player.w = 100; // Base block
+                } else if (this.mode === 'pump') {
+                    this.player.w = 50; // Balloon size
                 }
 
-                // Update UI based on Mode
-                const titles = { 'pop': 'POP BUBBLES!', 'catch': 'CATCH STARS!', 'whack': 'TAP MONSTERS!' };
-                const instrs = { 'pop': 'Tap floating bubbles!', 'catch': 'Drag basket to catch!', 'whack': 'Tap them fast!' };
-                document.getElementById('game-title').innerText = titles[this.mode];
-                document.getElementById('game-instr').innerText = instrs[this.mode];
-
+                // Update UI
+                const textMap = { 
+                    'pop': ['POP BUBBLES!', 'Tap floating bubbles!'], 
+                    'catch': ['CATCH STARS!', 'Drag basket to catch!'], 
+                    'whack': ['TAP MONSTERS!', 'Tap them fast!'],
+                    'slice': ['NINJA SLICE!', 'Swipe to cut!'],
+                    'jump': ['COSMO JUMP!', 'Tap to jump!'],
+                    'crush': ['CRUSH ROCKS!', 'Tap asteroids!'],
+                    'stack': ['TOWER STACK!', 'Tap to drop blocks!'],
+                    'rain': ['DODGE RAIN!', 'Avoid the drops!'],
+                    'collect': ['GOLD RUSH!', 'Collect coins, avoid skulls!'],
+                    'pump': ['BALLOON PUMP!', 'Tap fast to inflate!']
+                };
+                
+                document.getElementById('game-title').innerText = textMap[this.mode][0];
+                document.getElementById('game-instr').innerText = textMap[this.mode][1];
                 document.getElementById('game-overlay').style.display = 'flex';
                 setTimeout(() => document.getElementById('game-overlay').style.opacity = 1, 10);
                 
@@ -573,26 +606,46 @@
                 document.getElementById('game-overlay').style.opacity = 0;
                 setTimeout(() => {
                     document.getElementById('game-overlay').style.display = 'none';
-                    App.afterGameReset(this.returnIndex + 1); // 🔥 Reset logic call
+                    App.afterGameReset(this.returnIndex + 1); 
                 }, 300);
             },
 
-            input(x, y) {
+            input(x, y, isMove = false) {
                 if(!this.active) return;
                 
-                if (this.mode === 'catch') {
-                    this.player.x = x; // Update basket position
-                } 
-                else {
-                    // Tap detection for Pop and Whack
+                // Mode Specific Inputs
+                if ((this.mode === 'catch' || this.mode === 'collect' || this.mode === 'rain')) { this.player.x = x; } 
+                else if (this.mode === 'jump' && !isMove) {
+                    if(this.player.grounded) { this.player.vy = -18; this.player.grounded = false; AudioEngine.jump(); }
+                }
+                else if (this.mode === 'pump' && !isMove) {
+                    this.player.w += 10; AudioEngine.pop();
+                    if(this.player.w > 300) { this.player.w = 50; App.showToast("BLAST OFF!"); AudioEngine.star(); }
+                }
+                else if (this.mode === 'stack' && !isMove) {
+                    // Drop logic
+                    const lastBlock = this.entities.length > 0 ? this.entities[this.entities.length-1] : {y: this.height};
+                    this.entities.push({ x: this.player.x, y: lastBlock.y - 40, w: this.player.w, h: 40, color: '#f1c40f' });
+                    AudioEngine.gameStart();
+                }
+                else if (this.mode === 'slice') {
+                    this.trail.push({x, y, life: 10});
+                    if(this.trail.length > 10) this.trail.shift();
+                    if(isMove) { 
+                        AudioEngine.swipe(); 
+                        for (let i = this.entities.length - 1; i >= 0; i--) {
+                            const e = this.entities[i];
+                            if (Math.sqrt((x - e.x)**2 + (y - e.y)**2) < e.r + 20) {
+                                this.entities.splice(i, 1); AudioEngine.pop(); App.showToast("SLICE!");
+                            }
+                        }
+                    }
+                }
+                else if (!isMove) { // Tap games (Pop, Whack, Crush)
                     for (let i = this.entities.length - 1; i >= 0; i--) {
                         const b = this.entities[i];
-                        const dist = Math.sqrt((x - b.x)**2 + (y - b.y)**2);
-                        if (dist < b.r + 30) {
-                            this.entities.splice(i, 1);
-                            AudioEngine.pop();
-                            App.showToast("Combo +1");
-                            return;
+                        if (Math.sqrt((x - b.x)**2 + (y - b.y)**2) < b.r + 40) {
+                            this.entities.splice(i, 1); AudioEngine.pop(); App.showToast("HIT!"); return;
                         }
                     }
                 }
@@ -602,60 +655,85 @@
                 if(!this.active) return;
                 this.ctx.clearRect(0,0, this.width, this.height);
                 
-                // --- MODE: POP (Bubbles go UP) ---
-                if (this.mode === 'pop') {
-                    if(Math.random() < 0.1) {
-                        this.entities.push({ x: Math.random()*this.width, y: this.height+50, r: 30+Math.random()*20, speed: 4+Math.random()*3, color: `hsl(${Math.random()*360},80%,60%)` });
-                    }
-                    this.entities.forEach((e,i) => {
-                        e.y -= e.speed;
-                        this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r,0,Math.PI*2); this.ctx.fill();
-                        this.ctx.fillStyle = 'rgba(255,255,255,0.4)'; this.ctx.beginPath(); this.ctx.arc(e.x-e.r/3,e.y-e.r/3,e.r/4,0,Math.PI*2); this.ctx.fill();
-                        if(e.y < -50) this.entities.splice(i,1);
-                    });
+                // --- PUMP ---
+                if(this.mode === 'pump') {
+                    this.ctx.fillStyle = '#ff6b6b';
+                    this.ctx.beginPath(); this.ctx.arc(this.width/2, this.height/2, this.player.w, 0, Math.PI*2); this.ctx.fill();
+                    this.player.w = Math.max(50, this.player.w - 0.5); // Deflate
                 }
                 
-                // --- MODE: CATCH (Stars go DOWN) ---
-                else if (this.mode === 'catch') {
-                    // Draw Player Basket
-                    this.ctx.fillStyle = '#fff';
-                    this.ctx.beginPath(); this.ctx.arc(this.player.x, this.player.y, 40, 0, Math.PI, false); this.ctx.fill();
+                // --- STACK ---
+                else if(this.mode === 'stack') {
+                    // Moving block
+                    this.player.x = (Math.sin(Date.now()/500) * (this.width/2 - 50)) + this.width/2;
+                    this.ctx.fillStyle = '#fff'; this.ctx.fillRect(this.player.x, 100, this.player.w, 40);
+                    // Stacked blocks
+                    this.entities.forEach(e => {
+                        this.ctx.fillStyle = e.color; this.ctx.fillRect(e.x, e.y, e.w, e.h);
+                    });
+                }
+
+                // --- CRUSH (Falling rocks) ---
+                else if(this.mode === 'crush') {
+                    if(Math.random() < 0.08) this.entities.push({ x: Math.random()*this.width, y: -50, r: 40, speed: 4, color: '#7f8c8d' });
+                    this.entities.forEach((e,i) => {
+                        e.y += e.speed;
+                        this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r,0,Math.PI*2); this.ctx.fill();
+                        if(e.y > this.height) this.entities.splice(i,1);
+                    });
+                }
+
+                // --- COLLECT / RAIN ---
+                else if(this.mode === 'collect' || this.mode === 'rain') {
+                    // Player
+                    this.ctx.fillStyle = '#fff'; this.ctx.beginPath(); this.ctx.arc(this.player.x, this.player.y, 30, 0, Math.PI*2); this.ctx.fill();
                     
-                    if(Math.random() < 0.05) {
-                        this.entities.push({ x: Math.random()*this.width, y: -50, r: 20, speed: 5+Math.random()*4, color: '#FFD700' }); // Gold stars
+                    if(Math.random() < 0.06) {
+                        const isBad = this.mode === 'rain' ? true : (Math.random() > 0.7); // Rain=AllBad, Collect=Mix
+                        this.entities.push({ 
+                            x: Math.random()*this.width, y: -50, r: 20, speed: 5, 
+                            color: isBad ? '#e74c3c' : '#f1c40f', type: isBad ? 'bad' : 'good' 
+                        });
                     }
                     this.entities.forEach((e,i) => {
                         e.y += e.speed;
                         this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r,0,Math.PI*2); this.ctx.fill();
-                        
-                        // Collision with Basket
-                        const dist = Math.sqrt((e.x - this.player.x)**2 + (e.y - this.player.y)**2);
-                        if(dist < 50) {
+                        // Collision
+                        if(Math.sqrt((e.x - this.player.x)**2 + (e.y - this.player.y)**2) < 50) {
                             this.entities.splice(i,1);
-                            AudioEngine.correct();
-                            App.showToast("Caught!");
-                        }
-                        else if(e.y > this.height) this.entities.splice(i,1);
+                            if(e.type === 'good') { AudioEngine.correct(); App.showToast("+1"); }
+                            else { AudioEngine.wrong(); App.showToast("OUCH!"); }
+                        } else if(e.y > this.height) this.entities.splice(i,1);
                     });
                 }
 
-                // --- MODE: WHACK (Moles appear briefly) ---
+                // --- POP / CATCH / WHACK / SLICE / JUMP (Existing Logic) ---
+                else if (this.mode === 'pop') {
+                    if(Math.random() < 0.1) this.entities.push({ x: Math.random()*this.width, y: this.height+50, r: 30+Math.random()*20, speed: 4+Math.random()*3, color: `hsl(${Math.random()*360},80%,60%)` });
+                    this.entities.forEach((e,i) => { e.y -= e.speed; this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r,0,Math.PI*2); this.ctx.fill(); if(e.y < -50) this.entities.splice(i,1); });
+                }
+                else if (this.mode === 'catch') {
+                    this.ctx.fillStyle = '#fff'; this.ctx.beginPath(); this.ctx.arc(this.player.x, this.player.y, 40, 0, Math.PI, false); this.ctx.fill();
+                    if(Math.random() < 0.05) this.entities.push({ x: Math.random()*this.width, y: -50, r: 20, speed: 5+Math.random()*4, color: '#FFD700' });
+                    this.entities.forEach((e,i) => { e.y += e.speed; this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r,0,Math.PI*2); this.ctx.fill(); if(Math.sqrt((e.x-this.player.x)**2+(e.y-this.player.y)**2)<50){this.entities.splice(i,1);AudioEngine.correct();}else if(e.y>this.height)this.entities.splice(i,1); });
+                }
                 else if (this.mode === 'whack') {
-                    if(Math.random() < 0.05) {
-                        this.entities.push({ x: Math.random()*(this.width-100)+50, y: Math.random()*(this.height-200)+100, r: 40, life: 60, color: '#ff4757' });
-                    }
-                    this.entities.forEach((e,i) => {
-                        e.life--;
-                        const scale = e.life > 50 ? (60-e.life)/10 : (e.life < 10 ? e.life/10 : 1);
-                        this.ctx.fillStyle = e.color; 
-                        this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r*scale,0,Math.PI*2); this.ctx.fill();
-                        // Eyes
-                        this.ctx.fillStyle = '#fff';
-                        this.ctx.beginPath(); this.ctx.arc(e.x-10,e.y-5,8*scale,0,Math.PI*2); this.ctx.fill();
-                        this.ctx.beginPath(); this.ctx.arc(e.x+10,e.y-5,8*scale,0,Math.PI*2); this.ctx.fill();
-                        
-                        if(e.life <= 0) this.entities.splice(i,1);
-                    });
+                    if(Math.random() < 0.08) this.entities.push({ x: Math.random()*(this.width-100)+50, y: Math.random()*(this.height-200)+100, r: 40, life: 50, color: '#ff4757' });
+                    this.entities.forEach((e,i) => { e.life--; const scale = e.life > 40 ? (50-e.life)/10 : (e.life < 10 ? e.life/10 : 1); this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r*scale,0,Math.PI*2); this.ctx.fill(); if(e.life<=0) this.entities.splice(i,1); });
+                }
+                else if (this.mode === 'slice') {
+                    if(this.trail.length > 1) { this.ctx.strokeStyle = '#fff'; this.ctx.lineWidth = 4; this.ctx.beginPath(); this.ctx.moveTo(this.trail[0].x, this.trail[0].y); for(let i=1; i<this.trail.length; i++) this.ctx.lineTo(this.trail[i].x, this.trail[i].y); this.ctx.stroke(); this.trail.forEach(t => t.life--); this.trail = this.trail.filter(t => t.life > 0); }
+                    if(Math.random() < 0.06) this.entities.push({ x: Math.random()*(this.width-100)+50, y: this.height, vx: (Math.random()-0.5)*8, vy: -15-Math.random()*5, r: 35, color: `hsl(${Math.random()*360},70%,50%)` });
+                    this.entities.forEach((e,i) => { e.x += e.vx; e.y += e.vy; e.vy += 0.5; this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.arc(e.x,e.y,e.r,0,Math.PI*2); this.ctx.fill(); if(e.y > this.height+50) this.entities.splice(i,1); });
+                }
+                else if (this.mode === 'jump') {
+                    const groundY = this.height - 100;
+                    this.ctx.fillStyle = '#333'; this.ctx.fillRect(0, groundY, this.width, 100);
+                    this.player.vy += 0.8; this.player.y += this.player.vy;
+                    if(this.player.y > groundY - 50) { this.player.y = groundY - 50; this.player.vy = 0; this.player.grounded = true; }
+                    this.ctx.fillStyle = '#00f2ff'; this.ctx.fillRect(this.player.x, this.player.y, 50, 50);
+                    if(Math.random() < 0.02) this.entities.push({ x: this.width, y: groundY-40, w: 40, h: 40, color: '#ff0055' });
+                    this.entities.forEach((e,i) => { e.x -= 8; this.ctx.fillStyle = e.color; this.ctx.beginPath(); this.ctx.moveTo(e.x, e.y+40); this.ctx.lineTo(e.x+20, e.y); this.ctx.lineTo(e.x+40, e.y+40); this.ctx.fill(); if(this.player.x<e.x+40 && this.player.x+50>e.x && this.player.y<e.y+40 && this.player.y+50>e.y) { AudioEngine.wrong(); this.entities.splice(i,1); } if(e.x<-50) this.entities.splice(i,1); });
                 }
 
                 this.loopId = requestAnimationFrame(() => this.loop());
@@ -726,14 +804,13 @@
                     });
                 }
                 else if (type === 'lesson' && typeof lessonData !== 'undefined') {
-                    // 🔥 UPDATED LOGIC: Extract actual instructions from lessonData
                     lessonData.forEach(topic => { 
                         if(topic.qs) { 
                             topic.qs.forEach(q => { 
                                 data.push({ 
                                     type: 'choice', 
                                     cat: topic.title.split(':')[0] || 'Lesson', 
-                                    instr: topic.instr || "Choose the correct answer:", // Extract instruction
+                                    instr: topic.instr || "Choose the correct answer:", 
                                     q: q.q, 
                                     opts: q.opts, 
                                     ans: q.c 
@@ -791,19 +868,17 @@
                         });
                         interactHTML += `</div>`;
                     } else if (item.type === 'voice') {
-                        interactHTML = `<div class="flex flex-col items-center"><button onclick="App.handleVoice(${idx}, '${item.q}')" class="w-24 h-24 rounded-full bg-red-600/20 border-4 border-red-600 flex items-center justify-center mb-6 active:scale-90 transition animate-pulse shadow-[0_0_30px_rgba(255,0,0,0.4)]"><i data-lucide="mic" class="w-10 h-10 text-red-500"></i></button><p class="text-white font-bold bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">Tap to Speak</p></div>`;
+                        interactHTML = `<div class="flex flex-col items-center"><button id="mic-btn-${idx}" onclick="App.handleVoice(${idx}, '${item.q}', 'mic-btn-${idx}')" class="w-24 h-24 rounded-full bg-red-600/20 border-4 border-red-600 flex items-center justify-center mb-6 active:scale-90 transition shadow-[0_0_30px_rgba(255,0,0,0.4)]"><i data-lucide="mic" class="w-10 h-10 text-red-500"></i></button><p class="text-white font-bold bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">Tap to Speak</p></div>`;
                     }
                     
                     const views = (Math.random() * 800 + 100).toFixed(1) + 'K';
-                    
-                    // 🔥 NEW: Check for instruction and render badge
                     const instrBadge = item.instr ? `<div class="instr-badge">${item.instr}</div>` : '';
                     
                     section.innerHTML = `
                         <canvas id="bg-canvas-${idx}" class="video-bg"></canvas>
                         <div class="content-stage">
                             <div class="q-badge">${item.cat}</div>
-                            ${instrBadge} <!-- Render Instruction Here -->
+                            ${instrBadge}
                             <div class="question-text">${item.q}</div>
                             ${interactHTML}
                         </div>
@@ -836,8 +911,8 @@
                 document.getElementById(`prog-${qIdx}`).style.width = "100%";
             },
 
-            handleVoice(qIdx, target) {
-                VoiceEngine.listen(target, (success) => { if(success) { this.success(qIdx); document.getElementById(`prog-${qIdx}`).style.width = "100%"; }});
+            handleVoice(qIdx, target, btnId) {
+                VoiceEngine.listen(target, (success) => { if(success) { this.success(qIdx); document.getElementById(`prog-${qIdx}`).style.width = "100%"; }}, btnId);
             },
 
             success(qIdx) {
@@ -867,11 +942,10 @@
                 }
             },
 
-            // 🔥 Reset Function Called After Game
             afterGameReset(nextIdx) {
                 this.stars = 0; // Reset Score
                 this.updateScoreUI();
-                this.nextShort(nextIdx); // Continue learning flow
+                this.nextShort(nextIdx); 
             },
 
             updateScoreUI() {
