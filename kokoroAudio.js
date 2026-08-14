@@ -1,11 +1,13 @@
 /**
  * Kokoro AI Audio Engine for Merola's Lab
- * Pure AI audio integration using 2,998 pre-generated Kokoro-82M voice files.
+ * Pure AI audio integration using pre-generated Kokoro-82M human voice files.
+ * Machine SpeechSynthesis (robotic voices) has been completely removed.
  */
 (function() {
-    let manifest = null;
+    let manifest = new Map();
     let textToHash = new Map();
     let currentAudio = null;
+    let audioBaseUrl = '/public/audio/';
 
     // MD5 helper for hash lookup
     function md5(string) {
@@ -129,37 +131,42 @@
         return text
             .toLowerCase()
             .replace(/<[^>]*>?/gm, '')
+            .replace(/\*+/g, '')
+            .replace(/_+/g, '')
             .replace(/[^a-z0-9\s]/g, '')
             .replace(/\s+/g, ' ')
             .trim();
     }
 
-    let audioBaseUrl = '/public/audio/';
+    // Load both texts.json and manifest.json to cover all 4,000+ Kokoro AI voice entries
+    function initDatabase() {
+        const tryFetch = (url) => fetch(url).then(res => res.ok ? res.json() : Promise.reject());
 
-    // Fetch manifest.json with auto-path detection
-    function initManifest() {
-        const candidates = [
-            '/public/audio/manifest.json',
-            'public/audio/manifest.json',
-            '/audio/manifest.json',
-            'audio/manifest.json'
-        ];
-
-        const tryNext = (idx) => {
-            if (idx >= candidates.length) {
-                console.warn('Could not load Kokoro manifest from any path.');
-                manifest = new Map();
-                return;
-            }
-            const path = candidates[idx];
-            fetch(path)
-                .then(res => {
-                    if (!res.ok) throw new Error('Not ok');
-                    return res.json();
-                })
+        // 1. Fetch texts.json (2,996 Kokoro AI entries)
+        const textPaths = ['/texts.json', 'texts.json'];
+        const tryNextText = (idx) => {
+            if (idx >= textPaths.length) return;
+            tryFetch(textPaths[idx])
                 .then(data => {
-                    manifest = new Map();
-                    textToHash = new Map();
+                    for (const [hash, text] of Object.entries(data)) {
+                        if (text && typeof text === 'string') {
+                            const norm = normalizeText(text);
+                            if (norm) textToHash.set(norm, hash);
+                        }
+                    }
+                    console.log('⚡ Kokoro AI texts.json loaded: ' + textToHash.size + ' entries.');
+                })
+                .catch(() => tryNextText(idx + 1));
+        };
+        tryNextText(0);
+
+        // 2. Fetch manifest.json (1,071 Kokoro AI entries)
+        const manifestPaths = ['/public/audio/manifest.json', 'public/audio/manifest.json', '/audio/manifest.json', 'audio/manifest.json'];
+        const tryNextManifest = (idx) => {
+            if (idx >= manifestPaths.length) return;
+            const path = manifestPaths[idx];
+            tryFetch(path)
+                .then(data => {
                     audioBaseUrl = path.replace('manifest.json', '');
                     for (const [hash, info] of Object.entries(data)) {
                         manifest.set(hash, info);
@@ -168,12 +175,11 @@
                             if (norm) textToHash.set(norm, hash);
                         }
                     }
-                    console.log('⚡ Kokoro AI Manifest loaded with ' + manifest.size + ' entries from ' + audioBaseUrl);
+                    console.log('⚡ Kokoro AI manifest loaded from ' + audioBaseUrl + ' (Total entries: ' + textToHash.size + ')');
                 })
-                .catch(() => tryNext(idx + 1));
+                .catch(() => tryNextManifest(idx + 1));
         };
-
-        tryNext(0);
+        tryNextManifest(0);
     }
 
     function stopAudio() {
@@ -182,35 +188,48 @@
             currentAudio.currentTime = 0;
             currentAudio = null;
         }
-        if (window.speechSynthesis) {
-            window.speechSynthesis.cancel();
-        }
     }
 
-    function findAudioHash(cleanText) {
+    function findAudioHash(cleanText, rawText) {
         if (!cleanText) return null;
-        // 1. Check direct hash
+
+        // 1. Direct MD5 hash lookup
         const directHash = simpleHash(cleanText);
         if (manifest && manifest.has(directHash)) return directHash;
 
-        // 2. Check normalized text lookup
+        // 2. Exact normalized text lookup
         const norm = normalizeText(cleanText);
         if (textToHash && textToHash.has(norm)) return textToHash.get(norm);
+
+        // 3. Extract target word from HTML tags like <u>hot</u> or <b>word</b>
+        if (rawText && typeof rawText === 'string') {
+            const uMatch = rawText.match(/<u>(.*?)<\/u>/i) || rawText.match(/<b>(.*?)<\/b>/i);
+            if (uMatch && uMatch[1]) {
+                const targetNorm = normalizeText(uMatch[1]);
+                if (textToHash.has(targetNorm)) return textToHash.get(targetNorm);
+            }
+        }
+
+        // 4. Sub-word lookup for key vocabulary words
+        const words = norm.split(' ').filter(w => w.length > 2);
+        for (const w of words) {
+            if (textToHash.has(w)) return textToHash.get(w);
+        }
 
         return null;
     }
 
-    function speakKokoroOrFallback(text) {
+    function speakKokoro(text) {
         stopAudio();
 
         if (!text) return;
         const clean = text.replace(/<[^>]*>?/gm, '').trim();
         if (!clean) return;
 
-        const hash = findAudioHash(clean);
+        const hash = findAudioHash(clean, text);
 
         if (hash) {
-            // Play Kokoro AI audio file
+            // Play pure Kokoro AI human voice audio file
             const primaryPath = audioBaseUrl + hash + '.wav';
             const audio = new Audio(primaryPath);
             currentAudio = audio;
@@ -218,40 +237,24 @@
                 const altPath = (audioBaseUrl.includes('public') ? '/audio/' : '/public/audio/') + hash + '.wav';
                 const altAudio = new Audio(altPath);
                 currentAudio = altAudio;
-                altAudio.play().catch(() => {
-                    fallbackWebSpeech(clean);
+                altAudio.play().catch((err) => {
+                    console.warn('Could not play Kokoro AI audio file:', err);
                 });
             });
         } else {
-            fallbackWebSpeech(clean);
+            console.log('ℹ️ No Kokoro AI audio entry for:', text);
         }
     }
 
+    // Initialize database on script load
+    initDatabase();
 
-    function fallbackWebSpeech(text) {
-        if (!('speechSynthesis' in window)) return;
-        try {
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.rate = 0.85;
-            const voices = window.speechSynthesis.getVoices();
-            const enVoice = voices.find(v => v.lang.startsWith('en'));
-            if (enVoice) msg.voice = enVoice;
-            window.speechSynthesis.speak(msg);
-        } catch (e) {
-            console.warn('Speech synthesis error:', e);
-        }
-    }
-
-    // Initialize on script load
-    initManifest();
-
-    // Export global functions
-    window.speak = speakKokoroOrFallback;
+    // Export global functions (SpeechSynthesis machine speakers completely eliminated)
+    window.speak = speakKokoro;
     window.stopAudio = stopAudio;
     window.KokoroAudio = {
-        speak: speakKokoroOrFallback,
+        speak: speakKokoro,
         stop: stopAudio,
-        hasAudio: (text) => !!findAudioHash(text)
+        hasAudio: (text) => !!findAudioHash(text, text)
     };
 })();
