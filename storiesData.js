@@ -1,113 +1,90 @@
 const storiesData = [
     {
-        title: "The Snowy Day",
-        instr: "Read and answer the questions!",
-        passage: "Sam woke up and looked out the window. Everything was white! Snow had fallen all night. Sam put on his warm coat, blue hat, and red mittens. He ran outside to build a snowman. He used a carrot for the nose and coal for the eyes. Sam's dog, Barnaby, jumped in the snow and wagged his tail.",
+        title: "The Three Little Pigs",
+        instr: "Read the story and answer the questions!",
+        passage: "Three little pigs left home. The first pig built a house of straw. The second pig built a house of sticks. The third pig worked hard and built a house of bricks. The big bad wolf came and huffed and puffed. He blew down the straw house and the stick house. But he could not blow down the brick house! The wolf ran away. The three pigs lived safely in the brick house.",
         qs: [
-            { qText: "What did Sam see out the window?", opts: ["Rain", "Snow", "Sun", "Grass"], c: 1 },
-            { qText: "What color were Sam's mittens?", opts: ["Blue", "Red", "Green", "Black"], c: 1 },
-            { qText: "What did Sam use for the snowman's nose?", opts: ["A potato", "A carrot", "A stick", "A rock"], c: 1 },
-            { qText: "What is the name of Sam's dog?", opts: ["Rex", "Bolt", "Barnaby", "Buddy"], c: 2 }
+            { qText: "What did the first pig build his house with?", opts: ["Sticks", "Straw", "Bricks", "Mud"], c: 1 },
+            { qText: "What did the third pig build his house with?", opts: ["Straw", "Paper", "Bricks", "Leaves"], c: 2 },
+            { qText: "Which house could the wolf NOT blow down?", opts: ["Straw house", "Stick house", "Brick house", "All houses"], c: 2 },
+            { qText: "What happened to the wolf at the end?", opts: ["He came in", "He ran away", "He stayed", "He slept"], c: 1 }
         ]
     },
     {
-        title: "The Helpful Robot",
-        instr: "A story about Bolt!",
-        passage: "Bolt is a silver robot. He has wheels instead of feet. He helps Sam clean his room. Bolt can pick up toy cars with his magnet hand. Every night, Bolt puts the toys in a big blue bin. Sam thinks Bolt is the best helper in the world!",
+        title: "Goldilocks and the Three Bears",
+        instr: "Read Goldilocks' adventure!",
+        passage: "Goldilocks walked through the forest and found a little cottage. Inside were three bowls of porridge. She tasted the big bowl — too hot! She tasted the medium bowl — too cold! She tasted the small bowl — just right! She ate it all up. Then she tried three chairs. The big one was too hard. The middle one was too soft. The small one was just right, but it broke! She went upstairs and tried the beds. The small bed was just right. She fell fast asleep. When the three bears came home, they found Goldilocks! She woke up and ran away.",
         qs: [
-            { qText: "What color is Bolt?", opts: ["Gold", "Silver", "Red", "Blue"], c: 1 },
-            { qText: "How does Bolt move?", opts: ["He walks", "He flies", "He zooms on wheels", "He hops"], c: 2 },
-            { qText: "What is special about Bolt's hand?", opts: ["It is a hook", "It is a magnet", "It is a brush", "It is a light"], c: 1 },
-            { qText: "Where do the toys go?", opts: ["Under the bed", "In a blue bin", "Out the window", "In a closet"], c: 1 }
+            { qText: "What was wrong with the big bowl of porridge?", opts: ["Too cold", "Too hot", "Too salty", "Too small"], c: 1 },
+            { qText: "Which bowl was just right?", opts: ["Big bowl", "Medium bowl", "Small bowl", "None"], c: 2 },
+            { qText: "What happened to the small chair?", opts: ["It flew", "It broke", "It vanished", "It turned red"], c: 1 },
+            { qText: "What did Goldilocks do when the bears came home?", opts: ["She slept", "She sang", "She woke up and ran away", "She cooked"], c: 2 }
         ]
     },
     {
-        title: "The Garden Party",
-        instr: "Bees and flowers!",
-        passage: "The sun was shining in the garden. A busy bee flew to a bright yellow flower. The bee was looking for nectar. A small ladybug sat on a green leaf. 'Hello,' said the bee. They both enjoyed the warm day in the colorful garden.",
+        title: "The Magic School Bus Field Trip",
+        instr: "Journey inside the human body!",
+        passage: "Ms. Frizzle had the most unusual classroom in the world. One day she said, 'Today we will study the human body — from the inside!' The magic bus shrank to the size of a cell and flew into Carlos's nose. They traveled through his bloodstream, past red blood cells, past white blood cells fighting germs. They saw the heart pumping blood. They traveled through his lungs and watched air exchange happen. Finally, Carlos sneezed and the bus flew back out! 'Now THAT is how you do a field trip!' said Ms. Frizzle.",
         qs: [
-            { qText: "What color was the flower?", opts: ["Red", "Yellow", "Blue", "White"], c: 1 },
-            { qText: "Where did the ladybug sit?", opts: ["On a rock", "On a green leaf", "On a branch", "On the ground"], c: 1 },
-            { qText: "What was the bee looking for?", opts: ["Water", "Nectar", "A friend", "A home"], c: 1 },
-            { qText: "What kind of day was it?", opts: ["Cold", "Rainy", "Warm and sunny", "Windy"], c: 2 }
+            { qText: "Where did the magic bus travel?", opts: ["To space", "Into Carlos's nose", "To the ocean", "Underground"], c: 1 },
+            { qText: "What were the white blood cells doing?", opts: ["Sleeping", "Fighting germs", "Cooking", "Dancing"], c: 1 },
+            { qText: "What organ did they see pumping blood?", opts: ["Lungs", "Brain", "Heart", "Stomach"], c: 2 },
+            { qText: "How did the bus exit the body?", opts: ["Carlos sneezed", "Carlos jumped", "It flew backwards", "It melted"], c: 0 }
         ]
     },
     {
-        title: "Lost in the Woods",
-        instr: "A forest adventure.",
-        passage: "Toby the turtle was lost. He looked for his home near the pond. He saw a tall pine tree and a pile of dry leaves. Suddenly, he heard a 'Ribbit!' It was his friend the frog. 'Follow me,' said the frog. Toby was happy to find his way back to the water.",
+        title: "Desert Animals",
+        instr: "Discover life in harsh environments!",
+        passage: "Deserts may look empty, but they are full of life! Camels can survive without water for weeks because they store energy in their humps. The fennec fox has enormous ears that release heat to cool its body. Rattlesnakes are nocturnal — they hunt at night when it is cool. The saguaro cactus stores hundreds of gallons of water after rain. Even bacteria and tiny insects make their homes in the sand. The desert may be harsh, but life always finds a way!",
         qs: [
-            { qText: "Who was lost?", opts: ["The frog", "Toby the turtle", "A bird", "A squirrel"], c: 1 },
-            { qText: "Where does Toby live?", opts: ["In a tree", "Near the pond", "In a cave", "In a house"], c: 1 },
-            { qText: "What sound did the frog make?", opts: ["Quack", "Ribbit", "Meow", "Bark"], c: 1 },
-            { qText: "How did Toby feel at the end?", opts: ["Sad", "Happy", "Scared", "Angry"], c: 1 }
+            { qText: "Where do camels store energy?", opts: ["In their legs", "In their humps", "In their ears", "In their tails"], c: 1 },
+            { qText: "Why does the fennec fox have enormous ears?", opts: ["To fly", "To release heat", "To swim", "To dig"], c: 1 },
+            { qText: "When do rattlesnakes hunt?", opts: ["In the morning", "At noon", "At night", "Never"], c: 2 },
+            { qText: "What does the saguaro cactus store?", opts: ["Food", "Water", "Sand", "Rocks"], c: 1 }
         ]
     },
     {
-        title: "The Magic Kite",
-        instr: "High in the sky!",
-        passage: "Mia had a beautiful purple kite. She went to the park on a windy day. The kite flew high above the trees. Mia felt like she was flying with it. The kite did a loop in the air. Mia held the string tight so it wouldn't fly away to the clouds.",
+        title: "Charlotte's Web",
+        instr: "A story about true friendship!",
+        passage: "Wilbur was a small white pig who lived on a farm. He was afraid of dying. But Charlotte, a large gray spider who lived in the barn, was his best friend. Charlotte decided to help Wilbur. She spun words in her web: 'SOME PIG.' The farmer was amazed! He thought Wilbur was a very special pig. Charlotte worked all summer spinning messages. Because of her friendship, Wilbur lived a long and happy life.",
         qs: [
-            { qText: "What color was Mia's kite?", opts: ["Red", "Purple", "Green", "Yellow"], c: 1 },
-            { qText: "Why did the kite fly well?", opts: ["It was heavy", "It was a windy day", "It was raining", "It was night"], c: 1 },
-            { qText: "What did the kite do in the air?", opts: ["A dance", "A loop", "A song", "A sleep"], c: 1 },
-            { qText: "Where did Mia go to fly her kite?", opts: ["To school", "To the park", "To the beach", "To the store"], c: 1 }
+            { qText: "Who was Charlotte?", opts: ["A pig", "A duck", "A gray spider", "A cat"], c: 2 },
+            { qText: "What words did Charlotte spin in her web first?", opts: ["BEST PIG", "SOME PIG", "BIG PIG", "RUN PIG"], c: 1 },
+            { qText: "Where did Wilbur live?", opts: ["In a city", "On a farm", "In a forest", "In a zoo"], c: 1 },
+            { qText: "Why did Wilbur live a long happy life?", opts: ["Because of Charlotte's friendship", "He ran away", "He hid", "He flew"], c: 0 }
         ]
     },
     {
-        title: "Baking Cookies",
-        instr: "Yummy treats!",
-        passage: "Leo and his mom were baking. They put flour, sugar, and chocolate chips in a bowl. Leo helped stir the dough with a big wooden spoon. The kitchen smelled like sweet chocolate. When the cookies were done, Leo had one with a glass of cold milk.",
+        title: "The Very Hungry Caterpillar",
+        instr: "Follow the caterpillar's transformation!",
+        passage: "On Monday, the caterpillar ate one apple. On Tuesday it ate two pears. On Wednesday it ate three plums. On Thursday it ate four strawberries. On Friday it ate five oranges. Then it built a cozy cocoon around itself. Two weeks later, a beautiful butterfly came out!",
         qs: [
-            { qText: "What kind of chips were in the cookies?", opts: ["Mint", "Chocolate", "Apple", "Potato"], c: 1 },
-            { qText: "What did Leo use to stir the dough?", opts: ["A fork", "A wooden spoon", "A knife", "His hands"], c: 1 },
-            { qText: "What did Leo drink with his cookie?", opts: ["Water", "Juice", "Cold milk", "Tea"], c: 2 },
-            { qText: "Where were they baking?", opts: ["In the garden", "In the kitchen", "In the bedroom", "At school"], c: 1 }
+            { qText: "What did the caterpillar eat on Monday?", opts: ["One apple", "Two pears", "Three plums", "Five oranges"], c: 0 },
+            { qText: "How many strawberries did it eat on Thursday?", opts: ["Two", "Three", "Four", "Five"], c: 2 },
+            { qText: "What did it build around itself?", opts: ["A nest", "A cozy cocoon", "A box", "A house"], c: 1 },
+            { qText: "What came out two weeks later?", opts: ["A bird", "A bee", "A beautiful butterfly", "A moth"], c: 2 }
         ]
     },
     {
-        title: "The Brave Little Ant",
-        instr: "Working together.",
-        passage: "Andy the ant found a big bread crumb. It was too heavy to carry alone. He called his friends for help. Ten ants came to help Andy. They pushed and pulled the crumb all the way to their hill. Teamwork made the job easy and fast!",
+        title: "Marie Curie: Pioneer of Science",
+        instr: "Learn about the legendary scientist!",
+        passage: "Marie Curie was born in Poland in 1867, when women were not allowed to attend university. She saved money for years, then moved to Paris to study science. She discovered two new elements: polonium (named after Poland) and radium. She was the FIRST woman to win a Nobel Prize — and then she won a SECOND one in a different field! Despite facing discrimination as a woman in science, she never gave up. Her research on radioactivity, though it eventually harmed her health, transformed modern medicine and physics.",
         qs: [
-            { qText: "What did Andy find?", opts: ["A leaf", "A bread crumb", "A grape", "A stick"], c: 1 },
-            { qText: "Could Andy carry it alone?", opts: ["Yes", "No", "Maybe", "Only a little"], c: 1 },
-            { qText: "How many friends came to help?", opts: ["Two", "Five", "Ten", "Fifty"], c: 2 },
-            { qText: "What helped them finish the job?", opts: ["Luck", "Teamwork", "Magic", "Rain"], c: 1 }
+            { qText: "Where was Marie Curie born?", opts: ["France", "Poland", "England", "USA"], c: 1 },
+            { qText: "What two elements did she discover?", opts: ["Gold & Silver", "Polonium & Radium", "Oxygen & Hydrogen", "Iron & Copper"], c: 1 },
+            { qText: "How many Nobel Prizes did she win?", opts: ["One", "Two", "Three", "Four"], c: 1 },
+            { qText: "What field did her research transform?", opts: ["Music", "Modern medicine and physics", "Art", "Sports"], c: 1 }
         ]
     },
     {
-        title: "Space Journey",
-        instr: "To the moon!",
-        passage: "The rocket ship was ready to blast off. 3... 2... 1... GO! The astronauts went up past the clouds. They saw the Earth getting smaller and smaller. It looked like a big blue marble. They were going to visit the moon to collect gray rocks.",
+        title: "Harriet Tubman: Hero of Freedom",
+        instr: "The story of the Underground Railroad!",
+        passage: "Harriet Tubman was born into slavery around 1822. She escaped north to freedom in 1849. But she couldn't stay free while others suffered. She returned south NINETEEN times, using the Underground Railroad — a secret network of safe houses and helpers — to guide over 300 enslaved people to freedom. She was never caught and never lost a passenger. During the Civil War, she served as a spy and nurse for the Union Army. She is one of the greatest heroes in American history.",
         qs: [
-            { qText: "What was going to blast off?", opts: ["An airplane", "A rocket ship", "A kite", "A balloon"], c: 1 },
-            { qText: "What did Earth look like from space?", opts: ["A flat map", "A blue marble", "A square box", "A bright sun"], c: 1 },
-            { qText: "Where were the astronauts going?", opts: ["To Mars", "To the moon", "To the sun", "To a star"], c: 1 },
-            { qText: "What did they want to collect?", opts: ["Stars", "Gray rocks", "Ice", "Flowers"], c: 1 }
-        ]
-    },
-    {
-        title: "The Sleepy Owl",
-        instr: "Night time forest.",
-        passage: "Ollie the owl opened his big eyes. It was night time in the forest. While others slept, Ollie was awake. He flew silently through the trees. He saw a rabbit hopping and a fox hiding. Ollie hooted loudly at the bright white moon.",
-        qs: [
-            { qText: "When is Ollie awake?", opts: ["In the morning", "At night", "In the afternoon", "Never"], c: 1 },
-            { qText: "How does Ollie fly?", opts: ["Loudly", "Silently", "Slowly", "With a engine"], c: 1 },
-            { qText: "Who did Ollie see hopping?", opts: ["A fox", "A rabbit", "A deer", "A bear"], c: 1 },
-            { qText: "What did Ollie do at the moon?", opts: ["He sang", "He hooted", "He laughed", "He cried"], c: 1 }
-        ]
-    },
-    {
-        title: "Market Day",
-        instr: "Fresh fruit!",
-        passage: "Sara went to the market with her dad. They saw red apples, orange carrots, and green grapes. Sara picked out a big, round watermelon. Dad bought a bag of sweet peaches. They carried the heavy bags home and made a fresh fruit salad for lunch.",
-        qs: [
-            { qText: "Where did Sara go?", opts: ["To the zoo", "To the market", "To the park", "To the library"], c: 1 },
-            { qText: "What fruit did Sara pick?", opts: ["An apple", "A watermelon", "A grape", "A banana"], c: 1 },
-            { qText: "What did they make for lunch?", opts: ["Soup", "Fruit salad", "Pizza", "Sandwich"], c: 1 },
-            { qText: "What color were the apples?", opts: ["Green", "Red", "Yellow", "Purple"], c: 1 }
+            { qText: "What network did Harriet Tubman use?", opts: ["The Highway", "The Underground Railroad", "The Canal", "The River"], c: 1 },
+            { qText: "How many times did she return south to guide others?", opts: ["Five", "Ten", "Nineteen", "Fifty"], c: 2 },
+            { qText: "How many passengers did she lose?", opts: ["Ten", "Five", "Zero / None", "Two"], c: 2 },
+            { qText: "What role did she serve during the Civil War?", opts: ["Captain", "Spy and nurse", "Chef", "General"], c: 1 }
         ]
     }
 ];
-

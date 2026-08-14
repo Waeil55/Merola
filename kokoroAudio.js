@@ -295,9 +295,64 @@
                 });
             });
         } else {
-            console.log('ℹ️ No Kokoro AI audio entry for:', text);
-            if (onEnd) setTimeout(onEnd, 500);
+            // Sequential Word Playback Fallback for multi-word sentences/passages
+            const rawWords = clean.split(/\s+/);
+            if (rawWords.length > 0) {
+                let currentWordIndex = 0;
+
+                const playNextWord = () => {
+                    if (currentWordIndex >= rawWords.length) {
+                        if (onEnd) onEnd();
+                        return;
+                    }
+                    const word = rawWords[currentWordIndex];
+                    const cleanW = word.replace(/[^a-zA-Z0-9]/g, '');
+                    const wordHash = findAudioHash(cleanW, word);
+                    
+                    if (onWordHighlight) onWordHighlight(currentWordIndex, word);
+
+                    if (wordHash) {
+                        const wordAudio = createAudioInstance(wordHash);
+                        currentAudio = wordAudio;
+                        wordAudio.playbackRate = speechSpeed;
+                        wordAudio.onended = () => {
+                            wordAudio.onended = null;
+                            currentWordIndex++;
+                            setTimeout(playNextWord, 100);
+                        };
+                        wordAudio.play().catch(() => {
+                            currentWordIndex++;
+                            setTimeout(playNextWord, 200);
+                        });
+                    } else {
+                        currentWordIndex++;
+                        setTimeout(playNextWord, 350);
+                    }
+                };
+
+                playNextWord();
+            } else {
+                if (onEnd) setTimeout(onEnd, 300);
+            }
         }
+    }
+
+    function pauseAudio() {
+        if (currentAudio) currentAudio.pause();
+    }
+
+    function resumeAudio() {
+        if (currentAudio) currentAudio.play();
+    }
+
+    function preloadAudio(textArray) {
+        if (!Array.isArray(textArray)) return;
+        textArray.forEach(t => {
+            const hash = findAudioHash(t, t);
+            if (hash && !audioCache.has(hash)) {
+                createAudioInstance(hash);
+            }
+        });
     }
 
     // Initialize database on script load
@@ -309,12 +364,21 @@
     window.KokoroAudio = {
         speak: speakKokoro,
         speakWord: (word, onEnd) => speakKokoro(word, onEnd),
+        speakPhrase: (phrase, onEnd) => speakKokoro(phrase, onEnd),
         speakSentence: (sentence, onEnd) => speakKokoro(sentence, onEnd),
+        speakParagraph: (paragraph, onWordHighlight, onEnd) => speakKokoro(paragraph, onEnd, onWordHighlight),
         speakStory: (passage, onWordHighlight, onEnd) => speakKokoro(passage, onEnd, onWordHighlight),
         stop: stopAudio,
+        pause: pauseAudio,
+        resume: resumeAudio,
+        preloadAudio: preloadAudio,
+        cacheAudio: (text) => { const h = findAudioHash(text, text); if (h) createAudioInstance(h); },
         setSpeed: setSpeed,
         getSpeed: () => speechSpeed,
+        setVoice: (voice) => console.log('⚡ Kokoro AI Voice Profile active: af_heart'),
         hasAudio: (text) => !!findAudioHash(text, text)
     };
 
 })();
+
+

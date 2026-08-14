@@ -306,6 +306,10 @@
                     <i data-lucide="sparkles" class="w-5 h-5"></i>
                 </button>
 
+                <button onclick="openParentModal()" class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center" title="Parent Controls">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+
                 <div onclick="resetDaily()" class="bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer active:scale-95">
                     <span class="text-yellow-300 text-lg">⭐</span>
                     <span id="score-val" class="font-black">0</span>
@@ -315,6 +319,7 @@
                     <i data-lucide="home" class="w-5 h-5"></i>
                 </button>
             </div>
+
         </div>
         
         <div id="progress-container" class="hidden max-w-5xl mx-auto w-full mt-4 px-4">
@@ -397,11 +402,86 @@
                 </button>
                 <div id="elsa-mic-status" class="text-sm font-black text-purple-600 dark:text-purple-300 mt-3">Tap microphone & speak!</div>
             </div>
-            <div id="elsa-feedback-box" class="hidden p-4 bg-purple-50 dark:bg-purple-950/40 rounded-2xl border border-purple-200"></div>
+    <!-- Parent Settings & Progress Modal -->
+    <div id="parent-modal" class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="card max-w-lg w-full p-6 space-y-4 bg-white dark:bg-gray-900 border-4 border-[#7B68EE] shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="text-xs uppercase font-black text-purple-500 tracking-widest">⚙️ Parent Controls & Progress</span>
+                <button onclick="closeParentModal()" class="text-gray-400 hover:text-gray-600 font-black text-lg">✕</button>
+            </div>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <h4 class="font-black text-sm uppercase text-gray-700 dark:text-gray-200 mb-2">🔊 Reference Speech Speed</h4>
+                    <select onchange="setNarrationSpeed(this.value)" class="w-full p-3 bg-purple-50 dark:bg-gray-800 rounded-xl font-bold border border-purple-200">
+                        <option value="0.5">0.5x Slow Speech</option>
+                        <option value="0.75">0.75x Gentle Speech</option>
+                        <option value="1.0" selected>1.0x Natural Reference Speech</option>
+                        <option value="1.25">1.25x Fast Speech</option>
+                    </select>
+                </div>
+
+                <div>
+                    <h4 class="font-black text-sm uppercase text-gray-700 dark:text-gray-200 mb-2">🔒 Privacy & Data Retention</h4>
+                    <div class="p-3 bg-purple-50 dark:bg-gray-800 rounded-xl space-y-2 text-xs font-bold text-gray-600 dark:text-gray-300">
+                        <div class="flex items-center justify-between">
+                            <span>Child Voice Recording Retention</span>
+                            <span class="text-green-600 font-black">Temporary Only</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Cloud Audio Processing</span>
+                            <span class="text-purple-600 font-black">Secure Ephemeral</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-black text-sm uppercase text-gray-700 dark:text-gray-200 mb-2">⭐ Saved Words Vocabulary List</h4>
+                    <div id="parent-saved-words" class="p-3 bg-yellow-50 dark:bg-gray-800 rounded-xl max-h-40 overflow-y-auto space-y-2"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        function openParentModal() {
+            const modal = document.getElementById('parent-modal');
+            const savedList = JSON.parse(localStorage.getItem('merola_saved_words') || '[]');
+            const container = document.getElementById('parent-saved-words');
+            if (savedList.length === 0) {
+                container.innerHTML = `<div class="text-xs text-gray-400 font-bold text-center py-2">No saved words yet. Tap ⭐ Save on any word card!</div>`;
+            } else {
+                container.innerHTML = savedList.map(w => `
+                    <div class="flex items-center justify-between bg-white dark:bg-gray-900 p-2 rounded-lg border">
+                        <span class="font-black text-purple-600">${w}</span>
+                        <div class="flex gap-2">
+                            <button onclick="window.KokoroAudio.speakWord('${w}')" class="px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-xs font-bold">🔊 Hear</button>
+                            <button onclick="removeSavedWord('${w}')" class="px-2 py-1 bg-red-100 text-red-600 rounded-md text-xs font-bold">✕</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeParentModal() {
+            document.getElementById('parent-modal').classList.add('hidden');
+        }
+
+        function removeSavedWord(word) {
+            let saved = JSON.parse(localStorage.getItem('merola_saved_words') || '[]');
+            saved = saved.filter(w => w !== word);
+            localStorage.setItem('merola_saved_words', JSON.stringify(saved));
+            openParentModal();
+        }
+
+        document.addEventListener('mouseup', () => {
+            const selection = window.getSelection().toString().trim();
+            if (selection && selection.length > 2 && selection.length < 80) {
+                window.KokoroAudio.speakPhrase(selection);
+            }
+        });
+
 
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
