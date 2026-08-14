@@ -75,13 +75,15 @@ const initialCoinData = [
 // 80 Questions for Time Lab (10 pages)
 function generateTimeData() {
     const list = [];
+    const pool = ["1:00", "4:30", "10:15", "6:00", "12:45", "8:20", "2:15", "9:50", "3:35", "7:05"];
     for (let i = 0; i < 80; i++) {
         const h = (i % 12) + 1;
         const m = (i * 5) % 60;
         const correct = `${h}:${m.toString().padStart(2, '0')}`;
-        const opts = shuffle([correct, "1:00", "4:30", "10:15", "6:00", "12:45"]).slice(0, 4);
-        if (!opts.includes(correct)) opts[0] = correct;
-        list.push({ q: `What time is it?<br>${getClockSVG(h, m)}`, opts: shuffle(opts), c: opts.indexOf(correct) });
+        const distractors = pool.filter(d => d !== correct);
+        const rawOpts = [correct, distractors[0], distractors[1], distractors[2]];
+        const opts = shuffle([...rawOpts]);
+        list.push({ q: `What time is it?<br>${getClockSVG(h, m)}`, opts: opts, c: opts.indexOf(correct) });
     }
     return list;
 }
@@ -92,11 +94,19 @@ function generateMathData() {
     for (let i = 0; i < 100; i++) {
         const op = i % 2 === 0 ? '+' : '-';
         let a, b, res;
-        if (op === '+') { a = Math.floor(Math.random() * 50); b = Math.floor(Math.random() * 50); res = a + b; }
-        else { a = Math.floor(Math.random() * 80) + 20; b = Math.floor(Math.random() * a); res = a - b; }
+        if (op === '+') { a = Math.floor(Math.random() * 50) + 1; b = Math.floor(Math.random() * 50) + 1; res = a + b; }
+        else { a = Math.floor(Math.random() * 80) + 20; b = Math.floor(Math.random() * (a - 1)) + 1; res = a - b; }
         const correct = res.toString();
-        const opts = [correct, (res+5).toString(), (res-2).toString(), (res+10).toString()];
-        list.push({ q: `Solve:<br><span class="text-5xl font-black">${a} ${op} ${b} = ?</span>`, opts: shuffle(opts), c: opts.indexOf(correct) });
+        const wrongSet = new Set([
+            (res + 2).toString(),
+            Math.max(0, res - 3).toString(),
+            (res + 5).toString()
+        ]);
+        wrongSet.delete(correct);
+        const distractors = Array.from(wrongSet);
+        while (distractors.length < 3) distractors.push((res + distractors.length + 10).toString());
+        const opts = shuffle([correct, distractors[0], distractors[1], distractors[2]]);
+        list.push({ q: `Solve:<br><span class="text-5xl font-black">${a} ${op} ${b} = ?</span>`, opts: opts, c: opts.indexOf(correct) });
     }
     return list;
 }
@@ -108,10 +118,9 @@ function generateShapesData() {
     for (let i = 0; i < 50; i++) {
         const type = names[i % names.length];
         const correct = type.charAt(0).toUpperCase() + type.slice(1);
-        const wrongs = ["Box", "Point", "Line", "Ball", "Flat", "Big"].filter(w => w !== correct);
-        const opts = shuffle([correct, wrongs[0], wrongs[1], wrongs[2]]).slice(0, 4);
-        if (!opts.includes(correct)) opts[0] = correct;
-        list.push({ q: `Identify this shape:<br>${getShapeSVG(type)}`, opts: shuffle(opts), c: opts.indexOf(correct) });
+        const wrongs = ["Box", "Point", "Line", "Ball", "Flat", "Big", "Ring", "Oval"].filter(w => w !== correct);
+        const opts = shuffle([correct, wrongs[0], wrongs[1], wrongs[2]]);
+        list.push({ q: `Identify this shape:<br>${getShapeSVG(type)}`, opts: opts, c: opts.indexOf(correct) });
     }
     return list;
 }
@@ -128,4 +137,5 @@ function generateGrammarData() {
     }
     return list;
 }
+
 
