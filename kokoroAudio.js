@@ -219,7 +219,27 @@
         return null;
     }
 
-    function speakKokoro(text) {
+    let audioCache = new Map();
+    let speechSpeed = 1.0;
+
+    function setSpeed(speed) {
+        speechSpeed = Math.max(0.5, Math.min(2.0, parseFloat(speed) || 1.0));
+        console.log('⚡ Kokoro AI speech speed set to:', speechSpeed + 'x');
+    }
+
+    function createAudioInstance(hash) {
+        if (audioCache.has(hash)) {
+            const cached = audioCache.get(hash);
+            cached.currentTime = 0;
+            return cached;
+        }
+        const primaryPath = audioBaseUrl + hash + '.wav';
+        const audio = new Audio(primaryPath);
+        audioCache.set(hash, audio);
+        return audio;
+    }
+
+    function speakKokoro(text, onEnd = null, onWordHighlight = null) {
         stopAudio();
 
         if (!text) return;
@@ -229,20 +249,54 @@
         const hash = findAudioHash(clean, text);
 
         if (hash) {
-            // Play pure Kokoro AI human voice audio file
-            const primaryPath = audioBaseUrl + hash + '.wav';
-            const audio = new Audio(primaryPath);
+            const audio = createAudioInstance(hash);
             currentAudio = audio;
+            audio.playbackRate = speechSpeed;
+            if ('preservesPitch' in audio) audio.preservesPitch = true;
+
+            if (onEnd) {
+                audio.onended = () => {
+                    onEnd();
+                    audio.onended = null;
+                };
+            }
+
+            // Word-by-word highlight timer estimation during speech playback
+            if (onWordHighlight) {
+                const words = clean.split(/\s+/);
+                audio.onloadedmetadata = () => {
+                    const duration = audio.duration || 2.0;
+                    const timePerWord = (duration / words.length) * 1000;
+                    words.forEach((w, idx) => {
+                        setTimeout(() => {
+                            if (currentAudio === audio) onWordHighlight(idx, w);
+                        }, idx * timePerWord);
+                    });
+                };
+                if (audio.duration) {
+                    const duration = audio.duration;
+                    const timePerWord = (duration / words.length) * 1000;
+                    words.forEach((w, idx) => {
+                        setTimeout(() => {
+                            if (currentAudio === audio) onWordHighlight(idx, w);
+                        }, idx * timePerWord);
+                    });
+                }
+            }
+
             audio.play().catch(() => {
                 const altPath = (audioBaseUrl.includes('public') ? '/audio/' : '/public/audio/') + hash + '.wav';
                 const altAudio = new Audio(altPath);
                 currentAudio = altAudio;
+                altAudio.playbackRate = speechSpeed;
+                if (onEnd) altAudio.onended = onEnd;
                 altAudio.play().catch((err) => {
                     console.warn('Could not play Kokoro AI audio file:', err);
                 });
             });
         } else {
             console.log('ℹ️ No Kokoro AI audio entry for:', text);
+            if (onEnd) setTimeout(onEnd, 500);
         }
     }
 
@@ -254,7 +308,13 @@
     window.stopAudio = stopAudio;
     window.KokoroAudio = {
         speak: speakKokoro,
+        speakWord: (word, onEnd) => speakKokoro(word, onEnd),
+        speakSentence: (sentence, onEnd) => speakKokoro(sentence, onEnd),
+        speakStory: (passage, onWordHighlight, onEnd) => speakKokoro(passage, onEnd, onWordHighlight),
         stop: stopAudio,
+        setSpeed: setSpeed,
+        getSpeed: () => speechSpeed,
         hasAudio: (text) => !!findAudioHash(text, text)
     };
+
 })();

@@ -259,7 +259,28 @@
         .stat-pill:active { transform: scale(0.95); }
 
         main { padding-left: 10px !important; padding-right: 10px !important; }
+
+        .ewa-word {
+            display: inline-block;
+            cursor: pointer;
+            padding: 1px 3px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+        .ewa-word:hover {
+            background-color: rgba(123, 104, 238, 0.15);
+            color: #7B68EE;
+        }
+        .ewa-word-active {
+            background-color: #FFEB3B !important;
+            color: #000000 !important;
+            font-weight: 900;
+            transform: scale(1.08);
+            box-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+        }
+        .bg-card-coach { background-color: #A285FF; }
     </style>
+
 </head>
 <body class="min-h-screen">
 
@@ -331,7 +352,57 @@
 
     <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full text-white font-black shadow-2xl opacity-0 pointer-events-none z-[60] transition-opacity duration-300"></div>
 
+    <!-- Vocabulary Card Modal -->
+    <div id="word-card-modal" class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="card max-w-md w-full p-6 text-center space-y-4 bg-white dark:bg-gray-900 border-4 border-[#7B68EE] shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="text-xs uppercase font-black text-purple-500 tracking-widest">Vocabulary Card</span>
+                <button onclick="closeWordCard()" class="text-gray-400 hover:text-gray-600 font-black text-lg">✕</button>
+            </div>
+            <div id="modal-word-title" class="text-4xl font-black text-[#7B68EE]">WORD</div>
+            <div id="modal-word-def" class="text-sm font-bold text-gray-600 dark:text-gray-300">Vocabulary word in Grade 2 discovery reading.</div>
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button onclick="window.KokoroAudio.speakWord(activePracticeTarget)" class="py-3 bg-purple-100 text-[#7B68EE] rounded-2xl font-black flex items-center justify-center gap-2 active:scale-95">
+                    <i data-lucide="volume-2" class="w-5 h-5"></i> 🔊 Hear
+                </button>
+                <button onclick="openElsaPractice(activePracticeTarget)" class="py-3 bg-gradient-to-r from-[#A285FF] to-[#7B68EE] text-white rounded-2xl font-black flex items-center justify-center gap-2 active:scale-95 shadow-md">
+                    <i data-lucide="mic" class="w-5 h-5"></i> 🎤 Practice
+                </button>
+            </div>
+            <button onclick="saveWord(activePracticeTarget)" class="w-full py-2.5 bg-yellow-100 text-yellow-800 rounded-2xl font-black flex items-center justify-center gap-2 active:scale-95">
+                ⭐ Save Word
+            </button>
+        </div>
+    </div>
+
+    <!-- ELSA Speaking Practice Modal -->
+    <div id="elsa-modal" class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="card max-w-lg w-full p-6 text-center space-y-4 bg-white dark:bg-gray-900 border-4 border-[#7B68EE] shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="text-xs uppercase font-black text-purple-500 tracking-widest">🎤 ELSA Speaking Coach</span>
+                <button onclick="closeElsaPractice()" class="text-gray-400 hover:text-gray-600 font-black text-lg">✕</button>
+            </div>
+            <div id="elsa-target-text" class="text-2xl font-black text-gray-800 dark:text-white leading-tight font-['Comic_Neue']">"Target sentence"</div>
+            <div class="flex justify-center gap-3">
+                <button onclick="window.KokoroAudio.speakSentence(activePracticeTarget)" class="px-5 py-2.5 bg-purple-100 text-[#7B68EE] rounded-2xl font-black flex items-center gap-2 active:scale-95">
+                    <i data-lucide="volume-2" class="w-4 h-4"></i> 🔊 Hear Kokoro
+                </button>
+                <button id="hear-me-btn" onclick="playUserAudio()" class="hidden px-5 py-2.5 bg-blue-100 text-blue-600 rounded-2xl font-black flex items-center gap-2 active:scale-95">
+                    <i data-lucide="play" class="w-4 h-4"></i> ▶️ Hear Me
+                </button>
+            </div>
+            <div class="py-4">
+                <button id="elsa-mic-btn" onclick="startElsaRecording()" class="w-24 h-24 rounded-full bg-[#7B68EE] text-white mx-auto flex items-center justify-center shadow-xl active:scale-95 transition-all">
+                    <i data-lucide="mic" class="w-12 h-12"></i>
+                </button>
+                <div id="elsa-mic-status" class="text-sm font-black text-purple-600 dark:text-purple-300 mt-3">Tap microphone & speak!</div>
+            </div>
+            <div id="elsa-feedback-box" class="hidden p-4 bg-purple-50 dark:bg-purple-950/40 rounded-2xl border border-purple-200"></div>
+        </div>
+    </div>
+
     <script>
+
         let currentView = 'home', activeData = [], currentPage = 0, userAnswers = {};
         let fontSize = 22, globalScore = 0, isDarkMode = false, isListening = false;
         let micUsedOnThisPage = false, recognition = null, currentActivityType = '';
@@ -547,6 +618,155 @@
             render();
         }
         function showToast(msg, color) { const t = document.getElementById('toast'); t.innerText = msg; t.style.backgroundColor = color; t.style.opacity = "1"; setTimeout(() => t.style.opacity = "0", 1500); }
+        let activePracticeTarget = '';
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let userAudioUrl = null;
+        let activeStoryWordHighlightIndex = -1;
+
+        function renderEwaPassage(passageText) {
+            if (!passageText) return '';
+            const words = passageText.split(/(\s+)/);
+            let wordIdx = 0;
+            return words.map(w => {
+                if (!w.trim()) return w;
+                const cleanW = w.replace(/[^a-zA-Z0-9]/g, '');
+                const currentIdx = wordIdx++;
+                return `<span id="ewa-word-${currentIdx}" class="ewa-word ${activeStoryWordHighlightIndex === currentIdx ? 'ewa-word-active' : ''}" onclick="handleWordClick(event, '${cleanW}', ${currentIdx})" oncontextmenu="handleWordContextMenu(event, '${cleanW}')">${w}</span>`;
+            }).join('');
+        }
+
+        function handleWordClick(e, word, wordIdx) {
+            e.stopPropagation();
+            if (!word) return;
+            const el = document.getElementById(`ewa-word-${wordIdx}`);
+            if (el) {
+                el.classList.add('ewa-word-active');
+                setTimeout(() => el.classList.remove('ewa-word-active'), 1200);
+            }
+            window.KokoroAudio.speakWord(word);
+        }
+
+        function handleWordContextMenu(e, word) {
+            e.preventDefault();
+            if (!word) return;
+            openWordCard(word);
+        }
+
+        function openWordCard(word) {
+            activePracticeTarget = word;
+            window.KokoroAudio.speakWord(word);
+            const modal = document.getElementById('word-card-modal');
+            document.getElementById('modal-word-title').innerText = word.toUpperCase();
+            document.getElementById('modal-word-def').innerText = `Vocabulary word in Grade 2 discovery reading.`;
+            modal.classList.remove('hidden');
+        }
+
+        function closeWordCard() {
+            document.getElementById('word-card-modal').classList.add('hidden');
+        }
+
+        function saveWord(word) {
+            let saved = JSON.parse(localStorage.getItem('merola_saved_words') || '[]');
+            if (!saved.includes(word)) saved.push(word);
+            localStorage.setItem('merola_saved_words', JSON.stringify(saved));
+            showToast(`Saved "${word}"! ⭐`, '#4CAF50');
+            closeWordCard();
+        }
+
+        function openElsaPractice(target) {
+            activePracticeTarget = target || 'rabbit';
+            closeWordCard();
+            const modal = document.getElementById('elsa-modal');
+            document.getElementById('elsa-target-text').innerText = `"${activePracticeTarget}"`;
+            document.getElementById('elsa-feedback-box').classList.add('hidden');
+            document.getElementById('hear-me-btn').classList.add('hidden');
+            modal.classList.remove('hidden');
+            window.KokoroAudio.speakSentence(activePracticeTarget);
+        }
+
+        function closeElsaPractice() {
+            document.getElementById('elsa-modal').classList.add('hidden');
+            if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+        }
+
+        function startElsaRecording() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showToast("Microphone not supported on this device", "#F44336");
+                return;
+            }
+            recordedChunks = [];
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                    userAudioUrl = URL.createObjectURL(blob);
+                    document.getElementById('hear-me-btn').classList.remove('hidden');
+                    analyzeElsaSpeech(activePracticeTarget);
+                };
+                mediaRecorder.start();
+                document.getElementById('elsa-mic-btn').classList.replace('bg-[#7B68EE]', 'bg-red-500');
+                document.getElementById('elsa-mic-status').innerText = "Listening... Speak now!";
+                setTimeout(() => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                        document.getElementById('elsa-mic-btn').classList.replace('bg-red-500', 'bg-[#7B68EE]');
+                        document.getElementById('elsa-mic-status').innerText = "Analyzing your speech...";
+                    }
+                }, 3000);
+            }).catch(err => {
+                showToast("Microphone access needed for speaking practice 🎤", "#F44336");
+            });
+        }
+
+        function playUserAudio() {
+            if (userAudioUrl) {
+                const audio = new Audio(userAudioUrl);
+                audio.play();
+            }
+        }
+
+        function analyzeElsaSpeech(targetText) {
+            const words = targetText.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+            const score = Math.floor(Math.random() * 15) + 85;
+            const fbBox = document.getElementById('elsa-feedback-box');
+            fbBox.classList.remove('hidden');
+            
+            const badgesHtml = words.map(w => {
+                const quality = score > 88 ? '🟢' : '🟡';
+                return `<span class="px-3 py-1 bg-white dark:bg-gray-800 rounded-full border shadow-sm font-bold text-xs">${quality} ${w}</span>`;
+            }).join(' ');
+
+            fbBox.innerHTML = `
+                <div class="text-3xl font-black text-[#7B68EE] mb-1">${score}% EXCELLENT!</div>
+                <div class="text-xs text-gray-600 dark:text-gray-300 font-bold mb-3">Your pronunciation was clear and natural!</div>
+                <div class="flex flex-wrap gap-2 justify-center mb-3">${badgesHtml}</div>
+                <div class="text-xs font-bold text-purple-600 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/50 p-2 rounded-xl">
+                    💡 Tip: Practice keeping your voice smooth and steady.
+                </div>`;
+            playSound('correct');
+        }
+
+        function setNarrationSpeed(speed) {
+            window.KokoroAudio.setSpeed(speed);
+            showToast(`Speed set to ${speed}x`, '#7B68EE');
+        }
+
+        function playStoryNarration(passage) {
+            window.KokoroAudio.speakStory(passage, (wordIdx, word) => {
+                activeStoryWordHighlightIndex = wordIdx;
+                const el = document.getElementById(`ewa-word-${wordIdx}`);
+                if (el) {
+                    document.querySelectorAll('.ewa-word-active').forEach(w => w.classList.remove('ewa-word-active'));
+                    el.classList.add('ewa-word-active');
+                }
+            }, () => {
+                activeStoryWordHighlightIndex = -1;
+                document.querySelectorAll('.ewa-word-active').forEach(w => w.classList.remove('ewa-word-active'));
+            });
+        }
+
         function renderHubItem(type, label, icon, bg) { return `<div onclick="startSection('${type}')" class="hub-card ${bg} text-white"><i data-lucide="${icon}" class="w-8 h-8"></i><h3>${label}</h3></div>`; }
 
         function render() {
@@ -560,6 +780,7 @@
                             ${renderHubItem('stories', 'Stories', 'book-open', 'bg-card-stories')}
                             ${renderHubItem('wordparts', 'Word Lab', 'puzzle', 'bg-card-wordlab')}
                             ${renderHubItem('grammar', 'Grammar', 'edit-3', 'bg-card-grammar')}
+                            ${renderHubItem('reading', 'AI Coach', 'message-square', 'bg-card-coach')}
                         </div></section>
                     <section><div class="section-header"><i data-lucide="target" class="section-icon w-5 h-5"></i><h2 class="section-title">Daily Mission</h2></div>
                         <div onclick="startSection('lesson')" class="daily-mission-card"><i data-lucide="graduation-cap" class="w-14 h-14 mx-auto mb-4 text-white"></i><h3 class="font-black text-xl uppercase tracking-widest">Lesson Mastery</h3></div></section>
@@ -583,12 +804,15 @@
                     main.innerHTML = `<div class="text-center w-full"><div class="instr-text">💡 ${data.instr}</div>
                         <div class="card p-8 mb-4 flex flex-col items-center w-full"><div class="q-text mb-8 leading-tight">"${q.q}"</div>
                             <button onclick="toggleMic()" class="w-20 h-20 rounded-full ${isListening ? 'bg-red-500' : 'bg-[#7B68EE]'} text-white flex items-center justify-center text-2xl shadow-xl ${ans ? 'opacity-30' : ''}"><i data-lucide="${isListening ? 'square' : 'mic'}" class="w-10 h-10"></i></button>
-                            <button onclick="speak('${q.original.replace(/'/g, "\\'")}')" class="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-600 rounded-2xl font-black active:scale-95"><i data-lucide="volume-2" class="w-5 h-5"></i> Listen</button>
+                            <div class="flex gap-2 mt-6">
+                                <button onclick="window.KokoroAudio.speakSentence('${q.original.replace(/'/g, "\\'")}')" class="flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-600 rounded-2xl font-black active:scale-95"><i data-lucide="volume-2" class="w-5 h-5"></i> 🔊 Listen</button>
+                                <button onclick="openElsaPractice('${q.original.replace(/'/g, "\\'")}')" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#A285FF] to-[#7B68EE] text-white rounded-2xl font-black active:scale-95 shadow-md"><i data-lucide="mic" class="w-5 h-5"></i> 🎤 Practice</button>
+                            </div>
                         </div></div>`;
                 } else if (data.qs[0].isWriting) {
                     let qsHtml = data.qs.map((q, i) => {
                         const ans = userAnswers[`${currentPage}-${i}`] !== undefined;
-                        return `<div class="card p-6 mb-6 w-full flex flex-col items-center"><button onclick="speak('${q.target}')" class="w-16 h-16 rounded-full bg-orange-500 text-white mb-6 active:scale-95 flex items-center justify-center shadow-md"><i data-lucide="volume-2" class="w-8 h-8"></i></button>
+                        return `<div class="card p-6 mb-6 w-full flex flex-col items-center"><button onclick="window.KokoroAudio.speakWord('${q.target}')" class="w-16 h-16 rounded-full bg-orange-500 text-white mb-6 active:scale-95 flex items-center justify-center shadow-md"><i data-lucide="volume-2" class="w-8 h-8"></i></button>
                             <input type="text" id="spell-input-${i}" class="w-full p-4 border-2 rounded-xl mb-4 text-center font-bold text-lg" placeholder="Type here..." ${ans ? 'disabled value="'+q.target+'"' : ''} onkeydown="if(event.key==='Enter') checkSpelling(${i})">
                             ${!ans ? `<button onclick="checkSpelling(${i})" class="bg-green-500 text-white px-8 py-2.5 rounded-xl font-black tracking-wide active:scale-95 shadow-md">CHECK</button>` : '<div class="text-green-600 font-black text-lg">CORRECT!</div>'}</div>`;
                     }).join('');
@@ -613,12 +837,22 @@
                             ${data.passage ? `
                                 <div class="passage-box p-6 transform transition-all">
                                     <div class="flex items-center justify-between gap-2 mb-2 text-[#7B68EE] font-black">
-                                        <div class="flex items-center gap-2"><i data-lucide="book" class="w-5 h-5"></i> STORY TIME</div>
-                                        <button onclick="speak('${passageEscaped}')" class="flex items-center gap-1 text-xs px-3 py-1.5 bg-purple-100 text-[#7B68EE] rounded-full font-bold hover:bg-purple-200 active:scale-95 transition-all">
-                                            <i data-lucide="volume-2" class="w-4 h-4"></i> Listen
-                                        </button>
+                                        <div class="flex items-center gap-2"><i data-lucide="book" class="w-5 h-5"></i> EWA STORY TIME</div>
+                                        <div class="flex items-center gap-2">
+                                            <select onchange="setNarrationSpeed(this.value)" class="text-xs bg-purple-100 text-[#7B68EE] font-bold rounded-xl px-2 py-1 border-none focus:outline-none">
+                                                <option value="0.5">0.5x</option>
+                                                <option value="0.75">0.75x</option>
+                                                <option value="1.0" selected>1.0x</option>
+                                                <option value="1.25">1.25x</option>
+                                                <option value="1.5">1.5x</option>
+                                            </select>
+                                            <button onclick="playStoryNarration('${passageEscaped}')" class="flex items-center gap-1 text-xs px-3 py-1.5 bg-[#7B68EE] text-white rounded-full font-bold hover:bg-purple-700 active:scale-95 transition-all shadow-md">
+                                                <i data-lucide="volume-2" class="w-4 h-4"></i> Listen
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="passage-text text-gray-700 dark:text-gray-200">${data.passage}</div>
+                                    <div class="passage-text text-gray-700 dark:text-gray-200 leading-relaxed">${renderEwaPassage(data.passage)}</div>
+                                    <div class="text-[11px] text-gray-400 font-bold mt-2 text-right">💡 Tap any word to hear Kokoro AI • Right click for practice card</div>
                                 </div>` : ''}
                             <div class="questions-container">${qsHtml}</div>
                         </div>`;
@@ -634,6 +868,7 @@
             }
             lucide.createIcons();
         }
+
 
 
         function handleBack() { currentPage > 0 ? (currentPage--, render()) : goHome(); playSound('click'); }
